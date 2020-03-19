@@ -1,0 +1,6 @@
+query Plan($planId: ID!) {
+  plan(id: $planId) {
+    displayName
+    cost
+  }
+}

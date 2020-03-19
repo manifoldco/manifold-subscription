@@ -5,8 +5,15 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
+import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
+import { PlanQuery, } from "./types/graphql";
 export namespace Components {
     interface ManifoldSubscriptionCreate {
+        "connection": Connection;
+        "data"?: PlanQuery;
+        "errors"?: GraphqlError[];
+        "loading"?: boolean;
         /**
           * Plan ID for the new subscription
          */
@@ -26,6 +33,10 @@ declare global {
 }
 declare namespace LocalJSX {
     interface ManifoldSubscriptionCreate {
+        "connection"?: Connection;
+        "data"?: PlanQuery;
+        "errors"?: GraphqlError[];
+        "loading"?: boolean;
         /**
           * Plan ID for the new subscription
          */
