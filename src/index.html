@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Manifold Subscription</title>
+
+    <!-- manifold-init -->
+    <script
+      async
+      type="module"
+      src="https://js.cdn.manifold.co/@manifoldco/manifold-init/dist/manifold-init/manifold-init.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://js.cdn.manifold.co/@manifoldco/manifold-init/dist/manifold-init/manifold-init.js"
+    ></script>
+
+    <script type="module" src="/build/manifold-subscription.esm.js"></script>
+    <script nomodule src="/build/manifold-subscription.js"></script>
+  </head>
+  <body>
+    <manifold-init client-id="123"></manifold-init>
+    <manifold-subscription-create
+      plan-id="my-plan-id"
+    ></manifold-subscription-create>
+  </body>
+</html>

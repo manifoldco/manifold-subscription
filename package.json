@@ -1,0 +1,40 @@
+{
+  "name": "manifold-subscription",
+  "version": "0.0.1",
+  "description": "Manifold Subscription Web Components",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/manifold-subscription/manifold-subscription.js",
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "scripts": {
+    "build": "stencil build --docs",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "generate": "stencil generate"
+  },
+  "devDependencies": {
+    "@manifoldco/eslint-plugin-stencil": "^0.4.1",
+    "@manifoldco/manifold-init": "^0.3.0",
+    "@manifoldco/manifold-init-types": "^0.3.0",
+    "@stencil/core": "^1.8.8",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2"
+  },
+  "peerDependencies": {
+    "@manifoldco/manifold-init": "*"
+  },
+  "license": "MIT"
+}
