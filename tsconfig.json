@@ -2,16 +2,22 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
+    "baseUrl": "./src",
     "declaration": false,
     "experimentalDecorators": true,
+    "jsx": "react",
+    "jsxFactory": "h",
     "lib": ["dom", "es2017"],
-    "moduleResolution": "node",
     "module": "esnext",
-    "target": "es2017",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "jsx": "react",
-    "jsxFactory": "h"
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "target": "es2017"
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/*.spec.ts"]

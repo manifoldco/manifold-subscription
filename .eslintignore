@@ -1,0 +1,15 @@
+__mocks__
+dist/
+pkg/
+storybook-static/
+
+.stencil/
+.idea/
+.vscode/
+.sass-cache/
+.versions/
+coverage/
+node_modules/
+$RECYCLE.BIN/
+
+components.d.ts

@@ -1,10 +1,10 @@
-import { Component, Element, Prop, h } from "@stencil/core";
-import { Connection } from "@manifoldco/manifold-init-types/types/v0";
+import { Component, Element, Prop, h } from '@stencil/core';
+import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 
 @Component({
-  tag: "manifold-subscription-create",
-  styleUrl: "manifold-subscription-create.css",
-  shadow: true
+  tag: 'manifold-subscription-create',
+  styleUrl: 'manifold-subscription-create.css',
+  shadow: true,
 })
 export class ManifoldSubscriptionCreate {
   @Element() el: HTMLElement;
@@ -16,14 +16,12 @@ export class ManifoldSubscriptionCreate {
   connection: Connection;
 
   async componentWillLoad() {
-    await customElements.whenDefined("manifold-init");
-    const core = document.querySelector(
-      "manifold-init"
-    ) as HTMLManifoldInitElement;
+    await customElements.whenDefined('manifold-init');
+    const core = document.querySelector('manifold-init') as HTMLManifoldInitElement;
     this.connection = await core.initialize({
       element: this.el,
-      componentVersion: "<@NPM_PACKAGE_VERSION@>",
-      version: 0
+      componentVersion: '<@NPM_PACKAGE_VERSION@>',
+      version: 0,
     });
   }
 
