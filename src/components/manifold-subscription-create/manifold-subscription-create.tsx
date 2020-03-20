@@ -17,7 +17,7 @@ export class ManifoldSubscriptionCreate {
    */
   @Prop() planId: string;
 
-  @Prop({ mutable: true, reflect: true, reflectToAttr: true }) loading?: boolean = false;
+  @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
 
   @Prop({ mutable: true }) data?: PlanQuery;
