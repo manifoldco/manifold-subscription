@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Manifold Subscription</title>
+
+    <!-- manifold-init -->
+    <script
+      async
+      type="module"
+      src="https://js.cdn.manifold.co/@manifoldco/manifold-init/dist/manifold-init/manifold-init.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://js.cdn.manifold.co/@manifoldco/manifold-init/dist/manifold-init/manifold-init.js"
+    ></script>
+
+    <script type="module" src="/build/manifold-subscription.esm.js"></script>
+    <script nomodule src="/build/manifold-subscription.js"></script>
+  </head>
+  <body>
+    <manifold-init client-id="123"></manifold-init>
+    <manifold-subscription-create plan-id="2350hd8b2fe5a5vzj21xzuf558vku">
+      <manifold-plan-feature
+        name="my-feature"
+        type="number"
+        label="My Feature"
+        unit="GB"
+        value="1200"
+      ></manifold-plan-feature>
+      <manifold-plan-feature
+        name="my-other-feature"
+        type="boolean"
+        label="My Other Feature"
+        value="true"
+      ></manifold-plan-feature>
+    </manifold-subscription-create>
+  </body>
+</html>
