@@ -12,6 +12,13 @@ manifold-subscription-create {
   & * {
     all: unset;
   }
+
+  & .Manifold__Button {
+    grid-column: 1 / -1;
+    color: mercury.$color-white;
+    background-image: mercury.$gradient-blue;
+    border-color: transparent;
+  }
 }
 
 .ManifoldSubscriptionCreate {
@@ -55,17 +62,8 @@ manifold-subscription-create {
     }
   }
 
-  &__CardField,
-  &__Button {
+  &__CardField {
     grid-column: 1 / -1;
-  }
-
-  &__Button {
-    padding: 0.75em;
-    color: mercury.$color-white;
-    text-align: center;
-    background-image: mercury.$gradient-blue;
-    border-radius: 0.25em;
   }
 }
 

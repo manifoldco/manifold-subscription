@@ -147,7 +147,7 @@ export class ManifoldSubscriptionCreate {
           <span class="ManifoldSubscriptionCreate__Field__Label">CVC</span>
           <div ref={el => (this.cvcPlaceholder = el)} />
         </label>
-        <button class="ManifoldSubscriptionCreate__Button" type="submit">
+        <button class="Manifold__Button" type="submit">
           Subscribe with Card
         </button>
         <div ref={el => (this.paymentRequestButtonPlaceholder = el)} />
