@@ -39,6 +39,10 @@ export class ManifoldSubscriptionCreate {
   /**
    * Plan ID for the new subscription
    */
+  @Prop() heading?: string = 'Purchase Subscription';
+  /**
+   * Plan ID for the new subscription
+   */
   @Prop() planId: string;
   @Watch('planId') async updatePlan(planId: string) {
     this.loading = true;
@@ -128,6 +132,7 @@ export class ManifoldSubscriptionCreate {
     }
 
     return [
+      <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>,
       <PlanCard {...this.data.plan} />,
       <form class="ManifoldSubscriptionCreate__Form">
         <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__CardField">
