@@ -28,9 +28,12 @@
     "@graphql-codegen/typescript-operations": "^1.13.1",
     "@manifoldco/eslint-plugin-stencil": "^0.4.1",
     "@manifoldco/manifold-init-types": "^0.3.0",
+    "@manifoldco/mercury": "0.1.0-beta.1",
     "@rollup/plugin-replace": "^2.3.1",
     "@stencil/core": "^1.10.1",
     "@stencil/postcss": "^1.0.1",
+    "@stencil/sass": "^1.1.1",
+    "cssnano": "^4.1.10",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
@@ -41,13 +44,19 @@
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.19.1",
     "rollup-pluginutils": "^2.8.2",
-    "stylelint": "^13.2.0",
+    "stylelint": "^13.2.1",
     "stylelint-config-prettier": "^8.0.1",
+    "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-standard": "^19.0.0",
-    "stylelint-order": "^4.0.0"
+    "stylelint-config-standard-scss": "^1.1.0",
+    "stylelint-order": "^4.0.0",
+    "stylelint-scss": "^3.16.0"
   },
   "peerDependencies": {
     "@manifoldco/manifold-init": "*"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@stripe/stripe-js": "^1.2.0"
+  }
 }

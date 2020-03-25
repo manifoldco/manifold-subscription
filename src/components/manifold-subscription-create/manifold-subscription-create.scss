@@ -1,0 +1,67 @@
+@use "node_modules/@manifoldco/mercury";
+
+manifold-subscription-create {
+  all: unset;
+  display: grid;
+  gap: 1em;
+  box-sizing: border-box;
+  color: mercury.$color-grayDarker;
+  font-size: 1em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.ManifoldSubscriptionCreate {
+  &__PlanCard {
+    display: grid;
+    gap: 0.5em;
+    padding: 1em;
+    border: 1px solid mercury.$color-blue;
+    border-radius: 0.5em;
+
+    &__Cost {
+      font-weight: 600;
+      font-size: 0.9em;
+
+      &__Suffix {
+        color: mercury.$color-gray;
+      }
+    }
+  }
+
+  &__Form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+  }
+
+  &__Field {
+    display: grid;
+    gap: 0.25em;
+
+    &__Label {
+      color: mercury.$color-gray;
+      font-weight: 600;
+      font-size: 0.8em;
+      text-transform: uppercase;
+    }
+  }
+
+  &__CardField,
+  &__Button {
+    grid-column: 1 / -1;
+  }
+}
+
+.StripeElement {
+  padding: 0.5em 0.75em;
+  border: 1px solid mercury.$color-grayLight;
+  border-radius: 0.25em;
+}
+
+.StripeElement--focus {
+  border-color: mercury.$color-gray;
+}
+
+.StripeElement--invalid {
+  border-color: mercury.$color-red;
+}
