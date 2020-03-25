@@ -1,26 +1,49 @@
-import { Component, Element, Prop, h, Watch } from '@stencil/core';
+import { Component, Element, Prop, h, Watch, State } from '@stencil/core';
+import {
+  loadStripe,
+  Stripe,
+  StripeCardNumberElement,
+  StripeCardExpiryElement,
+  StripeCardCvcElement,
+  StripePaymentRequestButtonElement,
+} from '@stripe/stripe-js';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import query from './Plan.graphql';
 import { PlanQuery, PlanQueryVariables } from '../../types/graphql';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
+import PlanCard from './components/PlanCard';
 
 @Component({
   tag: 'manifold-subscription-create',
-  styleUrl: 'manifold-subscription-create.css',
-  shadow: true,
+  styleUrl: 'manifold-subscription-create.scss',
 })
 export class ManifoldSubscriptionCreate {
   @Element() el: HTMLElement;
+
+  cardPlaceholder?: HTMLDivElement;
+  expiryPlaceholder?: HTMLDivElement;
+  cvcPlaceholder?: HTMLDivElement;
+  paymentRequestButtonPlaceholder?: HTMLDivElement;
+
+  stripe: Stripe | null;
+  @State() card: StripeCardNumberElement;
+  @State() expiry: StripeCardExpiryElement;
+  @State() cvc: StripeCardCvcElement;
+  @State() paymentRequestButton: StripePaymentRequestButtonElement;
+
   @Prop({ mutable: true }) connection: Connection;
+  @Prop({ mutable: true }) loading?: boolean = false;
+  @Prop({ mutable: true }) errors?: GraphqlError[];
+  @Prop({ mutable: true }) data?: PlanQuery;
+
+  /**
+   * Plan ID for the new subscription
+   */
+  @Prop() heading?: string = 'Purchase Subscription';
   /**
    * Plan ID for the new subscription
    */
   @Prop() planId: string;
-
-  @Prop({ mutable: true }) loading?: boolean = false;
-  @Prop({ mutable: true }) errors?: GraphqlError[];
-
-  @Prop({ mutable: true }) data?: PlanQuery;
   @Watch('planId') async updatePlan(planId: string) {
     this.loading = true;
 
@@ -40,6 +63,35 @@ export class ManifoldSubscriptionCreate {
     this.loading = false;
   }
 
+  @Watch('data')
+  async initializeStripeElements(data?: PlanQuery) {
+    this.stripe = await loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+    if (!this.stripe || !data) {
+      return;
+    }
+
+    const elements = this.stripe.elements();
+
+    this.card = elements.create('cardNumber');
+    this.expiry = elements.create('cardExpiry');
+    this.cvc = elements.create('cardCvc');
+
+    // Payments API
+    const paymentRequest = this.stripe.paymentRequest({
+      country: 'US',
+      currency: 'usd',
+      total: {
+        label: data.plan.displayName,
+        amount: data.plan.cost,
+      },
+    });
+    const canMakePayment = await paymentRequest.canMakePayment();
+    if (canMakePayment) {
+      this.paymentRequestButton = elements.create('paymentRequestButton', {
+        paymentRequest,
+      });
+    }
+  }
   async componentWillLoad() {
     await customElements.whenDefined('manifold-init');
     const core = document.querySelector('manifold-init') as HTMLManifoldInitElement;
@@ -52,37 +104,54 @@ export class ManifoldSubscriptionCreate {
     this.updatePlan(this.planId);
   }
 
+  componentDidRender() {
+    if (this.card && this.cardPlaceholder) {
+      this.card.mount(this.cardPlaceholder);
+    }
+
+    if (this.expiry && this.expiryPlaceholder) {
+      this.expiry.mount(this.expiryPlaceholder);
+    }
+
+    if (this.cvc && this.cvcPlaceholder) {
+      this.cvc.mount(this.cvcPlaceholder);
+    }
+
+    if (this.paymentRequestButton && this.paymentRequestButtonPlaceholder) {
+      this.paymentRequestButton.mount(this.paymentRequestButtonPlaceholder);
+    }
+  }
+
   render() {
     if (this.loading) {
       return <div>Loading</div>;
     }
 
-    return (
-      <div>
-        <pre>
-          <strong>Component:</strong> manifold-subscription-create
-          <br />
-          <hr />
-          <strong>Attributes:</strong>
-          <dl>
-            <dt>plan-id</dt>
-            <dd>{this.planId}</dd>
-          </dl>
-          <br />
-          <hr />
-          <strong>Query Data:</strong>
-          <br />
-          {JSON.stringify(this.data?.plan, null, 2)}
-          {this.errors && (
-            <div>
-              <hr />
-              <strong>Errors:</strong>
-              <br />
-              <pre>{JSON.stringify(this.errors, null, 2)}</pre>
-            </div>
-          )}
-        </pre>
-      </div>
-    );
+    if (!this.data) {
+      return 'Error';
+    }
+
+    return [
+      <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>,
+      <PlanCard {...this.data.plan} />,
+      <form class="ManifoldSubscriptionCreate__Form">
+        <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__CardField">
+          <span class="ManifoldSubscriptionCreate__Field__Label">Card</span>
+          <div ref={el => (this.cardPlaceholder = el)} />
+        </label>
+        <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__ExpiryField">
+          <span class="ManifoldSubscriptionCreate__Field__Label">Expiry</span>
+          <div ref={el => (this.expiryPlaceholder = el)} />
+        </label>
+        <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__CvcField">
+          <span class="ManifoldSubscriptionCreate__Field__Label">CVC</span>
+          <div ref={el => (this.cvcPlaceholder = el)} />
+        </label>
+        <button class="ManifoldSubscriptionCreate__Button" type="submit">
+          Subscribe with Card
+        </button>
+        <div ref={el => (this.paymentRequestButtonPlaceholder = el)} />
+      </form>,
+    ];
   }
 }

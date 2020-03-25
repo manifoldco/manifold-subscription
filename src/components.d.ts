@@ -13,6 +13,10 @@ export namespace Components {
         "connection": Connection;
         "data"?: PlanQuery;
         "errors"?: GraphqlError[];
+        /**
+          * Plan ID for the new subscription
+         */
+        "heading"?: string;
         "loading"?: boolean;
         /**
           * Plan ID for the new subscription
@@ -36,6 +40,10 @@ declare namespace LocalJSX {
         "connection"?: Connection;
         "data"?: PlanQuery;
         "errors"?: GraphqlError[];
+        /**
+          * Plan ID for the new subscription
+         */
+        "heading"?: string;
         "loading"?: boolean;
         /**
           * Plan ID for the new subscription
