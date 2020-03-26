@@ -15,9 +15,8 @@ import Message from './components/Message';
 export class ManifoldSubscriptionCreate {
   @Element() el: HTMLElement;
 
-  cardPlaceholder?: HTMLDivElement;
-
   stripe: Stripe | null;
+  cardPlaceholder?: HTMLDivElement;
   @State() card: StripeCardElement;
 
   @Prop({ mutable: true }) connection: Connection;
@@ -25,21 +24,13 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) errors?: GraphqlError[];
   @Prop({ mutable: true }) data?: PlanQuery;
   @Prop({ mutable: true }) setupIntentStatus?: SetupIntent.Status;
-  @Prop({ mutable: true }) setupIntentError?: string = 'Oh no! An error happend... :(';
+  @Prop({ mutable: true }) setupIntentError?: string;
   @Prop({ mutable: true }) subscribing?: boolean = false;
 
   /**
    * Component heading text
    */
   @Prop() heading?: string;
-  /**
-   * Name of the subscriber
-   */
-  @Prop() subscriberName?: string;
-  /**
-   * Email of the subscriber
-   */
-  @Prop() subscriberEmail?: string;
   /**
    * Plan ID for the new subscription
    */
@@ -98,6 +89,7 @@ export class ManifoldSubscriptionCreate {
     e.preventDefault();
     if (this.stripe && !this.subscribing) {
       this.subscribing = true;
+
       const { setupIntent, error } = await this.stripe.confirmCardSetup('', {
         payment_method: {
           card: this.card,
