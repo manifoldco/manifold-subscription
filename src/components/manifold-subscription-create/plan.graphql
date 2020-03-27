@@ -3,4 +3,7 @@ query Plan($planId: ID!) {
     displayName
     cost
   }
+  profile {
+    stripeSetupIntentSecret
+  }
 }

@@ -21,10 +21,17 @@
 
     <script type="module" src="/build/manifold-subscription.esm.js"></script>
     <script nomodule src="/build/manifold-subscription.js"></script>
+    <!-- <link
+      rel="stylesheet"
+      href="https://unpkg.com/@manifoldco/mercury@0.1.0-alpha.2/index.min.css"
+    /> -->
   </head>
   <body>
-    <manifold-init client-id="123"></manifold-init>
-    <manifold-subscription-create plan-id="2350hd8b2fe5a5vzj21xzuf558vku">
+    <manifold-init env="stage"></manifold-init>
+    <manifold-subscription-create
+      heading="Purchase Subscription"
+      plan-id="235151h9fczz1wwv6zvxvrgw8x5ve"
+    >
     </manifold-subscription-create>
   </body>
 </html>

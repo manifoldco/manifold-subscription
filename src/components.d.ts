@@ -8,13 +8,14 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
 import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
 import { PlanQuery, } from "./types/graphql";
+import { SetupIntent, } from "@stripe/stripe-js";
 export namespace Components {
     interface ManifoldSubscriptionCreate {
         "connection": Connection;
         "data"?: PlanQuery;
         "errors"?: GraphqlError[];
         /**
-          * Plan ID for the new subscription
+          * Component heading text
          */
         "heading"?: string;
         "loading"?: boolean;
@@ -22,6 +23,17 @@ export namespace Components {
           * Plan ID for the new subscription
          */
         "planId": string;
+        "setupIntentError"?: string;
+        "setupIntentStatus"?: SetupIntent.Status;
+        /**
+          * Email of the subscriber
+         */
+        "subscriberEmail"?: string;
+        /**
+          * Name of the subscriber
+         */
+        "subscriberName"?: string;
+        "subscribing"?: boolean;
     }
 }
 declare global {
@@ -41,7 +53,7 @@ declare namespace LocalJSX {
         "data"?: PlanQuery;
         "errors"?: GraphqlError[];
         /**
-          * Plan ID for the new subscription
+          * Component heading text
          */
         "heading"?: string;
         "loading"?: boolean;
@@ -49,6 +61,17 @@ declare namespace LocalJSX {
           * Plan ID for the new subscription
          */
         "planId"?: string;
+        "setupIntentError"?: string;
+        "setupIntentStatus"?: SetupIntent.Status;
+        /**
+          * Email of the subscriber
+         */
+        "subscriberEmail"?: string;
+        /**
+          * Name of the subscriber
+         */
+        "subscriberName"?: string;
+        "subscribing"?: boolean;
     }
     interface IntrinsicElements {
         "manifold-subscription-create": ManifoldSubscriptionCreate;
