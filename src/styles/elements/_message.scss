@@ -1,0 +1,21 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+@mixin Message($color) {
+  color: $color;
+  background-color: rgba($color, 0.1);
+  border: 1px solid $color;
+}
+
+.#{$name}__Message {
+  display: block;
+  padding: 0.5em;
+  border-radius: 3px;
+
+  &--success {
+    @include Message(mercury.$color-green);
+  }
+  &--error {
+    @include Message(mercury.$color-red);
+  }
+}

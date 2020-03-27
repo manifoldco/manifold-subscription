@@ -127,7 +127,7 @@ export class ManifoldSubscriptionCreate {
             type="submit"
             disabled={this.subscribing}
           >
-            Subscribe with Card
+            {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
           </button>
           <p class="ManifoldSubscriptionCreate__HelpText">
             We charge for plan cost + usage at end of month

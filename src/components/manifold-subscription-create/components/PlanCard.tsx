@@ -13,13 +13,13 @@ const defaultPlan: PlanCardProps['plan'] = {
 };
 
 const PlanCard: FunctionalComponent<PlanCardProps> = ({ isLoading, plan = defaultPlan }) => (
-  <div class="ManifoldSubscriptionCreate__PlanCard">
-    <div class="ManifoldSubscriptionCreate__PlanCard__Name" data-is-loading={isLoading}>
+  <div class="ManifoldSubscriptionCreate__Card">
+    <div class="ManifoldSubscriptionCreate__PlanName" data-is-loading={isLoading}>
       {plan.displayName}
     </div>
-    <span class="ManifoldSubscriptionCreate__PlanCard__Cost" data-is-loading={isLoading}>
+    <span class="ManifoldSubscriptionCreate__Cost " data-is-loading={isLoading}>
       {$(plan.cost)}
-      <span class="ManifoldSubscriptionCreate__PlanCard__Cost__Suffix">/mo</span>
+      <span class="ManifoldSubscriptionCreate__Cost__Suffix">/mo</span>
     </span>
   </div>
 );

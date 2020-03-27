@@ -1,108 +1,14 @@
+@use "node_modules/@manifoldco/mercury";
 $name: 'ManifoldSubscriptionCreate';
 
+@use 'elements/subscription-create' with ($name: $name);
 @use 'elements/skeleton' with ($name: $name);
+@use 'elements/card' with ($name: $name);
+@use 'elements/cost' with ($name: $name);
+@use 'elements/field' with ($name: $name);
+@use 'elements/button' with ($name: $name);
+@use 'elements/message' with ($name: $name);
 
-@use "node_modules/@manifoldco/mercury";
-
-.#{$name} {
+manifold-subscription-create * {
   all: unset;
-  display: grid;
-  gap: 1em;
-  box-sizing: border-box;
-  color: mercury.$color-grayDarker;
-  font-size: 1em;
-  font-family: Arial, Helvetica, sans-serif;
-
-  * {
-    all: unset;
-  }
-
-  &__Heading {
-    font-size: 1.5em;
-    text-align: center;
-  }
-
-  &__PlanCard {
-    display: grid;
-    gap: 0.5em;
-    justify-items: start;
-    padding: 1em;
-    border: 1px solid mercury.$color-blue;
-    border-radius: 0.4em;
-
-    &__Cost {
-      font-weight: 600;
-      font-size: 0.9em;
-
-      &__Suffix {
-        color: mercury.$color-gray;
-      }
-    }
-  }
-
-  &__Form {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1em;
-  }
-
-  &__Field {
-    display: grid;
-    gap: 0.25em;
-
-    &__Label {
-      color: mercury.$color-grayDark;
-      font-weight: 500;
-      font-size: 0.8em;
-      text-transform: uppercase;
-    }
-  }
-
-  &__Button {
-    @include mercury.Manifold__Button;
-
-    color: mercury.$color-white;
-    text-align: center;
-    background-image: mercury.$gradient-blue;
-    border-color: transparent;
-  }
-
-  &__HelpText {
-    color: mercury.$color-gray;
-    font-size: 0.8em;
-    text-align: center;
-  }
-}
-
-@mixin Message($color) {
-  color: $color;
-  background-color: rgba($color, 0.1);
-  border: 1px solid $color;
-}
-
-.#{$name}__Message {
-  display: block;
-  padding: 0.5em;
-  border-radius: 3px;
-
-  &--success {
-    @include Message(mercury.$color-green);
-  }
-  &--error {
-    @include Message(mercury.$color-red);
-  }
-}
-
-.StripeElement {
-  padding: 0.75em;
-  border: 1px solid mercury.$color-grayLight;
-  border-radius: 0.2em;
-}
-
-.StripeElement--focus {
-  border-color: mercury.$color-gray;
-}
-
-.StripeElement--invalid {
-  border-color: mercury.$color-red;
 }
