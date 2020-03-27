@@ -1,6 +1,10 @@
+$name: 'ManifoldSubscriptionCreate';
+
+@use 'elements/skeleton' with ($name: $name);
+
 @use "node_modules/@manifoldco/mercury";
 
-manifold-subscription-create {
+.#{$name} {
   all: unset;
   display: grid;
   gap: 1em;
@@ -9,12 +13,10 @@ manifold-subscription-create {
   font-size: 1em;
   font-family: Arial, Helvetica, sans-serif;
 
-  & * {
+  * {
     all: unset;
   }
-}
 
-.ManifoldSubscriptionCreate {
   &__Heading {
     font-size: 1.5em;
     text-align: center;
@@ -50,7 +52,7 @@ manifold-subscription-create {
 
     &__Label {
       color: mercury.$color-grayDark;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.8em;
       text-transform: uppercase;
     }
@@ -78,7 +80,7 @@ manifold-subscription-create {
   border: 1px solid $color;
 }
 
-.ManifoldSubscriptionCreate__Message {
+.#{$name}__Message {
   display: block;
   padding: 0.5em;
   border-radius: 3px;
@@ -92,7 +94,7 @@ manifold-subscription-create {
 }
 
 .StripeElement {
-  padding: 0.5em 0.75em;
+  padding: 0.75em;
   border: 1px solid mercury.$color-grayLight;
   border-radius: 0.2em;
 }
@@ -103,71 +105,4 @@ manifold-subscription-create {
 
 .StripeElement--invalid {
   border-color: mercury.$color-red;
-}
-
-// ----------
-//  Skeleton
-// ----------
-
-@keyframes shimmer {
-  to {
-    transform: translateX(100%); // line width shouldn’t be more than this
-  }
-}
-
-@mixin ManifoldSubscriptionCreate__Skeleton {
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-  color: transparent;
-  // line-height: 1;
-  border-radius: 2px;
-
-  & * {
-    color: inherit;
-  }
-
-  &::before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-image: linear-gradient(
-      hsla(0, 0%, 0%, 0.1),
-      hsla(0, 0%, 0%, 0.1) 1em,
-      hsla(0, 0%, 0%, 0) 1em,
-      hsla(0, 0%, 0%, 0) 1.4em
-    );
-    background-repeat: repeat-y;
-    background-size: 100% 1.4em;
-    content: '';
-    pointer-events: none;
-  }
-
-  &::after {
-    position: absolute;
-    top: 0;
-    right: 100%;
-    width: 60em; // derived from font size
-    height: 100%;
-    background-image: linear-gradient(
-      60deg,
-      transparent 50%,
-      hsla(0, 0%, 100%, 0.5),
-      transparent 60%
-    );
-    background-repeat: no-repeat;
-    opacity: 0.4;
-    animation-name: shimmer;
-    animation-duration: 1.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    content: '';
-    pointer-events: none;
-  }
-}
-
-[data-is-loading] {
-  @include ManifoldSubscriptionCreate__Skeleton();
 }

@@ -36,6 +36,7 @@ function gql(opts: Options = {}) {
 
 export const config: Config = {
   namespace: 'manifold-subscription',
+  globalStyle: 'src/styles/index.scss',
   outputTargets: [
     {
       type: 'dist',

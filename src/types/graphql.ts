@@ -826,6 +826,7 @@ export type Profile = {
    __typename?: 'Profile';
   id: Scalars['ID'];
   subject: Scalars['String'];
+  stripeSetupIntentSecret: Maybe<Scalars['String']>;
   platform: Platform;
   invoicePreview: Maybe<Invoice>;
   invoices: Maybe<InvoiceConnection>;
@@ -1194,5 +1195,8 @@ export type PlanQuery = (
   & { plan: Maybe<(
     { __typename?: 'Plan' }
     & Pick<Plan, 'displayName' | 'cost'>
-  )> }
+  )>, profile: (
+    { __typename?: 'Profile' }
+    & Pick<Profile, 'stripeSetupIntentSecret'>
+  ) }
 );

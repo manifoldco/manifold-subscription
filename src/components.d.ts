@@ -25,14 +25,6 @@ export namespace Components {
         "planId": string;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
-        /**
-          * Email of the subscriber
-         */
-        "subscriberEmail"?: string;
-        /**
-          * Name of the subscriber
-         */
-        "subscriberName"?: string;
         "subscribing"?: boolean;
     }
 }
@@ -63,14 +55,6 @@ declare namespace LocalJSX {
         "planId"?: string;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
-        /**
-          * Email of the subscriber
-         */
-        "subscriberEmail"?: string;
-        /**
-          * Name of the subscriber
-         */
-        "subscriberName"?: string;
         "subscribing"?: boolean;
     }
     interface IntrinsicElements {
