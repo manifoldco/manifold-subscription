@@ -10,8 +10,12 @@ import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlF
 import { PlanQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
 export namespace Components {
+    interface ManifoldConfiguredFeature {
+        "label"?: string;
+        "value"?: string;
+    }
     interface ManifoldSubscriptionCreate {
-        "configuredFeatures"?: {
+        "configuredFeatures": {
             label: string;
             value: string;
         }[];
@@ -41,6 +45,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLManifoldConfiguredFeatureElement extends Components.ManifoldConfiguredFeature, HTMLStencilElement {
+    }
+    var HTMLManifoldConfiguredFeatureElement: {
+        prototype: HTMLManifoldConfiguredFeatureElement;
+        new (): HTMLManifoldConfiguredFeatureElement;
+    };
     interface HTMLManifoldSubscriptionCreateElement extends Components.ManifoldSubscriptionCreate, HTMLStencilElement {
     }
     var HTMLManifoldSubscriptionCreateElement: {
@@ -48,10 +58,16 @@ declare global {
         new (): HTMLManifoldSubscriptionCreateElement;
     };
     interface HTMLElementTagNameMap {
+        "manifold-configured-feature": HTMLManifoldConfiguredFeatureElement;
         "manifold-subscription-create": HTMLManifoldSubscriptionCreateElement;
     }
 }
 declare namespace LocalJSX {
+    interface ManifoldConfiguredFeature {
+        "label"?: string;
+        "onManifold-configured-feature-change"?: (event: CustomEvent<any>) => void;
+        "value"?: string;
+    }
     interface ManifoldSubscriptionCreate {
         "configuredFeatures"?: {
             label: string;
@@ -82,6 +98,7 @@ declare namespace LocalJSX {
         "subscribing"?: boolean;
     }
     interface IntrinsicElements {
+        "manifold-configured-feature": ManifoldConfiguredFeature;
         "manifold-subscription-create": ManifoldSubscriptionCreate;
     }
 }
@@ -89,6 +106,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "manifold-configured-feature": LocalJSX.ManifoldConfiguredFeature & JSXBase.HTMLAttributes<HTMLManifoldConfiguredFeatureElement>;
             "manifold-subscription-create": LocalJSX.ManifoldSubscriptionCreate & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionCreateElement>;
         }
     }

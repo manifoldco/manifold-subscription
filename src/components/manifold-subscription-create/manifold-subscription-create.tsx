@@ -1,4 +1,4 @@
-import { Component, Element, Prop, h, Watch, State } from '@stencil/core';
+import { Component, Element, Prop, h, Watch, State, Listen } from '@stencil/core';
 import { loadStripe, Stripe, StripeCardElement, SetupIntent } from '@stripe/stripe-js';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import query from './Plan.graphql';
@@ -34,7 +34,7 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) setupIntentError?: string;
   @Prop({ mutable: true }) subscribing?: boolean = false;
   // TODO watch configuredFeatures and get cost
-  @Prop({ mutable: true }) configuredFeatures?: { label: string; value: string }[];
+  @Prop({ mutable: true }) configuredFeatures: { label: string; value: string }[] = [];
 
   /**
    * Component heading text
@@ -86,18 +86,19 @@ export class ManifoldSubscriptionCreate {
     });
 
     this.updatePlan(this.planId);
-    this.updateFeaturesFromChildren();
   }
 
-  // TODO create helper web component for configurable features
-  updateFeaturesFromChildren() {
-    const featureElements = Array.from(this.el.getElementsByTagName('manifold-configured-feature'));
-    const featureData = featureElements.map(element => ({
-      label: element.getAttribute('label') || '',
-      value: element.getAttribute('value') || '',
-    }));
+  @Listen('manifold-configured-feature-change')
+  updateConfiguredFeature(event: CustomEvent) {
+    const currentFeatureIndex = this.configuredFeatures.findIndex(
+      cf => cf.label === event.detail.label
+    );
 
-    this.configuredFeatures = featureData;
+    if (currentFeatureIndex === -1) {
+      this.configuredFeatures = [...this.configuredFeatures, event.detail];
+    } else {
+      this.configuredFeatures[currentFeatureIndex] = event.detail;
+    }
   }
 
   async initializeStripeElements() {
