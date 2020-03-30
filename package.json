@@ -1,6 +1,6 @@
 {
   "name": "manifold-subscription",
-  "version": "0.0.1",
+  "version": "0.0.0-next.0",
   "description": "Manifold Subscription Web Components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -26,7 +26,8 @@
     "lint:css": "stylelint 'src/**/*.scss'",
     "lint:js": "eslint --ext .js,.ts,.tsx src",
     "typecheck": "npm run generate:gql && tsc --noEmit",
-    "version-from-git": "node scripts/version-from-git"
+    "version-from-git": "node scripts/version-from-git",
+    "prebuild": "npm run version-from-git"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.1",
@@ -54,7 +55,6 @@
     "happo-plugin-typescript": "^1.0.0",
     "happo.io": "^5.1.5",
     "postcss-preset-env": "^6.7.0",
-    "prebuild": "npm run version-from-git",
     "prettier": "^1.19.1",
     "rollup-pluginutils": "^2.8.2",
     "stylelint": "^13.2.1",
