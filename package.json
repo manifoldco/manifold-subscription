@@ -20,7 +20,11 @@
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
-    "generate:gql": "graphql-codegen --config codegen.yml"
+    "generate:gql": "graphql-codegen --config codegen.yml",
+    "happo": "npm run build && happo run",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:css": "stylelint 'src/**/*.css'",
+    "lint:js": "eslint --ext .js,.ts,.tsx src"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.1",
@@ -41,6 +45,8 @@
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.2",
     "graphql": "^14.6.0",
+    "happo-plugin-typescript": "^1.0.0",
+    "happo.io": "^5.1.5",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.19.1",
     "rollup-pluginutils": "^2.8.2",
