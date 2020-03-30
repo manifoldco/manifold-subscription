@@ -1,0 +1,12 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__Card {
+  display: grid;
+  gap: 0.5em;
+  justify-items: start;
+  padding: 1em;
+  border: 1px solid mercury.$color-blue;
+  border-radius: 0.4em;
+  box-shadow: mercury.$shadow-near;
+}

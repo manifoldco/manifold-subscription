@@ -1,0 +1,11 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__Button {
+  @include mercury.Manifold__Button;
+
+  color: mercury.$color-white;
+  text-align: center;
+  background-image: mercury.$gradient-blue;
+  border-color: transparent;
+}

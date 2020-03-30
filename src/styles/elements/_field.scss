@@ -1,0 +1,14 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__Field {
+  display: grid;
+  gap: 0.25em;
+
+  &__Label {
+    color: mercury.$color-grayDark;
+    font-weight: 500;
+    font-size: 0.8em;
+    text-transform: uppercase;
+  }
+}

@@ -1,0 +1,11 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__Cost {
+  font-weight: 600;
+  font-size: 0.9em;
+
+  &__Suffix {
+    color: mercury.$color-gray;
+  }
+}
