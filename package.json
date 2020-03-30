@@ -27,6 +27,7 @@
     "lint:js": "eslint --ext .js,.ts,.tsx src",
     "typecheck": "npm run generate:gql && tsc --noEmit",
     "version-from-git": "node scripts/version-from-git",
+    "clean-package-json": "node scripts/clean-package-json",
     "prebuild": "npm run version-from-git"
   },
   "devDependencies": {
@@ -43,7 +44,6 @@
     "@stencil/sass": "^1.1.1",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
-    "clean-package-json": "node scripts/clean-package-json",
     "cssnano": "^4.1.10",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
