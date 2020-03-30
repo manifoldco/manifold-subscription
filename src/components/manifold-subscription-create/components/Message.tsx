@@ -1,4 +1,5 @@
 import { h, FunctionalComponent } from '@stencil/core';
+
 interface MessageProps {
   type?: 'success' | 'error';
 }

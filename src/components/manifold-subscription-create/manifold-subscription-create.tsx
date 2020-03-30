@@ -1,11 +1,11 @@
 import { Component, Element, Prop, h, Watch, State } from '@stencil/core';
 import { loadStripe, Stripe, StripeCardElement, SetupIntent } from '@stripe/stripe-js';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
-import query from './Plan.graphql';
-import { PlanQuery, PlanQueryVariables } from '../../types/graphql';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
+import { PlanQuery, PlanQueryVariables } from '../../types/graphql';
 import PlanCard from './components/PlanCard';
 import Message from './components/Message';
+import query from './plan.graphql';
 
 // TODO add all these to the component API
 //   $productId: ID!
@@ -26,7 +26,7 @@ export class ManifoldSubscriptionCreate {
   cardPlaceholder?: HTMLDivElement;
   @State() card: StripeCardElement;
 
-  @Prop({ mutable: true }) connection: Connection;
+  @Prop({ mutable: true }) connection?: Connection;
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
   @Prop({ mutable: true }) data?: PlanQuery;
@@ -56,6 +56,10 @@ export class ManifoldSubscriptionCreate {
   @Watch('planId') async updatePlan(planId?: string) {
     if (!planId) {
       throw new Error('Missing property `planId` on `manifold-subscription-create`');
+    }
+
+    if (!this.connection) {
+      throw new Error('Missing property `connection` on `manifold-subscription-create`.');
     }
 
     this.loading = true;
@@ -141,6 +145,7 @@ export class ManifoldSubscriptionCreate {
         this.setupIntentStatus = setupIntent?.status;
         if (setupIntent?.status === 'succeeded') {
           // TODO Send setupIntent.payment_method to your server to save the card to a Customer
+          // eslint-disable-next-line no-console
           console.log(this.configuredFeatures);
         }
       }
@@ -155,7 +160,13 @@ export class ManifoldSubscriptionCreate {
         <form class="ManifoldSubscriptionCreate__Form" method="post" onSubmit={this.subscribe}>
           <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__CardField">
             <span class="ManifoldSubscriptionCreate__Field__Label">Credit Card</span>
-            <div class="StripeElement" ref={el => (this.cardPlaceholder = el)} data-is-loading>
+            <div
+              class="StripeElement"
+              ref={el => {
+                this.cardPlaceholder = el;
+              }}
+              data-is-loading
+            >
               Credit Card Field
             </div>
           </label>
