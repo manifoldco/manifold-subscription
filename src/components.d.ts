@@ -15,7 +15,7 @@ export namespace Components {
         "value"?: string;
     }
     interface ManifoldSubscriptionCreate {
-        "configuredFeatures"?: {
+        "configuredFeatures": {
             label: string;
             value: string;
         }[];
@@ -65,6 +65,7 @@ declare global {
 declare namespace LocalJSX {
     interface ManifoldConfiguredFeature {
         "label"?: string;
+        "onManifold-configured-feature-change"?: (event: CustomEvent<any>) => void;
         "value"?: string;
     }
     interface ManifoldSubscriptionCreate {
