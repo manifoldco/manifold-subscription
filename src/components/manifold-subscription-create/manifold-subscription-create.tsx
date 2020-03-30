@@ -7,6 +7,15 @@ import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFe
 import PlanCard from './components/PlanCard';
 import Message from './components/Message';
 
+// TODO add all these to the component API
+//   $productId: ID!
+//   $planId: ID! (done)
+//   $regionId: ID!
+//   $label: String
+//   $displayName: String
+//   $configuredFeatures: [ConfiguredFeatureInput!] (in progress)
+//   $ownerId: ID!
+
 @Component({
   tag: 'manifold-subscription-create',
 })
@@ -24,6 +33,8 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) setupIntentStatus?: SetupIntent.Status;
   @Prop({ mutable: true }) setupIntentError?: string;
   @Prop({ mutable: true }) subscribing?: boolean = false;
+  // TODO watch configuredFeatures and get cost
+  @Prop({ mutable: true }) configuredFeatures?: { label: string; value: string }[];
 
   /**
    * Component heading text
@@ -32,8 +43,21 @@ export class ManifoldSubscriptionCreate {
   /**
    * Plan ID for the new subscription
    */
-  @Prop() planId: string;
-  @Watch('planId') async updatePlan(planId: string) {
+  @Prop() planId?: string;
+  /**
+   * (Optional) Name given to the new subscription
+   */
+  @Prop() displayName?: string;
+  /**
+   * (Optional) Label given to the new subscription
+   */
+  @Prop() label?: string;
+
+  @Watch('planId') async updatePlan(planId?: string) {
+    if (!planId) {
+      throw new Error('Missing property `planId` on `manifold-subscription-create`');
+    }
+
     this.loading = true;
 
     const variables: PlanQueryVariables = { planId };
@@ -62,6 +86,18 @@ export class ManifoldSubscriptionCreate {
     });
 
     this.updatePlan(this.planId);
+    this.updateFeaturesFromChildren();
+  }
+
+  // TODO create helper web component for configurable features
+  updateFeaturesFromChildren() {
+    const featureElements = Array.from(this.el.getElementsByTagName('manifold-configured-feature'));
+    const featureData = featureElements.map(element => ({
+      label: element.getAttribute('label') || '',
+      value: element.getAttribute('value') || '',
+    }));
+
+    this.configuredFeatures = featureData;
   }
 
   async initializeStripeElements() {
@@ -105,6 +141,7 @@ export class ManifoldSubscriptionCreate {
         this.setupIntentStatus = setupIntent?.status;
         if (setupIntent?.status === 'succeeded') {
           // TODO Send setupIntent.payment_method to your server to save the card to a Customer
+          console.log(this.configuredFeatures);
         }
       }
     }

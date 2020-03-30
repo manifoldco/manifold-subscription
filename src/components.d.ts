@@ -11,18 +11,30 @@ import { PlanQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
 export namespace Components {
     interface ManifoldSubscriptionCreate {
+        "configuredFeatures"?: {
+            label: string;
+            value: string;
+        }[];
         "connection": Connection;
         "data"?: PlanQuery;
+        /**
+          * (Optional) Name given to the new subscription
+         */
+        "displayName"?: string;
         "errors"?: GraphqlError[];
         /**
           * Component heading text
          */
         "heading"?: string;
+        /**
+          * (Optional) Label given to the new subscription
+         */
+        "label"?: string;
         "loading"?: boolean;
         /**
           * Plan ID for the new subscription
          */
-        "planId": string;
+        "planId"?: string;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
         "subscribing"?: boolean;
@@ -41,13 +53,25 @@ declare global {
 }
 declare namespace LocalJSX {
     interface ManifoldSubscriptionCreate {
+        "configuredFeatures"?: {
+            label: string;
+            value: string;
+        }[];
         "connection"?: Connection;
         "data"?: PlanQuery;
+        /**
+          * (Optional) Name given to the new subscription
+         */
+        "displayName"?: string;
         "errors"?: GraphqlError[];
         /**
           * Component heading text
          */
         "heading"?: string;
+        /**
+          * (Optional) Label given to the new subscription
+         */
+        "label"?: string;
         "loading"?: boolean;
         /**
           * Plan ID for the new subscription
