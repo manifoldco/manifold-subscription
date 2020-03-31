@@ -14,5 +14,6 @@ module.exports = {
   type: 'plain',
   prerender: false,
   setupScript: path.resolve(__dirname, 'happo.setup.js'),
+  stylesheets: [path.join(__dirname, 'dist/manifold-subscription/manifold-subscription.css')],
   plugins: [happoPluginTypeScript()],
 };
