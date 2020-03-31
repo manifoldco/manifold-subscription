@@ -1,0 +1,48 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  npm:
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [13.x]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      # Make sure types are valid
+      - run: npm install
+      - run: npm run typecheck
+      - run: make package
+      - run: 'echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc'
+      - run: 'npm publish ./pkg --tag latest'
+  cdn:
+    env:
+      BUCKET: manifold-js
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      PACKAGE: '@manifoldco/manifold-subscription-create' # package name
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          export_default_credentials: true
+      # Make sure types are valid
+      - run: npm install
+      - run: npm run typecheck
+      - run: make package
+      # Copy all files for versioned release (/package@version/)
+      - run:
+          gsutil -m cp -r ${GITHUB_WORKSPACE}/pkg
+          gs://${BUCKET}/${PACKAGE}@${GITHUB_REF#refs/tags/v}
+      # Copy all files for latest stable release, after versioned release was successful (/package/)
+      - run: gsutil -m rm gs://${BUCKET}/${PACKAGE}/** # empty latest release folder
+      - run: gsutil -m cp -r ${GITHUB_WORKSPACE}/pkg gs://${BUCKET}/${PACKAGE}

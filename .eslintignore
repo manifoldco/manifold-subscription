@@ -13,3 +13,4 @@ node_modules/
 $RECYCLE.BIN/
 
 components.d.ts
+src/types/graphql.ts

@@ -19,7 +19,7 @@ export namespace Components {
             label: string;
             value: string;
         }[];
-        "connection": Connection;
+        "connection"?: Connection;
         "data"?: PlanQuery;
         /**
           * (Optional) Name given to the new subscription
