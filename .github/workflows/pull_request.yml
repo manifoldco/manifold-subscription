@@ -54,4 +54,4 @@ jobs:
           node-version: '13.x'
       - run: npm install
       - run: npm run build
-      - run: npm run happo
+      - run: node_modules/.bin/happo-ci
