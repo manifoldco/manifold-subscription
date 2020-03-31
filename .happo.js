@@ -3,7 +3,7 @@ const happoPluginTypeScript = require('happo-plugin-typescript');
 const path = require('path');
 
 module.exports = {
-  project: 'manifoldco/manifold-subscription',
+  project: 'manifoldco/manifold-subscription-create',
   apiKey: process.env.HAPPO_API_KEY,
   apiSecret: process.env.HAPPO_API_SECRET,
   targets: {
@@ -14,6 +14,8 @@ module.exports = {
   type: 'plain',
   prerender: false,
   setupScript: path.resolve(__dirname, 'happo.setup.js'),
-  stylesheets: [path.join(__dirname, 'dist/manifold-subscription/manifold-subscription.css')],
+  stylesheets: [
+    path.join(__dirname, 'dist/manifold-subscription-create/manifold-subscription-create.css'),
+  ],
   plugins: [happoPluginTypeScript()],
 };
