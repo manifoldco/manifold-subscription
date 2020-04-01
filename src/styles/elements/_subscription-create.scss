@@ -36,9 +36,24 @@ $name: '' !default;
   }
 
   &__HelpText {
+    display: block;
     color: mercury.$color-gray;
+    font-weight: normal;
     font-size: 0.8em;
-    text-align: center;
+  }
+
+  &__TextInput {
+    padding: 0.75em;
+    border: 1px solid mercury.$color-grayLight;
+    border-radius: 0.2em;
+
+    &:focus {
+      border-color: mercury.$color-gray;
+    }
+
+    &:invalid {
+      border-color: mercury.$color-red;
+    }
   }
 }
 

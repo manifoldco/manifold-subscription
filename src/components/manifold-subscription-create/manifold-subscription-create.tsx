@@ -2,10 +2,12 @@ import { Component, Element, Prop, h, Watch, State, Listen } from '@stencil/core
 import { loadStripe, Stripe, StripeCardElement, SetupIntent } from '@stripe/stripe-js';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
-import { PlanQuery, PlanQueryVariables } from '../../types/graphql';
+import { PlanQuery, PlanQueryVariables, PlanListQuery } from '../../types/graphql';
+import PlanSelector from './components/PlanSelector';
 import PlanCard from './components/PlanCard';
 import Message from './components/Message';
-import query from './plan.graphql';
+import planQuery from './plan.graphql';
+import planListQuery from './plan-list.graphql';
 
 // TODO add all these to the component API
 //   $productId: ID!
@@ -30,11 +32,15 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
   @Prop({ mutable: true }) data?: PlanQuery;
+  @Prop({ mutable: true }) planListData?: PlanListQuery;
   @Prop({ mutable: true }) setupIntentStatus?: SetupIntent.Status;
   @Prop({ mutable: true }) setupIntentError?: string;
   @Prop({ mutable: true }) subscribing?: boolean = false;
   // TODO watch configuredFeatures and get cost
-  @Prop({ mutable: true }) configuredFeatures: { label: string; value: string }[] = [];
+  @Prop({ mutable: true }) configuredFeatures: {
+    label: string;
+    value: string | number | boolean;
+  }[] = [];
 
   /**
    * Component heading text
@@ -43,7 +49,10 @@ export class ManifoldSubscriptionCreate {
   /**
    * Plan ID for the new subscription
    */
-  @Prop() planId?: string;
+  @Prop({ mutable: true }) planId: string;
+  // TODO watch planId change and get default configured features
+
+  @Prop({ mutable: true }) isEditing: boolean = true;
   /**
    * (Optional) Name given to the new subscription
    */
@@ -66,15 +75,23 @@ export class ManifoldSubscriptionCreate {
 
     const variables: PlanQueryVariables = { planId };
     const { data, errors } = await this.connection.graphqlFetch<PlanQuery>({
-      query,
+      query: planQuery,
       variables,
     });
 
-    if (errors) {
+    const { data: planListData, errors: planListErrors } = await this.connection.graphqlFetch<
+      PlanListQuery
+    >({
+      query: planListQuery,
+      variables: { productLabel: data?.plan.product.label },
+    });
+
+    if (errors || planListErrors) {
       this.errors = errors;
     }
-    if (data) {
+    if (data && planListData) {
       this.data = data;
+      this.planListData = planListData;
     }
 
     this.loading = false;
@@ -153,11 +170,43 @@ export class ManifoldSubscriptionCreate {
     }
   };
 
+  setPlanId = (planId: string) => {
+    this.planId = planId;
+  };
+
+  setConfiguredFeature = (label: string, value: string | number | boolean) => {
+    // Insert new value (this might not be needed if set to default values)
+    const currentFeatureIndex = this.configuredFeatures.findIndex(cf => cf.label === label);
+    if (currentFeatureIndex === -1) {
+      this.configuredFeatures = [...this.configuredFeatures, { label, value }];
+      return;
+    }
+
+    // Update existing value
+    this.configuredFeatures = this.configuredFeatures.reduce(
+      (acc, curr) => (curr.label === label ? [...acc, { label, value }] : [...acc, curr]),
+      []
+    );
+  };
+
   render() {
+    console.log(this.configuredFeatures);
     return (
       <div class="ManifoldSubscriptionCreate">
         {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
-        <PlanCard isLoading={this.loading} plan={this.data?.plan || undefined} />
+        {this.isEditing ? (
+          <PlanSelector
+            planId={this.planId}
+            setPlanId={this.setPlanId}
+            setConfiguredFeature={this.setConfiguredFeature}
+            configuredFeatures={this.configuredFeatures}
+            data={this.planListData}
+          />
+        ) : (
+          <PlanCard isLoading={this.loading} plan={this.data?.plan || undefined}>
+            <button class="ManifoldSubscriptionCreate__ModifyPlanButton">Change Plan</button>
+          </PlanCard>
+        )}
         <form class="ManifoldSubscriptionCreate__Form" method="post" onSubmit={this.subscribe}>
           <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__CardField">
             <span class="ManifoldSubscriptionCreate__Field__Label">Credit Card</span>

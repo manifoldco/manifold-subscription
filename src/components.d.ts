@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
 import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
-import { PlanQuery, } from "./types/graphql";
+import { PlanListQuery, PlanQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
 export namespace Components {
     interface ManifoldConfiguredFeature {
@@ -17,7 +17,7 @@ export namespace Components {
     interface ManifoldSubscriptionCreate {
         "configuredFeatures": {
             label: string;
-            value: string;
+            value: string | number | boolean;
         }[];
         "connection"?: Connection;
         "data"?: PlanQuery;
@@ -30,6 +30,7 @@ export namespace Components {
           * Component heading text
          */
         "heading"?: string;
+        "isEditing": boolean;
         /**
           * (Optional) Label given to the new subscription
          */
@@ -38,7 +39,8 @@ export namespace Components {
         /**
           * Plan ID for the new subscription
          */
-        "planId"?: string;
+        "planId": string;
+        "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
         "subscribing"?: boolean;
@@ -71,7 +73,7 @@ declare namespace LocalJSX {
     interface ManifoldSubscriptionCreate {
         "configuredFeatures"?: {
             label: string;
-            value: string;
+            value: string | number | boolean;
         }[];
         "connection"?: Connection;
         "data"?: PlanQuery;
@@ -84,6 +86,7 @@ declare namespace LocalJSX {
           * Component heading text
          */
         "heading"?: string;
+        "isEditing"?: boolean;
         /**
           * (Optional) Label given to the new subscription
          */
@@ -93,6 +96,7 @@ declare namespace LocalJSX {
           * Plan ID for the new subscription
          */
         "planId"?: string;
+        "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
         "subscribing"?: boolean;

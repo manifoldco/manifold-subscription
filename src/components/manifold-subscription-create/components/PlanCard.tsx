@@ -1,10 +1,14 @@
 import { h, FunctionalComponent } from '@stencil/core';
-import { PlanQuery } from '../../../types/graphql';
+import check from '@manifoldco/mercury/icons/check.svg';
 import { $ } from '../../../utils/currency';
 
 interface PlanCardProps {
   isLoading?: boolean;
-  plan?: PlanQuery['plan'];
+  isChecked?: boolean;
+  plan?: {
+    displayName: string;
+    cost: number;
+  };
 }
 
 const defaultPlan: PlanCardProps['plan'] = {
@@ -12,8 +16,15 @@ const defaultPlan: PlanCardProps['plan'] = {
   cost: 0,
 };
 
-const PlanCard: FunctionalComponent<PlanCardProps> = ({ isLoading, plan = defaultPlan }) => (
-  <div class="ManifoldSubscriptionCreate__Card">
+const PlanCard: FunctionalComponent<PlanCardProps> = (
+  { isLoading, isChecked, plan = defaultPlan },
+  cta
+) => (
+  <div
+    class={`ManifoldSubscriptionCreate__Card ${
+      isChecked ? 'ManifoldSubscriptionCreate__Card--checked' : ''
+    }`}
+  >
     <div class="ManifoldSubscriptionCreate__PlanName" data-is-loading={isLoading}>
       {plan.displayName}
     </div>
@@ -21,7 +32,8 @@ const PlanCard: FunctionalComponent<PlanCardProps> = ({ isLoading, plan = defaul
       {$(plan.cost)}
       <span class="ManifoldSubscriptionCreate__Cost__Suffix">/mo</span>
     </span>
-    <button class="ManifoldSubscriptionCreate__ModifyPlanButton">Change Plan</button>
+    {cta}
+    <img class="ManifoldSubscriptionCreate__Card__Checkmark" src={check} alt="" />
   </div>
 );
 

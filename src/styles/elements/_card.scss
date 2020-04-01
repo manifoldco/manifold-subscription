@@ -2,11 +2,38 @@
 $name: '' !default;
 
 .#{$name}__Card {
+  position: relative;
   display: grid;
   gap: 0.5em;
   justify-items: start;
   padding: 1em;
-  border: 1px solid mercury.$color-blue;
+  background-color: mercury.$color-white;
+  border: 1px solid mercury.$color-gray;
   border-radius: 0.4em;
   box-shadow: mercury.$shadow-near;
+
+  &--checked {
+    border: 1px solid mercury.$color-blue;
+  }
+
+  &__Checkmark {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 1em;
+    height: 1em;
+    padding: 0.2em;
+    background-color: mercury.$color-blue;
+    border-top-right-radius: inherit;
+    border-bottom-left-radius: inherit;
+    transform: scale(0);
+    transform-origin: top right;
+    opacity: 0;
+    transition: all 100ms ease-in-out;
+  }
+
+  &--checked &__Checkmark {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

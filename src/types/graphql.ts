@@ -118,6 +118,21 @@ export type CreateResourcePayload = {
   data: Resource;
 };
 
+export type CreateSubscriptionAgreementInput = {
+  label: Scalars['String'];
+  displayName: Maybe<Scalars['String']>;
+  owner: Maybe<Scalars['ProfileIdentity']>;
+  productId: Scalars['ID'];
+  planId: Scalars['ID'];
+  regionId: Scalars['ID'];
+  configuredFeatures: Maybe<Array<ConfiguredFeatureInput>>;
+};
+
+export type CreateSubscriptionAgreementPayload = {
+   __typename?: 'CreateSubscriptionAgreementPayload';
+  data: SubscriptionAgreement;
+};
+
 export type Credential = {
    __typename?: 'Credential';
   key: Scalars['String'];
@@ -285,6 +300,7 @@ export type Mutation = {
   createProfileAuthToken: CreateProfileAuthTokenPayload;
   updateProfileSubject: UpdateProfileSubjectPayload;
   updateProfileState: UpdateProfileStatePayload;
+  createSubscription: CreateSubscriptionAgreementPayload;
 };
 
 
@@ -325,6 +341,11 @@ export type MutationUpdateProfileSubjectArgs = {
 
 export type MutationUpdateProfileStateArgs = {
   input: UpdateProfileStateInput;
+};
+
+
+export type MutationCreateSubscriptionArgs = {
+  input: CreateSubscriptionAgreementInput;
 };
 
 export type Node = {
@@ -826,6 +847,7 @@ export type Profile = {
    __typename?: 'Profile';
   id: Scalars['ID'];
   subject: Scalars['String'];
+  stripeAccountID: Maybe<Scalars['String']>;
   stripeSetupIntentSecret: Maybe<Scalars['String']>;
   platform: Platform;
   invoicePreview: Maybe<Invoice>;
@@ -905,6 +927,8 @@ export type Query = {
   lineItem: Maybe<LineItem>;
   region: Maybe<Region>;
   regions: Maybe<RegionConnection>;
+  subscription: Maybe<SubscriptionAgreement>;
+  subscriptions: Maybe<SubscriptionAgreementConnection>;
 };
 
 
@@ -996,6 +1020,19 @@ export type QueryRegionsArgs = {
   first: Scalars['Int'];
   after: Maybe<Scalars['String']>;
   orderBy: Maybe<RegionsOrderBy>;
+};
+
+
+export type QuerySubscriptionArgs = {
+  id: Scalars['ID'];
+  owner: Maybe<Scalars['ProfileIdentity']>;
+};
+
+
+export type QuerySubscriptionsArgs = {
+  first: Scalars['Int'];
+  after: Maybe<Scalars['String']>;
+  owner: Maybe<Scalars['ProfileIdentity']>;
 };
 
 export type Region = Node & {
@@ -1130,6 +1167,58 @@ export type SubLineItemEdge = {
   node: Maybe<SubLineItem>;
 };
 
+export type SubscriptionAgreement = Node & {
+   __typename?: 'SubscriptionAgreement';
+  id: Scalars['ID'];
+  plan: Maybe<Plan>;
+  resource: Maybe<SubscriptionAgreementResource>;
+  status: SubscriptionAgreementStatus;
+};
+
+export type SubscriptionAgreementConnection = {
+   __typename?: 'SubscriptionAgreementConnection';
+  pageInfo: PageInfo;
+  edges: Array<SubscriptionAgreementEdge>;
+};
+
+export type SubscriptionAgreementEdge = {
+   __typename?: 'SubscriptionAgreementEdge';
+  cursor: Scalars['String'];
+  node: Maybe<SubscriptionAgreement>;
+};
+
+export type SubscriptionAgreementResource = Node & {
+   __typename?: 'SubscriptionAgreementResource';
+  id: Scalars['ID'];
+  displayName: Scalars['String'];
+  label: Scalars['String'];
+  credentials: Maybe<CredentialConnection>;
+};
+
+
+export type SubscriptionAgreementResourceCredentialsArgs = {
+  first: Scalars['Int'];
+  after: Maybe<Scalars['String']>;
+};
+
+export type SubscriptionAgreementStatus = {
+   __typename?: 'SubscriptionAgreementStatus';
+  label: SubscriptionAgreementStatusLabel;
+  percentDone: Scalars['Int'];
+  message: Scalars['String'];
+};
+
+export enum SubscriptionAgreementStatusLabel {
+  Available = 'AVAILABLE',
+  Creating = 'CREATING',
+  Updating = 'UPDATING',
+  Deleting = 'DELETING',
+  Deleted = 'DELETED',
+  ErrorCreating = 'ERROR_CREATING',
+  ErrorUpdating = 'ERROR_UPDATING',
+  ErrorDeleting = 'ERROR_DELETING'
+}
+
 
 export type UpdateProfileStateInput = {
   subject: Scalars['String'];
@@ -1185,6 +1274,90 @@ export type WithUsage = {
   end: Maybe<Scalars['Time']>;
 };
 
+export type PlanFragment = (
+  { __typename?: 'Plan' }
+  & Pick<Plan, 'id' | 'displayName' | 'label' | 'free' | 'cost'>
+  & { fixedFeatures: Maybe<(
+    { __typename?: 'PlanFixedFeatureConnection' }
+    & { edges: Array<(
+      { __typename?: 'PlanFixedFeatureEdge' }
+      & { node: (
+        { __typename?: 'PlanFixedFeature' }
+        & Pick<PlanFixedFeature, 'displayName' | 'displayValue' | 'label'>
+      ) }
+    )> }
+  )>, meteredFeatures: Maybe<(
+    { __typename?: 'PlanMeteredFeatureConnection' }
+    & { edges: Array<(
+      { __typename?: 'PlanMeteredFeatureEdge' }
+      & { node: (
+        { __typename?: 'PlanMeteredFeature' }
+        & Pick<PlanMeteredFeature, 'label' | 'displayName'>
+        & { numericDetails: (
+          { __typename?: 'PlanMeteredFeatureNumericDetails' }
+          & Pick<PlanMeteredFeatureNumericDetails, 'unit'>
+          & { costTiers: Maybe<Array<(
+            { __typename?: 'PlanFeatureCostTier' }
+            & Pick<PlanFeatureCostTier, 'limit' | 'cost'>
+          )>> }
+        ) }
+      ) }
+    )> }
+  )>, configurableFeatures: Maybe<(
+    { __typename?: 'PlanConfigurableFeatureConnection' }
+    & { edges: Array<(
+      { __typename?: 'PlanConfigurableFeatureEdge' }
+      & { node: (
+        { __typename?: 'PlanConfigurableFeature' }
+        & Pick<PlanConfigurableFeature, 'label' | 'displayName' | 'type' | 'upgradable' | 'downgradable'>
+        & { featureOptions: Maybe<Array<(
+          { __typename?: 'PlanConfigurableFeatureOption' }
+          & Pick<PlanConfigurableFeatureOption, 'displayName' | 'value' | 'cost'>
+        )>>, numericDetails: Maybe<(
+          { __typename?: 'PlanConfigurableFeatureNumericDetails' }
+          & Pick<PlanConfigurableFeatureNumericDetails, 'increment' | 'min' | 'max' | 'unit'>
+          & { costTiers: Maybe<Array<(
+            { __typename?: 'PlanFeatureCostTier' }
+            & Pick<PlanFeatureCostTier, 'limit' | 'cost'>
+          )>> }
+        )> }
+      ) }
+    )> }
+  )>, regions: Maybe<(
+    { __typename?: 'RegionConnection' }
+    & { edges: Array<(
+      { __typename?: 'RegionEdge' }
+      & { node: (
+        { __typename?: 'Region' }
+        & Pick<Region, 'id' | 'displayName' | 'platform' | 'dataCenter'>
+      ) }
+    )> }
+  )> }
+);
+
+export type PlanListQueryVariables = {
+  productLabel: Scalars['String'];
+};
+
+
+export type PlanListQuery = (
+  { __typename?: 'Query' }
+  & { product: Maybe<(
+    { __typename?: 'Product' }
+    & Pick<Product, 'id' | 'displayName' | 'label' | 'logoUrl'>
+    & { plans: Maybe<(
+      { __typename?: 'PlanConnection' }
+      & { edges: Array<(
+        { __typename?: 'PlanEdge' }
+        & { node: (
+          { __typename?: 'Plan' }
+          & PlanFragment
+        ) }
+      )> }
+    )> }
+  )> }
+);
+
 export type PlanQueryVariables = {
   planId: Scalars['ID'];
 };
@@ -1195,6 +1368,10 @@ export type PlanQuery = (
   & { plan: Maybe<(
     { __typename?: 'Plan' }
     & Pick<Plan, 'displayName' | 'cost'>
+    & { product: Maybe<(
+      { __typename?: 'Product' }
+      & Pick<Product, 'label'>
+    )> }
   )>, profile: (
     { __typename?: 'Profile' }
     & Pick<Profile, 'stripeSetupIntentSecret'>

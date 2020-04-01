@@ -12,3 +12,177 @@ $name: 'ManifoldSubscriptionCreate';
 manifold-subscription-create * {
   all: unset;
 }
+
+.ManifoldSubscriptionCreate__PlanSelector {
+  display: grid;
+  grid-template-columns: minmax(max-content, 3fr) minmax(max-content, 5fr);
+  height: 100%;
+  background-color: mercury.$color-white;
+  border: 1px solid mercury.$color-grayLight;
+  border-radius: 0.25em;
+  box-shadow: mercury.$shadow-near;
+
+  &__Menu {
+    display: grid;
+    gap: 0.75em;
+    align-content: start;
+    padding: 0.75em;
+    overflow: auto;
+    background-color: mercury.$color-grayLightest;
+  }
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__Details {
+  margin: 1em;
+  background-color: inherit;
+  border: inherit;
+  border-radius: inherit;
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__Heading {
+  display: block;
+  padding: 0.75em;
+  font-size: 1.5em;
+  border-bottom: inherit;
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__FeatureList {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  border-bottom: inherit;
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__FeatureName,
+.ManifoldSubscriptionCreate__PlanSelector__FeatureValue {
+  margin: 0;
+  padding: 0.5em 1.2em;
+  border-bottom: inherit;
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__FeatureName {
+  font-weight: 600;
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__FeatureDescription {
+  margin: 0.5em 0;
+  color: mercury.$color-gray;
+  font-weight: normal;
+  font-size: 0.8em;
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__FeatureTable {
+  width: 100%;
+  min-width: 100%;
+  line-height: 1;
+  border-collapse: collapse;
+
+  & td {
+    width: 50%;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+  }
+
+  & tr:nth-of-type(odd) td {
+    background-color: mercury.$color-grayLightest;
+  }
+}
+
+.region {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: var(--manifold-font-d1);
+  border-bottom: var(--card-border);
+  border-bottom-style: dotted;
+}
+
+.region-label {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.value {
+  &[data-value='false'],
+  &[data-value='true'] {
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  &[data-value='false'] {
+    color: var(--no-color);
+  }
+
+  &[data-value='true'] {
+    color: var(--yes-color);
+
+    & .icon {
+      display: inline-block;
+    }
+  }
+
+  &[data-locked] {
+    color: var(--locked-color);
+
+    & .icon {
+      display: inline-block;
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--padding);
+  padding: calc(var(--padding) * 0.75) var(--padding);
+  border-top: var(--card-border);
+}
+
+.ManifoldSubscriptionCreate__PlanSelector__BooleanInput {
+  --size: 0.8em;
+  --spacing: 0.2em;
+  --gap: calc(var(--size) / 2);
+
+  display: grid;
+  grid-gap: var(--gap);
+  grid-template-areas: 'off on';
+  width: calc(var(--size) * 2.5);
+  height: var(--size);
+  padding: var(--spacing);
+  background: mercury.$color-grayLightest;
+  border: 1px solid mercury.$color-grayLight;
+  border-radius: 2.5em;
+  transition: opacity 200ms;
+
+  &::before {
+    grid-area: off;
+    box-sizing: border-box;
+    background: mercury.$color-white;
+    border-radius: 50%;
+    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.3);
+    transition: transform 100ms ease-in-out;
+    content: '';
+  }
+
+  &:checked {
+    background: mercury.$color-blue;
+
+    &::before {
+      transform: translateX(calc(var(--size) + var(--gap)));
+    }
+  }
+
+  &:focus,
+  &:active {
+    border-color: mercury.$color-blue;
+    box-shadow: 0 0 0.25em 0.1em rgba(mercury.$color-blue, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
