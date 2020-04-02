@@ -1,0 +1,12 @@
+query Subscriptions($owner: ProfileIdentity!) {
+  subscriptions(first: 10) {
+    edges {
+      node {
+        plan {
+          displayName
+          cost
+        }
+      }
+    }
+  }
+}

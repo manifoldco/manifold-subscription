@@ -1377,3 +1377,25 @@ export type PlanQuery = (
     & Pick<Profile, 'stripeSetupIntentSecret' | 'stripeAccountID'>
   ) }
 );
+
+export type SubscriptionsQueryVariables = {
+  owner: Scalars['ProfileIdentity'];
+};
+
+
+export type SubscriptionsQuery = (
+  { __typename?: 'Query' }
+  & { subscriptions: Maybe<(
+    { __typename?: 'SubscriptionAgreementConnection' }
+    & { edges: Array<(
+      { __typename?: 'SubscriptionAgreementEdge' }
+      & { node: Maybe<(
+        { __typename?: 'SubscriptionAgreement' }
+        & { plan: Maybe<(
+          { __typename?: 'Plan' }
+          & Pick<Plan, 'displayName' | 'cost'>
+        )> }
+      )> }
+    )> }
+  )> }
+);
