@@ -12,7 +12,7 @@ export class ManifoldConfiguredFeature {
   @Watch('label') labelChange(value?: string) {
     this.isRequired('label', value);
   }
-  @Prop() value?: string;
+  @Prop() value?: string | number | boolean;
 
   componentDidLoad() {
     this.handlePropChange();

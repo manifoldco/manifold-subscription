@@ -7,6 +7,7 @@ import {
 } from '../../../types/graphql';
 import { fixedDisplayValue } from './FixedFeature';
 import NumberInput from './NumberInput';
+import Select from './Select';
 
 interface ConfigurableFeatureProps {
   configurableFeature?: PlanConfigurableFeatureEdge;
@@ -90,12 +91,12 @@ const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
       return [
         <dt class="ManifoldSubscriptionCreate__PlanSelector__FeatureName">{displayName}</dt>,
         <dd class="ManifoldSubscriptionCreate__PlanSelector__FeatureValue">
-          <manifold-select
+          <Select
             aria-label={displayName}
             name={label}
             options={selectOptions}
-            // onUpdateValue={onChange}
-            defaultValue={(defaultOption && `${defaultOption.value}`) || undefined}
+            onChange={setConfiguredFeature}
+            selectedValue={(defaultOption && `${defaultOption.value}`) || undefined}
           />
         </dd>,
       ];

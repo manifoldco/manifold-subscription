@@ -12,7 +12,7 @@ import { SetupIntent, } from "@stripe/stripe-js";
 export namespace Components {
     interface ManifoldConfiguredFeature {
         "label"?: string;
-        "value"?: string;
+        "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
         "configuredFeatures": {
@@ -68,7 +68,7 @@ declare namespace LocalJSX {
     interface ManifoldConfiguredFeature {
         "label"?: string;
         "onManifold-configured-feature-change"?: (event: CustomEvent<any>) => void;
-        "value"?: string;
+        "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
         "configuredFeatures"?: {
