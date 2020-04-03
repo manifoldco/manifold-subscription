@@ -13,6 +13,7 @@ $name: '' !default;
   box-shadow: mercury.$shadow-near;
 
   &--checked {
+    padding: calc(1em - 1px);
     border: 2px solid mercury.$color-blue;
   }
 

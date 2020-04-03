@@ -20,6 +20,7 @@ manifold-subscription-create {
   dd,
   h1,
   h2,
+  p,
   ul,
   li {
     all: unset;
@@ -61,7 +62,7 @@ manifold-subscription-create {
     display: grid;
     gap: 0.75em;
     align-content: start;
-    padding: 0.75em;
+    padding: 1em;
     overflow: auto;
     background-color: mercury.$color-grayLightest;
   }
@@ -169,8 +170,14 @@ manifold-subscription-create {
 }
 
 .ManifoldSubscriptionCreate__PlanSelector__Footer {
+  display: grid;
+  gap: 0.25em;
   align-items: center;
   padding: 1em;
+
+  .#{$name}__CostDisplay {
+    font-size: 1.5em;
+  }
 }
 
 .ManifoldSubscriptionCreate__PlanSelector__BooleanInput {
@@ -220,7 +227,7 @@ manifold-subscription-create {
   }
 }
 
-.cost {
+.#{$name}__CostDisplay {
   display: flex;
   align-items: center;
   min-height: 1.25em;
@@ -230,10 +237,6 @@ manifold-subscription-create {
     font-size: 0.9em;
     opacity: 0.6;
   }
-}
-
-.starting {
-  margin-right: 0.25em;
 }
 
 .ManifoldSubscriptionCreate__Badge {

@@ -73,9 +73,9 @@ const CostDisplay: FunctionalComponent<CostDisplayProps> = props => {
   const isCompositeCost = !isFreeMonthly && isMetered;
 
   return (
-    <div class="cost" data-compact={compact}>
+    <div class="ManifoldSubscriptionCreate__CostDisplay" data-compact={compact}>
       <span itemprop="price">
-        {showStartingAt && <span class="starting">Starting at</span>}
+        {showStartingAt && <span class="starting">Starting at&nbsp;</span>}
         <BaseCost
           compact={compact}
           cost={baseCost}

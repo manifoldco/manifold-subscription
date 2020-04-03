@@ -40,6 +40,10 @@ $name: '' !default;
     color: mercury.$color-gray;
     font-weight: normal;
     font-size: 0.8em;
+
+    &[data-centered] {
+      text-align: center;
+    }
   }
 
   &__TextInput {

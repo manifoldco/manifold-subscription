@@ -269,7 +269,7 @@ export class ManifoldSubscriptionCreate {
           >
             {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
           </button>
-          <p class="ManifoldSubscriptionCreate__HelpText">
+          <p class="ManifoldSubscriptionCreate__HelpText" data-centered>
             We charge for plan cost + usage at end of month
           </p>
           {/* TODO restyle success state when designs are available */}

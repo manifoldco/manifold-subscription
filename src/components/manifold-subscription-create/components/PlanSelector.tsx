@@ -102,6 +102,7 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
               }
             />
           )}
+          <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
         </footer>
       </div>
     </div>
