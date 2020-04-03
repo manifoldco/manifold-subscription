@@ -10,8 +10,8 @@ import NumberInput from './NumberInput';
 import Select from './Select';
 
 interface ConfigurableFeatureProps {
-  configurableFeature?: PlanConfigurableFeatureEdge;
-  setConfiguredFeature?: (label: string, value?: string | number | boolean) => void;
+  configurableFeature: PlanConfigurableFeatureEdge;
+  setConfiguredFeature: (label: string, value?: string | number | boolean) => void;
   value?: string | number | boolean;
   readOnly?: boolean;
   isExistingResource?: boolean;
@@ -39,7 +39,7 @@ const getDisplayValue = (
 
 const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
   configurableFeature,
-  setConfiguredFeature = () => {},
+  setConfiguredFeature,
   value,
   readOnly,
   isExistingResource,
@@ -124,7 +124,7 @@ const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
             min={isExistingResource && downgradable ? (value as number) : numericDetails.min}
             name={label}
             onChange={setConfiguredFeature}
-            value={parseInt(value as string, 10)}
+            value={value as number}
             disabled={readOnly}
             placeholder={numericDetails.unit}
           />
@@ -141,11 +141,8 @@ const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
             class="ManifoldSubscriptionCreate__PlanSelector__BooleanInput"
             type="checkbox"
             name={label}
-            checked={value === 'true'}
-            onChange={e =>
-              setConfiguredFeature &&
-              setConfiguredFeature(label, (e.target as HTMLInputElement).checked)
-            }
+            checked={value as boolean}
+            onChange={e => setConfiguredFeature(label, (e.target as HTMLInputElement).checked)}
           />
         </dd>,
       ];

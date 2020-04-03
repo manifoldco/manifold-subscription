@@ -2,11 +2,7 @@
 import { $ } from './currency';
 import { pluralize } from './string';
 // import { RestFetch } from './restFetch';
-import {
-  PlanMeteredFeatureNumericDetails,
-  // PlanConfigurableFeatureEdge,
-  // PlanFeatureType,
-} from '../types/graphql';
+import { PlanMeteredFeatureNumericDetails, PlanFeatureType, PlanEdge } from '../types/graphql';
 
 // interface PlanCostOptions {
 //   planID: string;
@@ -151,29 +147,36 @@ export function meteredFeatureDisplayValue(
 //   });
 // }
 
+export interface FeatureMap {
+  [label: string]: string | number | boolean | undefined;
+}
 /**
  * Get default feature map for configurableFeatures
  */
-// export function configurableFeatureDefaults(configurableFeatures: PlanConfigurableFeatureEdge[]) {
-//   const defaultFeatures: Gateway.FeatureMap = {};
+export function configurableFeatureDefaults(plans: PlanEdge[], selectedPlanId: string) {
+  const defaultFeatures: FeatureMap = {};
 
-//   configurableFeatures.forEach(({ node: { label, numericDetails, featureOptions, type } }) => {
-//     switch (type) {
-//       case PlanFeatureType.Boolean: {
-//         defaultFeatures[label] = false;
-//         break;
-//       }
-//       case PlanFeatureType.Number:
-//         defaultFeatures[label] = numericDetails?.min;
-//         break;
-//       case PlanFeatureType.String:
-//         defaultFeatures[label] = featureOptions?.[0].value;
-//         break;
-//       default:
-//         defaultFeatures[label] = undefined;
-//         break;
-//     }
-//   });
+  const configurableFeatures = plans.find(plan => plan.node.id === selectedPlanId)?.node
+    ?.configurableFeatures.edges;
+  if (configurableFeatures) {
+    configurableFeatures.forEach(({ node: { label, numericDetails, featureOptions, type } }) => {
+      switch (type) {
+        case PlanFeatureType.Boolean: {
+          defaultFeatures[label] = false;
+          break;
+        }
+        case PlanFeatureType.Number:
+          defaultFeatures[label] = numericDetails?.min;
+          break;
+        case PlanFeatureType.String:
+          defaultFeatures[label] = featureOptions?.[0].value;
+          break;
+        default:
+          defaultFeatures[label] = undefined;
+          break;
+      }
+    });
+  }
 
-//   return defaultFeatures;
-// }
+  return defaultFeatures;
+}

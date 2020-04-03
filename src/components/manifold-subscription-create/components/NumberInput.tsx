@@ -26,7 +26,7 @@ const NumberInput: FunctionalComponent<NumberInputProps> = props => {
         onClick={() => onChange(name, value - increment)}
         disabled={lowerBoundReached || disabled}
       >
-        <img src={minus} alt="" title="increment" />
+        <i innerHTML={minus} title="increment" />
       </button>
       <input
         name={name}
@@ -49,7 +49,7 @@ const NumberInput: FunctionalComponent<NumberInputProps> = props => {
         onClick={() => onChange(name, value + increment)}
         disabled={upperBoundReached || disabled}
       >
-        <img src={plus} alt="" title="increment" />
+        <i innerHTML={plus} title="increment" />
       </button>
     </div>
   );

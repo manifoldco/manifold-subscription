@@ -8,6 +8,7 @@ import PlanCard from './components/PlanCard';
 import Message from './components/Message';
 import planQuery from './plan.graphql';
 import planListQuery from './plan-list.graphql';
+import { FeatureMap } from '../../utils/plan';
 
 // TODO add all these to the component API
 //   $productId: ID!
@@ -37,10 +38,8 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) setupIntentError?: string;
   @Prop({ mutable: true }) subscribing?: boolean = false;
   // TODO watch configuredFeatures and get cost
-  @Prop({ mutable: true }) configuredFeatures: {
-    label: string;
-    value: string | number | boolean;
-  }[] = [];
+  @Prop({ mutable: true }) configuredFeatures: FeatureMap = {};
+  @Prop({ mutable: true }) calculatedCost?: number;
 
   /**
    * Component heading text
@@ -50,9 +49,12 @@ export class ManifoldSubscriptionCreate {
    * Plan ID for the new subscription
    */
   @Prop({ mutable: true }) planId: string;
-  // TODO watch planId change and get default configured features
 
-  @Prop({ mutable: true }) isEditing: boolean = true;
+  resetConfiguredFeatures = (defaultFeatures: FeatureMap = {}) => {
+    this.configuredFeatures = defaultFeatures;
+  };
+
+  @Prop({ mutable: true }) isEditing: boolean = false;
   /**
    * (Optional) Name given to the new subscription
    */
@@ -110,23 +112,24 @@ export class ManifoldSubscriptionCreate {
   }
 
   @Listen('manifold-configured-feature-change')
-  updateConfiguredFeature(event: CustomEvent) {
-    const currentFeatureIndex = this.configuredFeatures.findIndex(
-      cf => cf.label === event.detail.label
-    );
-
-    if (currentFeatureIndex === -1) {
-      this.configuredFeatures = [...this.configuredFeatures, event.detail];
-    } else {
-      this.configuredFeatures[currentFeatureIndex] = event.detail;
-    }
+  updateConfiguredFeature(event: CustomEvent<{ label: string; value: string | number | boolean }>) {
+    const { label, value } = event.detail;
+    this.setConfiguredFeature(label, value);
   }
 
-  async initializeStripeElements() {
+  @Watch('data')
+  async initializeStripeElements(data: PlanQuery) {
+    // Only initialize once
+    if (this.stripe) {
+      return;
+    }
     // TODO replace token with a Manifold Stripe token.
     // Initialize Stripe
-    this.stripe = await loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+    this.stripe = await loadStripe(
+      data.profile.stripeAccountID || 'pk_test_TYooMQauvdEDq54NiTphI7jx'
+    );
     if (!this.stripe) {
+      // TODO handle stripe error
       return;
     }
 
@@ -137,10 +140,6 @@ export class ManifoldSubscriptionCreate {
       this.card.mount(this.cardPlaceholder);
       this.cardPlaceholder.removeAttribute('data-is-loading');
     }
-  }
-
-  componentDidLoad() {
-    this.initializeStripeElements();
   }
 
   subscribe = async (e: UIEvent) => {
@@ -176,21 +175,57 @@ export class ManifoldSubscriptionCreate {
 
   setConfiguredFeature = (label: string, value: string | number | boolean) => {
     // Insert new value (this might not be needed if set to default values)
-    const currentFeatureIndex = this.configuredFeatures.findIndex(cf => cf.label === label);
-    if (currentFeatureIndex === -1) {
-      this.configuredFeatures = [...this.configuredFeatures, { label, value }];
-      return;
-    }
-
-    // Update existing value
-    this.configuredFeatures = this.configuredFeatures.reduce(
-      (acc, curr) => (curr.label === label ? [...acc, { label, value }] : [...acc, curr]),
-      []
-    );
+    this.configuredFeatures = { ...this.configuredFeatures, [label]: value };
   };
 
+  toggleIsEditing = () => {
+    this.isEditing = !this.isEditing;
+  };
+
+  controller?: AbortController;
+
+  @Watch('configuredFeatures')
+  async fetchCustomCost(configuredFeatures: FeatureMap) {
+    if (!this.connection) {
+      return undefined;
+    }
+
+    // if not configurable, return plan cost
+    if (this.configuredFeatures.length === 0) {
+      this.calculatedCost = 0;
+      return undefined;
+    }
+
+    // Hide display while calculating
+    this.calculatedCost = undefined;
+    this.errors = undefined;
+    if (this.controller) {
+      this.controller.abort();
+    }
+
+    // If a request is in flight, cancel it
+    this.controller = new AbortController();
+
+    // TODO pass controller to the request (might need to do this in manifold-init)
+    try {
+      const { cost } = await this.connection.gateway.post<
+        { cost: number },
+        { features: FeatureMap }
+      >(`/id/plan/${this.planId}/cost`, {
+        features: configuredFeatures,
+      });
+
+      this.calculatedCost = cost;
+    } catch (e) {
+      if (e.name !== 'AbortError') {
+        // TODO store error in a better way so it can be displayed in place of cost in UI
+        this.errors = [{ message: 'Error getting plan cost.' }];
+      }
+    }
+    return undefined;
+  }
+
   render() {
-    console.log(this.configuredFeatures);
     return (
       <div class="ManifoldSubscriptionCreate">
         {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
@@ -199,12 +234,19 @@ export class ManifoldSubscriptionCreate {
             planId={this.planId}
             setPlanId={this.setPlanId}
             setConfiguredFeature={this.setConfiguredFeature}
+            resetConfiguredFeatures={this.resetConfiguredFeatures}
             configuredFeatures={this.configuredFeatures}
+            calculatedCost={this.calculatedCost}
             data={this.planListData}
           />
         ) : (
           <PlanCard isLoading={this.loading} plan={this.data?.plan || undefined}>
-            <button class="ManifoldSubscriptionCreate__ModifyPlanButton">Change Plan</button>
+            <button
+              class="ManifoldSubscriptionCreate__ModifyPlanButton"
+              onClick={this.toggleIsEditing}
+            >
+              Change Plan
+            </button>
           </PlanCard>
         )}
         <form class="ManifoldSubscriptionCreate__Form" method="post" onSubmit={this.subscribe}>

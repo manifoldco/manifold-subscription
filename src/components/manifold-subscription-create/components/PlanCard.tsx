@@ -1,6 +1,6 @@
 import { h, FunctionalComponent } from '@stencil/core';
 import check from '@manifoldco/mercury/icons/check.svg';
-import { $ } from '../../../utils/currency';
+import CostDisplay from './CostDisplay';
 
 interface PlanCardProps {
   isLoading?: boolean;
@@ -29,11 +29,10 @@ const PlanCard: FunctionalComponent<PlanCardProps> = (
       {plan.displayName}
     </div>
     <span class="ManifoldSubscriptionCreate__Cost" data-is-loading={isLoading}>
-      {$(plan.cost)}
-      <span class="ManifoldSubscriptionCreate__Cost__Suffix">/mo</span>
+      <CostDisplay baseCost={plan.cost} isConfigurable compact />
     </span>
     {cta}
-    <img class="ManifoldSubscriptionCreate__Card__Checkmark" src={check} alt="" />
+    <i class="ManifoldSubscriptionCreate__Card__Checkmark" innerHTML={check} />
   </div>
 );
 

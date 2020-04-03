@@ -1374,6 +1374,6 @@ export type PlanQuery = (
     )> }
   )>, profile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'stripeSetupIntentSecret'>
+    & Pick<Profile, 'stripeSetupIntentSecret' | 'stripeAccountID'>
   ) }
 );

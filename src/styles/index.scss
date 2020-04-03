@@ -9,8 +9,42 @@ $name: 'ManifoldSubscriptionCreate';
 @use 'elements/button' with ($name: $name);
 @use 'elements/message' with ($name: $name);
 
-manifold-subscription-create * {
-  all: unset;
+manifold-subscription-create {
+  box-sizing: border-box;
+
+  button,
+  input,
+  select,
+  dl,
+  dt,
+  dd,
+  h1,
+  h2,
+  ul,
+  li {
+    all: unset;
+  }
+
+  * {
+    box-sizing: inherit;
+  }
+
+  i {
+    display: block;
+    width: 1em;
+  }
+}
+
+@keyframes enter {
+  0% {
+    transform: scale(0.75) translateY(-30%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 100;
+  }
 }
 
 .ManifoldSubscriptionCreate__PlanSelector {
@@ -21,6 +55,7 @@ manifold-subscription-create * {
   border: 1px solid mercury.$color-grayLight;
   border-radius: 0.25em;
   box-shadow: mercury.$shadow-near;
+  animation: enter 500ms ease-in-out;
 
   &__Menu {
     display: grid;
@@ -54,7 +89,9 @@ manifold-subscription-create * {
 
 .ManifoldSubscriptionCreate__PlanSelector__FeatureName,
 .ManifoldSubscriptionCreate__PlanSelector__FeatureValue {
-  margin: 0;
+  display: grid;
+  align-content: center;
+  justify-content: start;
   padding: 0.5em 1.2em;
   border-bottom: inherit;
 }
@@ -131,14 +168,9 @@ manifold-subscription-create * {
   }
 }
 
-.footer {
-  display: flex;
-  flex-wrap: wrap;
+.ManifoldSubscriptionCreate__PlanSelector__Footer {
   align-items: center;
-  justify-content: space-between;
-  margin-top: var(--padding);
-  padding: calc(var(--padding) * 0.75) var(--padding);
-  border-top: var(--card-border);
+  padding: 1em;
 }
 
 .ManifoldSubscriptionCreate__PlanSelector__BooleanInput {
@@ -149,6 +181,7 @@ manifold-subscription-create * {
   display: grid;
   grid-gap: var(--gap);
   grid-template-areas: 'off on';
+  box-sizing: initial;
   width: calc(var(--size) * 2.5);
   height: var(--size);
   padding: var(--spacing);
@@ -187,29 +220,30 @@ manifold-subscription-create * {
   }
 }
 
-select {
-  --default-color: mercury.$color-blue;
-  --focus-color: mercury.$color-gray;
+.cost {
+  display: flex;
+  align-items: center;
+  min-height: 1.25em;
+  color: inherit;
 
-  width: 100%;
-  padding: 0.5em 3.5em 0.5em 1em;
-  line-height: 1.5em;
-  background-color: mercury.$color-white;
-  background-image: linear-gradient(45deg, transparent 50%, var(--default-color) 50%),
-    linear-gradient(135deg, var(--default-color) 50%, transparent 50%),
-    linear-gradient(to right, var(--default-color), var(--default-color));
-  background-repeat: no-repeat;
-  background-position: calc(100% - 16px) calc(1em + 2px), calc(100% - 11px) calc(1em + 2px),
-    calc(100% - 2.5em) 0.5em;
-  background-size: 5px 5px, 5px 5px, 1px 1.5em;
-  border: 1px solid var(--default-color);
-  border-radius: 0.25em;
+  & small {
+    font-size: 0.9em;
+    opacity: 0.6;
+  }
 }
 
-select:focus {
-  background-image: linear-gradient(45deg, transparent 50%, var(--focus-color) 50%),
-    linear-gradient(135deg, var(--focus-color) 50%, transparent 50%),
-    linear-gradient(to right, var(--focus-color), var(--focus-color));
-  border: 1px solid var(--focus-color);
-  outline: 0;
+.starting {
+  margin-right: 0.25em;
+}
+
+.ManifoldSubscriptionCreate__Badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5em 1em;
+  color: mercury.$color-white;
+  font-weight: 700;
+  font-size: 0.7em;
+  text-transform: uppercase;
+  background: mercury.$gradient-green;
+  border-radius: 1.5em;
 }

@@ -9,16 +9,15 @@ import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
 import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
 import { PlanListQuery, PlanQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
+import { FeatureMap, } from "./utils/plan";
 export namespace Components {
     interface ManifoldConfiguredFeature {
         "label"?: string;
         "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
-        "configuredFeatures": {
-            label: string;
-            value: string | number | boolean;
-        }[];
+        "calculatedCost"?: number;
+        "configuredFeatures": FeatureMap;
         "connection"?: Connection;
         "data"?: PlanQuery;
         /**
@@ -71,10 +70,8 @@ declare namespace LocalJSX {
         "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
-        "configuredFeatures"?: {
-            label: string;
-            value: string | number | boolean;
-        }[];
+        "calculatedCost"?: number;
+        "configuredFeatures"?: FeatureMap;
         "connection"?: Connection;
         "data"?: PlanQuery;
         /**

@@ -4,14 +4,22 @@ import FixedFeature from './FixedFeature';
 import MeteredFeature from './MeteredFeature';
 import ConfigurableFeature from './ConfigurableFeature';
 import PlanCard from './PlanCard';
+import { FeatureMap, configurableFeatureDefaults } from '../../../utils/plan';
+import CostDisplay from './CostDisplay';
 
 interface PlanMenuProps {
   plans: PlanListQuery['product']['plans']['edges'];
   selectedPlanId: string;
   setPlanId: (planId: string) => void;
+  resetConfiguredFeatures: (configuredFeatures: FeatureMap) => void;
 }
 
-const PlanMenu: FunctionalComponent<PlanMenuProps> = ({ plans, selectedPlanId, setPlanId }) => (
+const PlanMenu: FunctionalComponent<PlanMenuProps> = ({
+  plans,
+  selectedPlanId,
+  setPlanId,
+  resetConfiguredFeatures,
+}) => (
   <ul class="ManifoldSubscriptionCreate__PlanSelector__Menu">
     {plans.map(({ node: plan }) => (
       <li>
@@ -20,7 +28,10 @@ const PlanMenu: FunctionalComponent<PlanMenuProps> = ({ plans, selectedPlanId, s
             type="radio"
             value={plan.id}
             checked={plan.id === selectedPlanId}
-            onClick={() => setPlanId(plan.id)}
+            onClick={() => {
+              setPlanId(plan.id);
+              resetConfiguredFeatures(configurableFeatureDefaults(plans as any, plan.id));
+            }}
           />
           <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} />
         </label>
@@ -31,10 +42,12 @@ const PlanMenu: FunctionalComponent<PlanMenuProps> = ({ plans, selectedPlanId, s
 
 interface PlanSelectorProps {
   planId: string;
-  configuredFeatures: { label: string; value: string | number | boolean }[];
+  configuredFeatures: FeatureMap;
+  calculatedCost?: number;
   data?: PlanListQuery;
   setPlanId: (planId: string) => void;
   setConfiguredFeature: (label: string, value: string | number | boolean) => void;
+  resetConfiguredFeatures: (configuredFeatures: FeatureMap) => void;
 }
 
 const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
@@ -52,6 +65,7 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
         plans={props.data.product.plans.edges}
         selectedPlanId={props.planId}
         setPlanId={props.setPlanId}
+        resetConfiguredFeatures={props.resetConfiguredFeatures}
       />
       <div
         class="ManifoldSubscriptionCreate__PlanSelector__Details"
@@ -72,16 +86,22 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
             <ConfigurableFeature
               setConfiguredFeature={props.setConfiguredFeature}
               configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
-              value={
-                props.configuredFeatures.find(cf => cf.label === configurableFeature.node.label)
-                  ?.value
-              }
+              value={props.configuredFeatures[configurableFeature.node.label]}
             />
           ))}
         </dl>
-        <footer class="footer">
-          {/* <manifold-plan-cost plan={this.plan} selectedFeatures={this.features} /> */}
-          <slot name="cta" />
+        <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
+          {props.calculatedCost === undefined ? (
+            <em>Calculating cost...</em>
+          ) : (
+            <CostDisplay
+              baseCost={props.calculatedCost || currentPlan?.node.cost || 0}
+              meteredFeatures={currentPlan?.node.meteredFeatures.edges as any}
+              isConfigurable={
+                currentPlan ? currentPlan.node.configurableFeatures.edges.length > 0 : false
+              }
+            />
+          )}
         </footer>
       </div>
     </div>
