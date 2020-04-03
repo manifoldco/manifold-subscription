@@ -55,7 +55,7 @@ function svg(opts: Options = {}) {
 }
 
 export const config: Config = {
-  namespace: 'manifold-subscription-create',
+  namespace: 'manifold-subscription',
   globalStyle: 'src/styles/index.scss',
   outputTargets: [
     {

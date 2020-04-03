@@ -26,7 +26,7 @@ jobs:
     env:
       BUCKET: manifold-js
       GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      PACKAGE: '@manifoldco/manifold-subscription-create' # package name
+      PACKAGE: '@manifoldco/manifold-subscription' # package name
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
