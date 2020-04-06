@@ -51,21 +51,24 @@ interface PlanSelectorProps {
 }
 
 const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
-  // const { planId, configuredFeatures, setPlan, setConfiguredFeature } = props;
-  if (!props.data) {
+  const { planId, setPlanId, data } = props;
+  const { configuredFeatures, setConfiguredFeature, resetConfiguredFeatures } = props;
+
+  if (!data) {
     return null;
   }
 
-  const currentPlan = props.data.product.plans.edges.find(
-    ({ node: plan }) => plan.id === props.planId
-  );
+  const plans = data.product.plans.edges;
+
+  const currentPlan = plans.find(({ node: plan }) => plan.id === planId)?.node;
+
   return (
     <div class="ManifoldSubscriptionCreate__PlanSelector">
       <PlanMenu
-        plans={props.data.product.plans.edges}
-        selectedPlanId={props.planId}
-        setPlanId={props.setPlanId}
-        resetConfiguredFeatures={props.resetConfiguredFeatures}
+        plans={plans}
+        selectedPlanId={planId}
+        setPlanId={setPlanId}
+        resetConfiguredFeatures={resetConfiguredFeatures}
       />
       <div
         class="ManifoldSubscriptionCreate__PlanSelector__Details"
@@ -73,32 +76,33 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
         itemtype="https://schema.org/IndividualProduct"
       >
         <h2 class="ManifoldSubscriptionCreate__PlanSelector__Heading" itemprop="name">
-          {currentPlan?.node.displayName}
+          {currentPlan?.displayName}
         </h2>
         <dl class="ManifoldSubscriptionCreate__PlanSelector__FeatureList">
-          {currentPlan?.node.fixedFeatures.edges.map(fixedFeature => (
+          {currentPlan?.fixedFeatures.edges.map(fixedFeature => (
             <FixedFeature fixedFeature={fixedFeature as any} />
           ))}
-          {currentPlan?.node.meteredFeatures.edges.map(meteredFeature => (
+          {currentPlan?.meteredFeatures.edges.map(meteredFeature => (
             <MeteredFeature meteredFeature={meteredFeature as any} />
           ))}
-          {currentPlan?.node.configurableFeatures.edges.map(configurableFeature => (
+          {currentPlan?.configurableFeatures.edges.map(configurableFeature => (
             <ConfigurableFeature
-              setConfiguredFeature={props.setConfiguredFeature}
+              setConfiguredFeature={setConfiguredFeature}
               configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
-              value={props.configuredFeatures[configurableFeature.node.label]}
+              value={configuredFeatures[configurableFeature.node.label]}
             />
           ))}
         </dl>
+        {/* TODO add regions */}
         <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
           {props.calculatedCost === undefined ? (
             <em>Calculating cost...</em>
           ) : (
             <CostDisplay
-              baseCost={props.calculatedCost || currentPlan?.node.cost || 0}
-              meteredFeatures={currentPlan?.node.meteredFeatures.edges as any}
+              baseCost={props.calculatedCost || currentPlan?.cost || 0}
+              meteredFeatures={currentPlan?.meteredFeatures.edges as any}
               isConfigurable={
-                currentPlan ? currentPlan.node.configurableFeatures.edges.length > 0 : false
+                currentPlan ? currentPlan.configurableFeatures.edges.length > 0 : false
               }
             />
           )}

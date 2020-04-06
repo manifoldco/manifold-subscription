@@ -1,0 +1,14 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__Badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5em 1em;
+  color: mercury.$color-white;
+  font-weight: 700;
+  font-size: 0.7em;
+  text-transform: uppercase;
+  background: mercury.$gradient-green;
+  border-radius: 1.5em;
+}

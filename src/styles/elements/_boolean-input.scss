@@ -1,0 +1,49 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__BooleanInput {
+  --size: 0.8em;
+  --spacing: 0.2em;
+  --gap: calc(var(--size) / 2);
+
+  display: grid;
+  grid-gap: var(--gap);
+  grid-template-areas: 'off on';
+  box-sizing: initial;
+  width: calc(var(--size) * 2.5);
+  height: var(--size);
+  padding: var(--spacing);
+  background: mercury.$color-grayLightest;
+  border: 1px solid mercury.$color-grayLight;
+  border-radius: 2.5em;
+  transition: opacity 200ms;
+
+  &::before {
+    grid-area: off;
+    box-sizing: border-box;
+    background: mercury.$color-white;
+    border-radius: 50%;
+    box-shadow: 0 0 0.1em 0.05em rgba(0, 0, 0, 0.3);
+    transition: transform 100ms ease-in-out;
+    content: '';
+  }
+
+  &:checked {
+    background: mercury.$color-blue;
+
+    &::before {
+      transform: translateX(calc(var(--size) + var(--gap)));
+    }
+  }
+
+  &:focus,
+  &:active {
+    border-color: mercury.$color-blue;
+    box-shadow: 0 0 0.25em 0.1em rgba(mercury.$color-blue, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

@@ -12,7 +12,7 @@ $name: '' !default;
   border-radius: 0.4em;
   box-shadow: mercury.$shadow-near;
 
-  &--checked {
+  &[data-is-checked] {
     padding: calc(1em - 1px);
     border: 2px solid mercury.$color-blue;
   }
@@ -38,7 +38,7 @@ $name: '' !default;
     }
   }
 
-  &--checked &__Checkmark {
+  &[data-is-checked] &__Checkmark {
     transform: scale(1);
     opacity: 1;
   }

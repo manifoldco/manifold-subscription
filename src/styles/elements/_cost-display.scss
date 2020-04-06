@@ -1,0 +1,14 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__CostDisplay {
+  display: flex;
+  align-items: center;
+  min-height: 1.25em;
+  color: inherit;
+
+  & small {
+    font-size: 0.9em;
+    opacity: 0.6;
+  }
+}

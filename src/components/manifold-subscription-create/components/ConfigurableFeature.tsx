@@ -124,7 +124,7 @@ const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
             min={isExistingResource && downgradable ? (value as number) : numericDetails.min}
             name={label}
             onChange={setConfiguredFeature}
-            value={value as number}
+            value={typeof value === 'number' ? value : parseInt(value as string, 10)}
             disabled={readOnly}
             placeholder={numericDetails.unit}
           />
@@ -138,10 +138,10 @@ const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
         <dt class="ManifoldSubscriptionCreate__PlanSelector__FeatureName">{displayName}</dt>,
         <dd class="ManifoldSubscriptionCreate__PlanSelector__FeatureValue">
           <input
-            class="ManifoldSubscriptionCreate__PlanSelector__BooleanInput"
+            class="ManifoldSubscriptionCreate__BooleanInput"
             type="checkbox"
             name={label}
-            checked={value as boolean}
+            checked={typeof value === 'boolean' ? value : value === 'true'}
             onChange={e => setConfiguredFeature(label, (e.target as HTMLInputElement).checked)}
           />
         </dd>,

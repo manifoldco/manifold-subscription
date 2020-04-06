@@ -54,7 +54,7 @@ export class ManifoldSubscriptionCreate {
     this.configuredFeatures = defaultFeatures;
   };
 
-  @Prop({ mutable: true }) isEditing: boolean = false;
+  @Prop({ mutable: true }) isEditing: boolean = true;
   /**
    * (Optional) Name given to the new subscription
    */
@@ -191,7 +191,7 @@ export class ManifoldSubscriptionCreate {
     }
 
     // if not configurable, return plan cost
-    if (this.configuredFeatures.length === 0) {
+    if (Object.keys(this.configuredFeatures).length === 0) {
       this.calculatedCost = 0;
       return undefined;
     }

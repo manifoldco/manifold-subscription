@@ -20,11 +20,7 @@ const PlanCard: FunctionalComponent<PlanCardProps> = (
   { isLoading, isChecked, plan = defaultPlan },
   cta
 ) => (
-  <div
-    class={`ManifoldSubscriptionCreate__Card ${
-      isChecked ? 'ManifoldSubscriptionCreate__Card--checked' : ''
-    }`}
-  >
+  <div class="ManifoldSubscriptionCreate__Card" data-is-checked={isChecked}>
     <div class="ManifoldSubscriptionCreate__PlanName" data-is-loading={isLoading}>
       {plan.displayName}
     </div>
