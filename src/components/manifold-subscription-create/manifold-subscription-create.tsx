@@ -54,7 +54,7 @@ export class ManifoldSubscriptionCreate {
     this.configuredFeatures = defaultFeatures;
   };
 
-  @Prop({ mutable: true }) isEditing: boolean = true;
+  @Prop({ mutable: true }) isEditing: boolean = false;
   /**
    * (Optional) Name given to the new subscription
    */
