@@ -70,7 +70,10 @@ const CostDisplay: FunctionalComponent<CostDisplayProps> = props => {
   if (props.isCalculating) {
     return (
       <div class="ManifoldSubscriptionCreate__CostDisplay" data-compact={props.compact}>
-        <em class="ManifoldSubscriptionCreate__CostDisplay__Calculating">Calculating cost...</em>
+        <div
+          class="ManifoldSubscriptionCreate__CostDisplay__Calculating"
+          title="Calculating cost..."
+        />
       </div>
     );
   }
