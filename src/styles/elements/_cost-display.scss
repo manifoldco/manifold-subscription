@@ -1,14 +1,44 @@
 @use "node_modules/@manifoldco/mercury";
 $name: '' !default;
 
+@keyframes newCost {
+  0% {
+    color: mercury.$color-green;
+    transform: scale(1);
+  }
+
+  10% {
+    transform: scale(1.2);
+  }
+
+  30% {
+    color: mercury.$color-green;
+    transform: scale(1);
+  }
+
+  100% {
+    color: initial;
+  }
+}
+
 .#{$name}__CostDisplay {
   display: flex;
   align-items: center;
   min-height: 1.25em;
-  color: inherit;
+  color: initial;
 
-  & small {
+  [itemprop='price'] {
+    animation-name: newCost;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-out;
+  }
+
+  small {
     font-size: 0.9em;
     opacity: 0.6;
+  }
+
+  &__Calculating {
+    color: mercury.$color-gray;
   }
 }

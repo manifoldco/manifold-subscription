@@ -31,6 +31,16 @@ $name: '' !default;
     padding: 1em;
     overflow: auto;
     background-color: mercury.$color-grayLightest;
+
+    input ~ .#{$name}__Card {
+      cursor: pointer;
+    }
+
+    input:focus ~ .#{$name}__Card,
+    input:hover ~ .#{$name}__Card {
+      border-color: mercury.$color-blue;
+      box-shadow: 0 0 0.25em 0 mercury.$color-blue;
+    }
   }
 
   &__Details {

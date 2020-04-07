@@ -59,12 +59,23 @@ const MeteredCost: FunctionalComponent<MeteredCostProps> = ({ meteredFeatures })
 
 interface CostDisplayProps {
   baseCost: number;
+  isCalculating?: boolean;
   compact?: boolean;
   isConfigurable?: boolean;
   meteredFeatures?: PlanMeteredFeatureEdge[];
 }
 
 const CostDisplay: FunctionalComponent<CostDisplayProps> = props => {
+  // Render loading state
+  if (props.isCalculating) {
+    return (
+      <div class="ManifoldSubscriptionCreate__CostDisplay" data-compact={props.compact}>
+        <em class="ManifoldSubscriptionCreate__CostDisplay__Calculating">Calculating cost...</em>
+      </div>
+    );
+  }
+
+  // Render cost
   const { compact, isConfigurable, baseCost, meteredFeatures = [] } = props;
 
   const showStartingAt = compact && isConfigurable;

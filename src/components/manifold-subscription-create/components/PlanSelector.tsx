@@ -95,17 +95,12 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
         </dl>
         {/* TODO add regions */}
         <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
-          {props.calculatedCost === undefined ? (
-            <em>Calculating cost...</em>
-          ) : (
-            <CostDisplay
-              baseCost={props.calculatedCost || currentPlan?.cost || 0}
-              meteredFeatures={currentPlan?.meteredFeatures.edges as any}
-              isConfigurable={
-                currentPlan ? currentPlan.configurableFeatures.edges.length > 0 : false
-              }
-            />
-          )}
+          <CostDisplay
+            isCalculating={props.calculatedCost === undefined}
+            baseCost={props.calculatedCost || currentPlan?.cost || 0}
+            meteredFeatures={currentPlan?.meteredFeatures.edges as any}
+            isConfigurable={currentPlan ? currentPlan.configurableFeatures.edges.length > 0 : false}
+          />
           <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
         </footer>
       </div>

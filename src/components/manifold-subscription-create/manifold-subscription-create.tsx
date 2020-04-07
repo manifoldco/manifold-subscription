@@ -37,7 +37,6 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) setupIntentStatus?: SetupIntent.Status;
   @Prop({ mutable: true }) setupIntentError?: string;
   @Prop({ mutable: true }) subscribing?: boolean = false;
-  // TODO watch configuredFeatures and get cost
   @Prop({ mutable: true }) configuredFeatures: FeatureMap = {};
   @Prop({ mutable: true }) calculatedCost?: number;
 
@@ -161,7 +160,7 @@ export class ManifoldSubscriptionCreate {
       } else {
         this.setupIntentStatus = setupIntent?.status;
         if (setupIntent?.status === 'succeeded') {
-          // TODO Send setupIntent.payment_method to your server to save the card to a Customer
+          // TODO run createSubscription() query
           // eslint-disable-next-line no-console
           console.log(this.configuredFeatures);
         }
@@ -174,7 +173,6 @@ export class ManifoldSubscriptionCreate {
   };
 
   setConfiguredFeature = (label: string, value: string | number | boolean) => {
-    // Insert new value (this might not be needed if set to default values)
     this.configuredFeatures = { ...this.configuredFeatures, [label]: value };
   };
 
