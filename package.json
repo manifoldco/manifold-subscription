@@ -1,5 +1,5 @@
 {
-  "name": "manifold-subscription",
+  "name": "@manifoldco/manifold-subscription",
   "version": "0.0.0-next.0",
   "description": "Manifold Subscription Create Web Components",
   "main": "dist/index.js",
