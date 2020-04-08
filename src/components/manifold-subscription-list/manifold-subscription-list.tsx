@@ -2,8 +2,9 @@ import { Component, Element, Prop, h, Watch } from '@stencil/core';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
 import { SubscriptionsQuery, SubscriptionsQueryVariables } from '../../types/graphql';
-import PlanCard from '../manifold-subscription-create/components/PlanCard';
+import SubscriptionCard from './components/SubscriptionCard';
 import query from './subscriptions.graphql';
+import MockData from './subscription-mock-data';
 
 @Component({
   tag: 'manifold-subscription-list',
@@ -38,17 +39,17 @@ export class ManifoldSubscriptionList {
 
     this.loading = true;
 
-    const variables: SubscriptionsQueryVariables = { owner };
-    const { data, errors } = await this.connection.graphqlFetch<SubscriptionsQuery>({
-      query,
-      variables,
-    });
+    // const variables: SubscriptionsQueryVariables = { owner };
+    // const { data, errors } = await this.connection.graphqlFetch<SubscriptionsQuery>({
+    //   query,
+    //   variables,
+    // });
 
-    if (errors) {
-      this.errors = errors;
-    }
-    if (data) {
-      this.data = data;
+    // if (errors) {
+    //   this.errors = errors;
+    // }
+    if (MockData) {
+      this.data = MockData;
     }
 
     this.loading = false;
@@ -68,11 +69,11 @@ export class ManifoldSubscriptionList {
 
   render() {
     return (
-      <div class="ManifoldSubscriptionList">
-        {this.heading && <h1 class="ManifoldSubscriptionList__Heading">{this.heading}</h1>}
+      <div class="ManifoldSubscription">
+        {this.heading && <h1 class="ManifoldSubscription__List__Heading">{this.heading}</h1>}
 
         {this.data?.subscriptions.edges.map(sub => {
-          return <PlanCard isLoading={this.loading} plan={sub.node.plan || undefined} />;
+          return <SubscriptionCard isLoading={this.loading} plan={sub.node.plan || undefined} />;
         })}
       </div>
     );

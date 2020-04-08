@@ -1,7 +1,8 @@
 @use "node_modules/@manifoldco/mercury";
-$name: 'ManifoldSubscriptionCreate';
+$name: 'ManifoldSubscription';
 
 @use 'elements/subscription-create' with ($name: $name);
+@use 'elements/subscription-list' with ($name: $name);
 @use 'elements/card' with ($name: $name);
 @use 'elements/cost' with ($name: $name);
 @use 'elements/field' with ($name: $name);
@@ -38,4 +39,8 @@ manifold-subscription-create {
     display: block;
     width: 1em;
   }
+}
+
+manifold-subscription-list * {
+  all: unset;
 }

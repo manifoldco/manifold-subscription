@@ -1,7 +1,7 @@
 @use "node_modules/@manifoldco/mercury";
 $name: '' !default;
 
-.#{$name} {
+.#{$name}__Create {
   display: grid;
   gap: 1em;
   box-sizing: border-box;

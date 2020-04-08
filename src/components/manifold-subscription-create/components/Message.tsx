@@ -5,9 +5,7 @@ interface MessageProps {
 }
 
 const resolveClass = (type: MessageProps['type']) =>
-  `ManifoldSubscriptionCreate__Message ${
-    type ? `ManifoldSubscriptionCreate__Message--${type}` : ''
-  }`;
+  `ManifoldSubscription__Message ${type ? `ManifoldSubscription__Message--${type}` : ''}`;
 
 const Message: FunctionalComponent<MessageProps> = ({ type }, children) => (
   <p class={resolveClass(type)}>{children}</p>
