@@ -11,7 +11,6 @@ import planListQuery from './plan-list.graphql';
 import { FeatureMap } from '../../utils/plan';
 
 // TODO add all these to the component API
-//   $productId: ID!
 //   $planId: ID! (done)
 //   $regionId: ID!
 //   $label: String
@@ -168,9 +167,13 @@ export class ManifoldSubscriptionCreate {
       const { cost } = await this.connection.gateway.post<
         { cost: number },
         { features: FeatureMap }
-      >(`/id/plan/${this.planId}/cost`, {
-        features: configuredFeatures,
-      });
+      >(
+        `/id/plan/${this.planId}/cost`,
+        {
+          features: configuredFeatures,
+        },
+        { signal: this.controller.signal }
+      );
 
       this.calculatedCost = cost;
     } catch (e) {

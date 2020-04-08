@@ -36,7 +36,7 @@ const NumberInput: FunctionalComponent<NumberInputProps> = props => {
         pattern="[0-9]*"
         onInput={e => {
           const input = e.target as HTMLInputElement;
-          onChange(name, parseInt(input.value as any, 10));
+          onChange(name, parseInt(input.value as string, 10));
         }}
         required
         step={increment}

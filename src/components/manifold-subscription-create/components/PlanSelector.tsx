@@ -1,5 +1,11 @@
 import { h, FunctionalComponent } from '@stencil/core';
-import { PlanListQuery, PlanConfigurableFeatureEdge } from '../../../types/graphql';
+import {
+  PlanListQuery,
+  PlanConfigurableFeatureEdge,
+  PlanFixedFeatureEdge,
+  PlanMeteredFeatureEdge,
+  PlanEdge,
+} from '../../../types/graphql';
 import FixedFeature from './FixedFeature';
 import MeteredFeature from './MeteredFeature';
 import ConfigurableFeature from './ConfigurableFeature';
@@ -31,7 +37,7 @@ const PlanMenu: FunctionalComponent<PlanMenuProps> = ({
             checked={plan.id === selectedPlanId}
             onClick={() => {
               setPlanId(plan.id);
-              resetConfiguredFeatures(configurableFeatureDefaults(plans as any, plan.id));
+              resetConfiguredFeatures(configurableFeatureDefaults(plans as PlanEdge[], plan.id));
             }}
           />
           <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} />
@@ -86,10 +92,10 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
         </h2>
         <dl class="ManifoldSubscriptionCreate__PlanSelector__FeatureList">
           {currentPlan?.fixedFeatures.edges.map(fixedFeature => (
-            <FixedFeature fixedFeature={fixedFeature as any} />
+            <FixedFeature fixedFeature={fixedFeature as PlanFixedFeatureEdge} />
           ))}
           {currentPlan?.meteredFeatures.edges.map(meteredFeature => (
-            <MeteredFeature meteredFeature={meteredFeature as any} />
+            <MeteredFeature meteredFeature={meteredFeature as PlanMeteredFeatureEdge} />
           ))}
           {currentPlan?.configurableFeatures.edges.map(configurableFeature => (
             <ConfigurableFeature
@@ -104,7 +110,7 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
           <CostDisplay
             isCalculating={props.calculatedCost === undefined}
             baseCost={props.calculatedCost || currentPlan?.cost || 0}
-            meteredFeatures={currentPlan?.meteredFeatures.edges as any}
+            meteredFeatures={currentPlan?.meteredFeatures.edges as PlanMeteredFeatureEdge[]}
             isConfigurable={currentPlan ? currentPlan.configurableFeatures.edges.length > 0 : false}
           />
           <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>

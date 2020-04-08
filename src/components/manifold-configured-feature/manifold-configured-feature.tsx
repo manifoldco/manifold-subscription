@@ -1,5 +1,4 @@
-import { Component, Event, Prop, Watch } from '@stencil/core';
-import { EventEmitter } from '@manifoldco/manifold-init-types/types/stencil.core';
+import { Component, Event, Prop, Watch, EventEmitter } from '@stencil/core';
 
 @Component({
   tag: 'manifold-configured-feature',

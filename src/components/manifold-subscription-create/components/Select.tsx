@@ -1,6 +1,6 @@
 import { h, FunctionalComponent } from '@stencil/core';
 
-interface Option {
+export interface Option {
   label: string;
   value: string;
 }

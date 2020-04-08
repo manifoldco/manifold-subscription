@@ -13,7 +13,7 @@ interface PlanCardProps {
 
 const defaultPlan: PlanCardProps['plan'] = {
   displayName: 'Plan Name',
-  cost: 0,
+  cost: 100,
 };
 
 const PlanCard: FunctionalComponent<PlanCardProps> = (

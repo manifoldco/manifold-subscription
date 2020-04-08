@@ -11,7 +11,7 @@ const SkeletonPlanSelector: FunctionalComponent = () => (
         ['Third Plan', 1000],
       ].map(([displayName, cost]) => (
         <li>
-          <PlanCard isLoading plan={{ displayName, cost } as any} />
+          <PlanCard isLoading plan={{ displayName: displayName as string, cost: cost as number }} />
         </li>
       ))}
     </ul>

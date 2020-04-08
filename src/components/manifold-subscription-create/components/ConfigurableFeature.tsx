@@ -1,4 +1,5 @@
 import { h, FunctionalComponent } from '@stencil/core';
+import lock from '@manifoldco/mercury/icons/lock.svg';
 import { $ } from '../../../utils/currency';
 import {
   PlanConfigurableFeatureEdge,
@@ -7,7 +8,7 @@ import {
 } from '../../../types/graphql';
 import { fixedDisplayValue } from './FixedFeature';
 import NumberInput from './NumberInput';
-import Select from './Select';
+import Select, { Option } from './Select';
 
 interface ConfigurableFeatureProps {
   configurableFeature: PlanConfigurableFeatureEdge;
@@ -65,12 +66,10 @@ const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
     return [
       <dt class="ManifoldSubscriptionCreate__PlanSelector__FeatureName">{displayName}</dt>,
       <dd class="ManifoldSubscriptionCreate__PlanSelector__FeatureValue">
-        <manifold-tooltip labelText="Feature cannot be resized on an existing resource.">
-          <span class="value" data-value={value} data-locked>
-            {/* <manifold-icon class="icon" icon={lock} marginRight /> */}
-            {getDisplayValue(value, configurableFeature.node)}
-          </span>
-        </manifold-tooltip>
+        <span class="value" data-value={value} data-locked>
+          <i innerHTML={lock} />
+          {getDisplayValue(value, configurableFeature.node)}
+        </span>
       </dd>,
     ];
   }
@@ -78,7 +77,7 @@ const ConfigurableFeature: FunctionalComponent<ConfigurableFeatureProps> = ({
   switch (type) {
     // string
     case PlanFeatureType.String: {
-      const selectOptions: any[] = featureOptions
+      const selectOptions: Option[] = featureOptions
         ? featureOptions.map(o => ({
             label: `${o.displayName} (${$(o.cost)})`,
             value: o.value,
