@@ -5,7 +5,6 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
 import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
 import { PlanListQuery, PlanQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
@@ -18,7 +17,6 @@ export namespace Components {
     interface ManifoldSubscriptionCreate {
         "calculatedCost"?: number;
         "configuredFeatures": FeatureMap;
-        "connection"?: Connection;
         "data"?: PlanQuery;
         /**
           * (Optional) Name given to the new subscription
@@ -30,6 +28,7 @@ export namespace Components {
          */
         "heading"?: string;
         "isEditing": boolean;
+        "isLoadingPlanSelector"?: boolean;
         /**
           * (Optional) Label given to the new subscription
          */
@@ -72,7 +71,6 @@ declare namespace LocalJSX {
     interface ManifoldSubscriptionCreate {
         "calculatedCost"?: number;
         "configuredFeatures"?: FeatureMap;
-        "connection"?: Connection;
         "data"?: PlanQuery;
         /**
           * (Optional) Name given to the new subscription
@@ -84,6 +82,7 @@ declare namespace LocalJSX {
          */
         "heading"?: string;
         "isEditing"?: boolean;
+        "isLoadingPlanSelector"?: boolean;
         /**
           * (Optional) Label given to the new subscription
          */

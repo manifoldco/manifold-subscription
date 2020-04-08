@@ -25,12 +25,14 @@ import { FeatureMap } from '../../utils/plan';
 export class ManifoldSubscriptionCreate {
   @Element() el: HTMLElement;
 
+  connection?: Connection;
+
   stripe: Stripe | null;
   cardPlaceholder?: HTMLDivElement;
   @State() card: StripeCardElement;
 
-  @Prop({ mutable: true }) connection?: Connection;
   @Prop({ mutable: true }) loading?: boolean = false;
+  @Prop({ mutable: true }) isLoadingPlanSelector?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
   @Prop({ mutable: true }) data?: PlanQuery;
   @Prop({ mutable: true }) planListData?: PlanListQuery;
@@ -49,10 +51,6 @@ export class ManifoldSubscriptionCreate {
    */
   @Prop({ mutable: true }) planId: string;
 
-  resetConfiguredFeatures = (defaultFeatures: FeatureMap = {}) => {
-    this.configuredFeatures = defaultFeatures;
-  };
-
   @Prop({ mutable: true }) isEditing: boolean = false;
   /**
    * (Optional) Name given to the new subscription
@@ -62,41 +60,6 @@ export class ManifoldSubscriptionCreate {
    * (Optional) Label given to the new subscription
    */
   @Prop() label?: string;
-
-  @Watch('planId') async updatePlan(planId?: string) {
-    if (!planId) {
-      throw new Error('Missing property `planId` on `manifold-subscription-create`');
-    }
-
-    if (!this.connection) {
-      throw new Error('Missing property `connection` on `manifold-subscription-create`.');
-    }
-
-    this.loading = true;
-
-    const variables: PlanQueryVariables = { planId };
-    const { data, errors } = await this.connection.graphqlFetch<PlanQuery>({
-      query: planQuery,
-      variables,
-    });
-
-    const { data: planListData, errors: planListErrors } = await this.connection.graphqlFetch<
-      PlanListQuery
-    >({
-      query: planListQuery,
-      variables: { productLabel: data?.plan.product.label },
-    });
-
-    if (errors || planListErrors) {
-      this.errors = errors;
-    }
-    if (data && planListData) {
-      this.data = data;
-      this.planListData = planListData;
-    }
-
-    this.loading = false;
-  }
 
   async componentWillLoad() {
     await customElements.whenDefined('manifold-init');
@@ -108,12 +71,6 @@ export class ManifoldSubscriptionCreate {
     });
 
     this.updatePlan(this.planId);
-  }
-
-  @Listen('manifold-configured-feature-change')
-  updateConfiguredFeature(event: CustomEvent<{ label: string; value: string | number | boolean }>) {
-    const { label, value } = event.detail;
-    this.setConfiguredFeature(label, value);
   }
 
   @Watch('data')
@@ -141,43 +98,45 @@ export class ManifoldSubscriptionCreate {
     }
   }
 
-  subscribe = async (e: UIEvent) => {
-    e.preventDefault();
-    if (this.data && this.stripe && !this.subscribing) {
-      this.subscribing = true;
-      const { stripeSetupIntentSecret } = this.data.profile;
-
-      const { setupIntent, error } = await this.stripe.confirmCardSetup(stripeSetupIntentSecret, {
-        payment_method: {
-          card: this.card,
-        },
-      });
-
-      this.subscribing = false;
-
-      if (error) {
-        this.setupIntentError = error.message;
-      } else {
-        this.setupIntentStatus = setupIntent?.status;
-        if (setupIntent?.status === 'succeeded') {
-          // TODO run createSubscription() query
-          // eslint-disable-next-line no-console
-          console.log(this.configuredFeatures);
-        }
-      }
+  @Watch('planId') async updatePlan(planId?: string) {
+    if (!planId) {
+      throw new Error('Missing property `planId` on `manifold-subscription-create`');
     }
-  };
 
-  setPlanId = (planId: string) => {
-    this.planId = planId;
-  };
+    if (!this.connection) {
+      throw new Error('Missing property `connection` on `manifold-subscription-create`.');
+    }
+
+    this.loading = true;
+
+    const variables: PlanQueryVariables = { planId };
+    const { data, errors } = await this.connection.graphqlFetch<PlanQuery>({
+      query: planQuery,
+      variables,
+    });
+
+    if (errors) {
+      this.errors = errors;
+    }
+    if (data) {
+      this.data = data;
+    }
+
+    this.loading = false;
+  }
+
+  @Listen('manifold-configured-feature-change')
+  updateConfiguredFeature(event: CustomEvent<{ label: string; value: string | number | boolean }>) {
+    const { label, value } = event.detail;
+    this.setConfiguredFeature(label, value);
+  }
 
   setConfiguredFeature = (label: string, value: string | number | boolean) => {
     this.configuredFeatures = { ...this.configuredFeatures, [label]: value };
   };
 
-  toggleIsEditing = () => {
-    this.isEditing = !this.isEditing;
+  resetConfiguredFeatures = (defaultFeatures: FeatureMap = {}) => {
+    this.configuredFeatures = defaultFeatures;
   };
 
   controller?: AbortController;
@@ -223,6 +182,63 @@ export class ManifoldSubscriptionCreate {
     return undefined;
   }
 
+  subscribe = async (e: UIEvent) => {
+    e.preventDefault();
+    if (this.data && this.stripe && !this.subscribing) {
+      this.subscribing = true;
+      const { stripeSetupIntentSecret } = this.data.profile;
+
+      const { setupIntent, error } = await this.stripe.confirmCardSetup(stripeSetupIntentSecret, {
+        payment_method: {
+          card: this.card,
+        },
+      });
+
+      this.subscribing = false;
+
+      if (error) {
+        this.setupIntentError = error.message;
+      } else {
+        this.setupIntentStatus = setupIntent?.status;
+        if (setupIntent?.status === 'succeeded') {
+          // TODO run createSubscription() query
+          // eslint-disable-next-line no-console
+          console.log(this.configuredFeatures);
+        }
+      }
+    }
+  };
+
+  setPlanId = (planId: string) => {
+    this.planId = planId;
+  };
+
+  toggleIsEditing = async () => {
+    this.isEditing = !this.isEditing;
+
+    if (!this.connection || !this.data) {
+      return undefined;
+    }
+
+    this.isLoadingPlanSelector = true;
+
+    const { data, errors } = await this.connection.graphqlFetch<PlanListQuery>({
+      query: planListQuery,
+      variables: { productLabel: this.data?.plan.product.label },
+    });
+
+    if (errors) {
+      this.errors = errors;
+    }
+
+    if (data) {
+      this.planListData = data;
+    }
+
+    this.isLoadingPlanSelector = false;
+    return null;
+  };
+
   render() {
     return (
       <div class="ManifoldSubscriptionCreate">
@@ -236,6 +252,7 @@ export class ManifoldSubscriptionCreate {
             configuredFeatures={this.configuredFeatures}
             calculatedCost={this.calculatedCost}
             data={this.planListData}
+            isLoading={this.isLoadingPlanSelector}
           />
         ) : (
           <PlanCard isLoading={this.loading} plan={this.data?.plan || undefined}>

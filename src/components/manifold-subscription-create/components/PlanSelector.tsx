@@ -6,6 +6,7 @@ import ConfigurableFeature from './ConfigurableFeature';
 import PlanCard from './PlanCard';
 import { FeatureMap, configurableFeatureDefaults } from '../../../utils/plan';
 import CostDisplay from './CostDisplay';
+import SkeletonPlanSelector from './SkeletonPlanSelector';
 
 interface PlanMenuProps {
   plans: PlanListQuery['product']['plans']['edges'];
@@ -45,12 +46,17 @@ interface PlanSelectorProps {
   configuredFeatures: FeatureMap;
   calculatedCost?: number;
   data?: PlanListQuery;
+  isLoading?: boolean;
   setPlanId: (planId: string) => void;
   setConfiguredFeature: (label: string, value: string | number | boolean) => void;
   resetConfiguredFeatures: (configuredFeatures: FeatureMap) => void;
 }
 
 const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
+  if (props.isLoading) {
+    return <SkeletonPlanSelector />;
+  }
+
   const { planId, setPlanId, data } = props;
   const { configuredFeatures, setConfiguredFeature, resetConfiguredFeatures } = props;
 
