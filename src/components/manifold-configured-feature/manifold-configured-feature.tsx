@@ -27,7 +27,7 @@ export class ManifoldConfiguredFeature {
     });
   }
 
-  isRequired(name: string, value?: any) {
+  isRequired(name: string, value?: string | number | boolean) {
     if (!value) {
       throw new Error(`Prop ${name} on manifold-configured-feature is required`);
     }

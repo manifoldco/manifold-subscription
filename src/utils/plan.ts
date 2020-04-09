@@ -1,14 +1,6 @@
-// import { Gateway } from '../types/gateway';
 import { $ } from './currency';
 import { pluralize } from './string';
-// import { RestFetch } from './restFetch';
 import { PlanMeteredFeatureNumericDetails, PlanFeatureType, PlanEdge } from '../types/graphql';
-
-// interface PlanCostOptions {
-//   planID: string;
-//   features: Gateway.FeatureMap;
-//   init: RequestInit;
-// }
 
 export interface PricingTier {
   cost: number;
@@ -130,22 +122,6 @@ export function meteredFeatureDisplayValue(
 
   return { cost: $(featureCost(cost)), per: `/ ${unit}` };
 }
-
-/**
- * Fetch cost from our API
- */
-// export function planCost(restFetch: RestFetch, { planID, features, init }: PlanCostOptions) {
-//   return restFetch<Gateway.Price>({
-//     service: 'gateway',
-//     endpoint: `/id/plan/${planID}/cost`,
-//     body: { features },
-//     options: {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       ...init,
-//     },
-//   });
-// }
 
 export interface FeatureMap {
   [label: string]: string | number | boolean | undefined;

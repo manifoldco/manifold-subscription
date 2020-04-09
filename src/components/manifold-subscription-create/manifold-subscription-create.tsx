@@ -134,8 +134,8 @@ export class ManifoldSubscriptionCreate {
     this.configuredFeatures = { ...this.configuredFeatures, [label]: value };
   };
 
-  resetConfiguredFeatures = (defaultFeatures: FeatureMap = {}) => {
-    this.configuredFeatures = defaultFeatures;
+  setAllConfiguredFeatures = (features: FeatureMap = {}) => {
+    this.configuredFeatures = features;
   };
 
   controller?: AbortController;
@@ -248,11 +248,15 @@ export class ManifoldSubscriptionCreate {
         {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
         {this.isEditing ? (
           <PlanSelector
-            planId={this.planId}
-            setPlanId={this.setPlanId}
-            setConfiguredFeature={this.setConfiguredFeature}
-            resetConfiguredFeatures={this.resetConfiguredFeatures}
-            configuredFeatures={this.configuredFeatures}
+            planId={{
+              value: this.planId,
+              set: this.setPlanId,
+            }}
+            configuredFeatures={{
+              value: this.configuredFeatures,
+              set: this.setConfiguredFeature,
+              setAll: this.setAllConfiguredFeatures,
+            }}
             calculatedCost={this.calculatedCost}
             data={this.planListData}
             isLoading={this.isLoadingPlanSelector}

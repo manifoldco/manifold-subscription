@@ -18,14 +18,14 @@ interface PlanMenuProps {
   plans: PlanListQuery['product']['plans']['edges'];
   selectedPlanId: string;
   setPlanId: (planId: string) => void;
-  resetConfiguredFeatures: (configuredFeatures: FeatureMap) => void;
+  setAllConfiguredFeatures: (configuredFeatures: FeatureMap) => void;
 }
 
 const PlanMenu: FunctionalComponent<PlanMenuProps> = ({
   plans,
   selectedPlanId,
   setPlanId,
-  resetConfiguredFeatures,
+  setAllConfiguredFeatures,
 }) => (
   <ul class="ManifoldSubscriptionCreate__PlanSelector__Menu">
     {plans.map(({ node: plan }) => (
@@ -37,7 +37,7 @@ const PlanMenu: FunctionalComponent<PlanMenuProps> = ({
             checked={plan.id === selectedPlanId}
             onClick={() => {
               setPlanId(plan.id);
-              resetConfiguredFeatures(configurableFeatureDefaults(plans as PlanEdge[], plan.id));
+              setAllConfiguredFeatures(configurableFeatureDefaults(plans as PlanEdge[], plan.id));
             }}
           />
           <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} />
@@ -47,15 +47,23 @@ const PlanMenu: FunctionalComponent<PlanMenuProps> = ({
   </ul>
 );
 
+interface PlanId {
+  value: string;
+  set: (planId: string) => void;
+}
+
+interface ConfiguredFeatures {
+  value: FeatureMap;
+  set: (label: string, value: string | number | boolean) => void;
+  setAll: (configuredFeatures: FeatureMap) => void;
+}
+
 interface PlanSelectorProps {
-  planId: string;
-  configuredFeatures: FeatureMap;
+  planId: PlanId;
+  configuredFeatures: ConfiguredFeatures;
   calculatedCost?: number;
   data?: PlanListQuery;
   isLoading?: boolean;
-  setPlanId: (planId: string) => void;
-  setConfiguredFeature: (label: string, value: string | number | boolean) => void;
-  resetConfiguredFeatures: (configuredFeatures: FeatureMap) => void;
 }
 
 const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
@@ -63,8 +71,7 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
     return <SkeletonPlanSelector />;
   }
 
-  const { planId, setPlanId, data } = props;
-  const { configuredFeatures, setConfiguredFeature, resetConfiguredFeatures } = props;
+  const { planId, configuredFeatures, data } = props;
 
   if (!data) {
     return null;
@@ -72,15 +79,15 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
 
   const plans = data.product.plans.edges;
 
-  const currentPlan = plans.find(({ node: plan }) => plan.id === planId)?.node;
+  const currentPlan = plans.find(({ node: plan }) => plan.id === planId.value)?.node;
 
   return (
     <div class="ManifoldSubscriptionCreate__PlanSelector">
       <PlanMenu
         plans={plans}
-        selectedPlanId={planId}
-        setPlanId={setPlanId}
-        resetConfiguredFeatures={resetConfiguredFeatures}
+        selectedPlanId={planId.value}
+        setPlanId={planId.set}
+        setAllConfiguredFeatures={configuredFeatures.setAll}
       />
       <div
         class="ManifoldSubscriptionCreate__PlanSelector__Details"
@@ -99,9 +106,9 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
           ))}
           {currentPlan?.configurableFeatures.edges.map(configurableFeature => (
             <ConfigurableFeature
-              setConfiguredFeature={setConfiguredFeature}
+              setConfiguredFeature={configuredFeatures.set}
               configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
-              value={configuredFeatures[configurableFeature.node.label]}
+              value={configuredFeatures.value[configurableFeature.node.label]}
             />
           ))}
         </dl>
