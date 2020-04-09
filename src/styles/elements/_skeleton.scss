@@ -62,6 +62,6 @@ $name: '' !default;
   }
 }
 
-manifold-subsciption-create [data-is-loading] {
+manifold-subscription-create [data-is-loading] {
   @include Skeleton();
 }

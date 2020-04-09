@@ -1,5 +1,4 @@
-import { Component, Event, Prop, Watch } from '@stencil/core';
-import { EventEmitter } from '@manifoldco/manifold-init-types/types/stencil.core';
+import { Component, Event, Prop, Watch, EventEmitter } from '@stencil/core';
 
 @Component({
   tag: 'manifold-configured-feature',
@@ -12,7 +11,7 @@ export class ManifoldConfiguredFeature {
   @Watch('label') labelChange(value?: string) {
     this.isRequired('label', value);
   }
-  @Prop() value?: string;
+  @Prop() value?: string | number | boolean;
 
   componentDidLoad() {
     this.handlePropChange();
@@ -28,7 +27,7 @@ export class ManifoldConfiguredFeature {
     });
   }
 
-  isRequired(name: string, value?: any) {
+  isRequired(name: string, value?: string | number | boolean) {
     if (!value) {
       throw new Error(`Prop ${name} on manifold-configured-feature is required`);
     }

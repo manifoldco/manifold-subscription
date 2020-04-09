@@ -2,13 +2,40 @@
 $name: 'ManifoldSubscriptionCreate';
 
 @use 'elements/subscription-create' with ($name: $name);
-@use 'elements/skeleton' with ($name: $name);
 @use 'elements/card' with ($name: $name);
 @use 'elements/cost' with ($name: $name);
 @use 'elements/field' with ($name: $name);
 @use 'elements/button' with ($name: $name);
 @use 'elements/message' with ($name: $name);
+@use 'elements/badge' with ($name: $name);
+@use 'elements/cost-display' with ($name: $name);
+@use 'elements/boolean-input' with ($name: $name);
+@use 'elements/plan-selector' with ($name: $name);
+@use 'elements/skeleton' with ($name: $name);
 
-manifold-subscription-create * {
-  all: unset;
+manifold-subscription-create {
+  box-sizing: border-box;
+
+  button,
+  input,
+  select,
+  dl,
+  dt,
+  dd,
+  h1,
+  h2,
+  p,
+  ul,
+  li {
+    all: unset;
+  }
+
+  * {
+    box-sizing: inherit;
+  }
+
+  i {
+    display: block;
+    width: 1em;
+  }
 }

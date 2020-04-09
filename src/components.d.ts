@@ -5,21 +5,18 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
 import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
-import { PlanQuery, } from "./types/graphql";
+import { PlanListQuery, PlanQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
+import { FeatureMap, } from "./utils/plan";
 export namespace Components {
     interface ManifoldConfiguredFeature {
         "label"?: string;
-        "value"?: string;
+        "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
-        "configuredFeatures": {
-            label: string;
-            value: string;
-        }[];
-        "connection"?: Connection;
+        "calculatedCost"?: number;
+        "configuredFeatures": FeatureMap;
         "data"?: PlanQuery;
         /**
           * (Optional) Name given to the new subscription
@@ -30,6 +27,8 @@ export namespace Components {
           * Component heading text
          */
         "heading"?: string;
+        "isEditing": boolean;
+        "isLoadingPlanSelector"?: boolean;
         /**
           * (Optional) Label given to the new subscription
          */
@@ -38,7 +37,8 @@ export namespace Components {
         /**
           * Plan ID for the new subscription
          */
-        "planId"?: string;
+        "planId": string;
+        "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
         "subscribing"?: boolean;
@@ -66,14 +66,11 @@ declare namespace LocalJSX {
     interface ManifoldConfiguredFeature {
         "label"?: string;
         "onManifold-configured-feature-change"?: (event: CustomEvent<any>) => void;
-        "value"?: string;
+        "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
-        "configuredFeatures"?: {
-            label: string;
-            value: string;
-        }[];
-        "connection"?: Connection;
+        "calculatedCost"?: number;
+        "configuredFeatures"?: FeatureMap;
         "data"?: PlanQuery;
         /**
           * (Optional) Name given to the new subscription
@@ -84,6 +81,8 @@ declare namespace LocalJSX {
           * Component heading text
          */
         "heading"?: string;
+        "isEditing"?: boolean;
+        "isLoadingPlanSelector"?: boolean;
         /**
           * (Optional) Label given to the new subscription
          */
@@ -93,6 +92,7 @@ declare namespace LocalJSX {
           * Plan ID for the new subscription
          */
         "planId"?: string;
+        "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
         "subscribing"?: boolean;

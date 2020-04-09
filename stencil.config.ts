@@ -34,6 +34,26 @@ function gql(opts: Options = {}) {
   };
 }
 
+function svg(opts: Options = {}) {
+  const filter = createFilter(opts.include || '**/*.svg', opts.exclude);
+
+  return {
+    name: 'svg',
+    // eslint-disable-next-line consistent-return
+    transform(code, id) {
+      if (filter(id)) {
+        // Rollup by default returns a base64 URL. Decode that back into HTML for SVGs
+        const transformed = code.replace(/'[^']+'/, data =>
+          JSON.stringify(
+            Buffer.from(data.replace('data:image/svg+xml;base64,', ''), 'base64').toString('utf8')
+          )
+        );
+        return { code: transformed };
+      }
+    },
+  };
+}
+
 export const config: Config = {
   namespace: 'manifold-subscription',
   globalStyle: 'src/styles/index.scss',
@@ -49,6 +69,7 @@ export const config: Config = {
   ],
   plugins: [
     gql(),
+    svg(),
     sass(),
     postcss({
       plugins: [cssnano(), postCSSPresetEnv()],

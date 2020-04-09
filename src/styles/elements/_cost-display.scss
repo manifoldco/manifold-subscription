@@ -1,0 +1,72 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+@keyframes newCost {
+  0% {
+    color: mercury.$color-green;
+    transform: scale(1);
+  }
+
+  10% {
+    transform: scale(1.1);
+  }
+
+  30% {
+    color: mercury.$color-green;
+    transform: scale(1);
+  }
+
+  100% {
+    color: initial;
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-color: mercury.$color-grayLight;
+    box-shadow: 0.75em 0 0 0 mercury.$color-grayLighter, 1.5em 0 0 0 mercury.$color-grayLightest;
+  }
+
+  33% {
+    background-color: mercury.$color-grayLighter;
+    box-shadow: 0.75em 0 0 0 mercury.$color-grayLight, 1.5em 0 0 0 mercury.$color-grayLighter;
+  }
+
+  66% {
+    background-color: mercury.$color-grayLightest;
+    box-shadow: 0.75em 0 0 0 mercury.$color-grayLighter, 1.5em 0 0 0 mercury.$color-grayLight;
+  }
+
+  100% {
+    background-color: mercury.$color-grayLight;
+    box-shadow: 0.75em 0 0 0 mercury.$color-grayLighter, 1.5em 0 0 0 mercury.$color-grayLightest;
+  }
+}
+
+.#{$name}__CostDisplay {
+  display: flex;
+  align-items: center;
+  min-height: 1.25em;
+  color: initial;
+
+  [itemprop='price'] {
+    animation-name: newCost;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-out;
+  }
+
+  small {
+    font-size: 0.9em;
+    opacity: 0.6;
+  }
+
+  &__Calculating {
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 50%;
+    animation-name: loading;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+}
