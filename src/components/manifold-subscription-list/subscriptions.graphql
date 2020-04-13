@@ -1,5 +1,5 @@
 query Subscriptions($owner: ProfileIdentity!) {
-  subscriptions(first: 10) {
+  subscriptions(first: 10, owner: $owner) {
     edges {
       node {
         plan {

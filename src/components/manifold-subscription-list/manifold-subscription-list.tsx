@@ -51,6 +51,9 @@ export class ManifoldSubscriptionList {
     if (MockData) {
       this.data = MockData;
     }
+    // if (data) {
+    //   this.data = data;
+    // }
 
     this.loading = false;
   }

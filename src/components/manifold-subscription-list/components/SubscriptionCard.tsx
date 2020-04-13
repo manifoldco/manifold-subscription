@@ -18,7 +18,7 @@ const SubscriptionCard: FunctionalComponent<SubscriptionCardProps> = ({
   isLoading,
   plan = defaultPlan,
 }) => (
-  <div class="ManifoldSubscription__Card">
+  <div class="ManifoldSubscription__Card ManifoldSubscription__List__Card">
     <div class="ManifoldSubscription__PlanName" data-is-loading={isLoading}>
       {plan.displayName}
     </div>
