@@ -1,7 +1,8 @@
 {
   "name": "@manifoldco/manifold-subscription",
   "version": "0.0.0-next.0",
-  "description": "Manifold Subscription Create Web Components",
+  "private": false,
+  "description": "Manifold Subscription Web Components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "es2015": "dist/esm/index.mjs",
