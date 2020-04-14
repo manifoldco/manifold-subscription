@@ -284,7 +284,11 @@ export class ManifoldSubscriptionCreate {
               Credit Card Field
             </div>
           </label>
-          <button class="ManifoldSubscription__Button" type="submit" disabled={this.subscribing}>
+          <button
+            class="ManifoldSubscriptionCreate__Button"
+            type="submit"
+            disabled={this.subscribing}
+          >
             {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
           </button>
           <p class="ManifoldSubscriptionCreate__HelpText" data-centered>
