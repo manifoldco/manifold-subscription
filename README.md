@@ -4,8 +4,8 @@
 
 **Components**
 
-- `manifold-subscription-create`
-  - `manifold-configured-feature`
+- `<manifold-subscription-create>`
+  - `<manifold-configured-feature>`
 
 <!-- List new components here -->
 
