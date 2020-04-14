@@ -3,8 +3,8 @@ $name: '' !default;
 
 .#{$name}__List {
   display: grid;
-  gap: 0.5em;
-  grid-gap: 0.5em;
+  gap: 1em;
+  grid-gap: 1em;
   box-sizing: border-box;
   color: mercury.$color-grayDarker;
   font-size: 1em;
@@ -12,15 +12,15 @@ $name: '' !default;
   &__Heading {
     font-size: 1.5em;
     text-align: justify;
-    padding-bottom: 0.5em;
+    padding-bottom: 0.25em;
   }
 
   &__Card {
     position: relative;
     display: grid;
-    gap: 0.5em;
+    gap: 0em;
     justify-items: start;
-    padding: 1em;
+    padding: 0.8em;
     background-color: mercury.$color-white;
     border: 1px solid mercury.$color-grayLight;
     border-radius: 0.4em;
@@ -33,11 +33,12 @@ $name: '' !default;
     grid-column: 2;
     align-self: center;
     justify-self: end;
+    font-size: 0.9em;
   }
 
   &__Icon {
     position: absolute;
-    margin-block-start: -.2em;
+    margin-block-start: -.1em;
     margin-inline-start: .4em;
     fill: mercury.$color-gray;
     width: 1.4em;
