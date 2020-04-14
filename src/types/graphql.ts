@@ -119,12 +119,8 @@ export type CreateResourcePayload = {
 };
 
 export type CreateSubscriptionAgreementInput = {
-  label: Scalars['String'];
-  displayName: Maybe<Scalars['String']>;
   owner: Maybe<Scalars['ProfileIdentity']>;
-  productId: Scalars['ID'];
   planId: Scalars['ID'];
-  regionId: Scalars['ID'];
   configuredFeatures: Maybe<Array<ConfiguredFeatureInput>>;
 };
 
@@ -163,6 +159,15 @@ export type DeleteResourceInput = {
 export type DeleteResourcePayload = {
    __typename?: 'DeleteResourcePayload';
   data: Resource;
+};
+
+export type DeleteSubscriptionAgreementInput = {
+  id: Scalars['ID'];
+};
+
+export type DeleteSubscriptionAgreementPayload = {
+   __typename?: 'DeleteSubscriptionAgreementPayload';
+  data: SubscriptionAgreement;
 };
 
 export enum Duration {
@@ -301,6 +306,8 @@ export type Mutation = {
   updateProfileSubject: UpdateProfileSubjectPayload;
   updateProfileState: UpdateProfileStatePayload;
   createSubscription: CreateSubscriptionAgreementPayload;
+  updateSubscription: UpdateSubscriptionAgreementPayload;
+  deleteSubscription: DeleteSubscriptionAgreementPayload;
 };
 
 
@@ -346,6 +353,16 @@ export type MutationUpdateProfileStateArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   input: CreateSubscriptionAgreementInput;
+};
+
+
+export type MutationUpdateSubscriptionArgs = {
+  input: UpdateSubscriptionAgreementInput;
+};
+
+
+export type MutationDeleteSubscriptionArgs = {
+  input: DeleteSubscriptionAgreementInput;
 };
 
 export type Node = {
@@ -848,6 +865,7 @@ export type Profile = {
   id: Scalars['ID'];
   subject: Scalars['String'];
   stripeAccountID: Maybe<Scalars['String']>;
+  stripeAccount: Maybe<StripeAccount>;
   stripeSetupIntentSecret: Maybe<Scalars['String']>;
   platform: Platform;
   invoicePreview: Maybe<Invoice>;
@@ -1025,7 +1043,6 @@ export type QueryRegionsArgs = {
 
 export type QuerySubscriptionArgs = {
   id: Scalars['ID'];
-  owner: Maybe<Scalars['ProfileIdentity']>;
 };
 
 
@@ -1143,6 +1160,40 @@ export type StringConfiguredFeature = ConfiguredFeature & {
   value: Scalars['String'];
 };
 
+export type StripeAccount = {
+   __typename?: 'StripeAccount';
+  id: Scalars['String'];
+  business_type: StripeBusinessType;
+  capabilities: StripeCapabilities;
+  representative: Maybe<StripePerson>;
+};
+
+export enum StripeBusinessType {
+  Individual = 'INDIVIDUAL',
+  Company = 'COMPANY',
+  NonProfit = 'NON_PROFIT',
+  GovernmentEntity = 'GOVERNMENT_ENTITY'
+}
+
+export type StripeCapabilities = {
+   __typename?: 'StripeCapabilities';
+  card_payments: StripeCapabilityStatus;
+  transfers: StripeCapabilityStatus;
+};
+
+export enum StripeCapabilityStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  Pending = 'PENDING'
+}
+
+export type StripePerson = {
+   __typename?: 'StripePerson';
+  email: Maybe<Scalars['String']>;
+  first_name: Maybe<Scalars['String']>;
+  last_name: Maybe<Scalars['String']>;
+};
+
 export type SubLineItem = {
    __typename?: 'SubLineItem';
   cost: Scalars['Int'];
@@ -1171,7 +1222,6 @@ export type SubscriptionAgreement = Node & {
    __typename?: 'SubscriptionAgreement';
   id: Scalars['ID'];
   plan: Maybe<Plan>;
-  resource: Maybe<SubscriptionAgreementResource>;
   status: SubscriptionAgreementStatus;
 };
 
@@ -1185,20 +1235,6 @@ export type SubscriptionAgreementEdge = {
    __typename?: 'SubscriptionAgreementEdge';
   cursor: Scalars['String'];
   node: Maybe<SubscriptionAgreement>;
-};
-
-export type SubscriptionAgreementResource = Node & {
-   __typename?: 'SubscriptionAgreementResource';
-  id: Scalars['ID'];
-  displayName: Scalars['String'];
-  label: Scalars['String'];
-  credentials: Maybe<CredentialConnection>;
-};
-
-
-export type SubscriptionAgreementResourceCredentialsArgs = {
-  first: Scalars['Int'];
-  after: Maybe<Scalars['String']>;
 };
 
 export type SubscriptionAgreementStatus = {
@@ -1263,6 +1299,17 @@ export type UpdateResourcePlanPayload = {
   data: Resource;
 };
 
+export type UpdateSubscriptionAgreementInput = {
+  id: Scalars['ID'];
+  newPlanID: Maybe<Scalars['ID']>;
+  configuredFeatures: Maybe<Array<ConfiguredFeatureInput>>;
+};
+
+export type UpdateSubscriptionAgreementPayload = {
+   __typename?: 'UpdateSubscriptionAgreementPayload';
+  data: SubscriptionAgreement;
+};
+
 export type ValueProp = {
    __typename?: 'ValueProp';
   header: Scalars['String'];
@@ -1273,6 +1320,28 @@ export type WithUsage = {
   start: Maybe<Scalars['Time']>;
   end: Maybe<Scalars['Time']>;
 };
+
+export type CreateSubscriptionMutationVariables = {
+  ownerId: Maybe<Scalars['ProfileIdentity']>;
+  planId: Scalars['ID'];
+  configuredFeatures: Maybe<Array<ConfiguredFeatureInput>>;
+};
+
+
+export type CreateSubscriptionMutation = (
+  { __typename?: 'Mutation' }
+  & { createSubscription: (
+    { __typename?: 'CreateSubscriptionAgreementPayload' }
+    & { data: (
+      { __typename?: 'SubscriptionAgreement' }
+      & Pick<SubscriptionAgreement, 'id'>
+      & { status: (
+        { __typename?: 'SubscriptionAgreementStatus' }
+        & Pick<SubscriptionAgreementStatus, 'label' | 'percentDone' | 'message'>
+      ) }
+    ) }
+  ) }
+);
 
 export type PlanFragment = (
   { __typename?: 'Plan' }
@@ -1374,6 +1443,10 @@ export type PlanQuery = (
     )> }
   )>, profile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'stripeSetupIntentSecret' | 'stripeAccountID'>
+    & Pick<Profile, 'id' | 'stripeSetupIntentSecret'>
+    & { stripeAccount: Maybe<(
+      { __typename?: 'StripeAccount' }
+      & Pick<StripeAccount, 'id'>
+    )> }
   ) }
 );

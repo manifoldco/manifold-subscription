@@ -41,6 +41,7 @@ export namespace Components {
         "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
+        "stripePublishableKey": string;
         "subscribing"?: boolean;
     }
 }
@@ -95,6 +96,7 @@ declare namespace LocalJSX {
         "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
+        "stripePublishableKey"?: string;
         "subscribing"?: boolean;
     }
     interface IntrinsicElements {

@@ -2,12 +2,19 @@ import { Component, Element, Prop, h, Watch, State, Listen } from '@stencil/core
 import { loadStripe, Stripe, StripeCardElement, SetupIntent } from '@stripe/stripe-js';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
-import { PlanQuery, PlanQueryVariables, PlanListQuery } from '../../types/graphql';
+import {
+  PlanQuery,
+  PlanQueryVariables,
+  PlanListQuery,
+  CreateSubscriptionMutationVariables,
+  CreateSubscriptionMutation,
+} from '../../types/graphql';
 import PlanSelector from './components/PlanSelector';
 import PlanCard from './components/PlanCard';
 import Message from './components/Message';
 import planQuery from './plan.graphql';
 import planListQuery from './plan-list.graphql';
+import createSubscrptionMutation from './create-subscription.graphql';
 import { FeatureMap } from '../../utils/plan';
 
 // TODO add all these to the component API
@@ -49,6 +56,7 @@ export class ManifoldSubscriptionCreate {
    * Plan ID for the new subscription
    */
   @Prop({ mutable: true }) planId: string;
+  @Prop({ mutable: true }) stripePublishableKey: string;
 
   @Prop({ mutable: true }) isEditing: boolean = false;
   /**
@@ -80,9 +88,9 @@ export class ManifoldSubscriptionCreate {
     }
     // TODO replace token with a Manifold Stripe token.
     // Initialize Stripe
-    this.stripe = await loadStripe(
-      data.profile.stripeAccountID || 'pk_test_TYooMQauvdEDq54NiTphI7jx'
-    );
+    this.stripe = await loadStripe(this.stripePublishableKey, {
+      stripeAccount: data.profile.stripeAccount.id,
+    });
     if (!this.stripe) {
       // TODO handle stripe error
       return;
@@ -204,9 +212,23 @@ export class ManifoldSubscriptionCreate {
       } else {
         this.setupIntentStatus = setupIntent?.status;
         if (setupIntent?.status === 'succeeded') {
-          // TODO run createSubscription() query
-          // eslint-disable-next-line no-console
-          console.log(this.configuredFeatures);
+          const configuredFeatures = Object.keys(this.configuredFeatures).map(key => ({
+            label: key,
+            value: `${this.configuredFeatures[key]}`,
+          }));
+
+          const variables: CreateSubscriptionMutationVariables = {
+            ownerId: undefined,
+            planId: this.planId,
+            configuredFeatures,
+          };
+
+          const res = await this.connection?.graphqlFetch<CreateSubscriptionMutation>({
+            query: createSubscrptionMutation,
+            variables,
+          });
+
+          console.log({ res });
         }
       }
     }
@@ -296,7 +318,7 @@ export class ManifoldSubscriptionCreate {
           </p>
           {/* TODO restyle success state when designs are available */}
           {this.setupIntentStatus === 'succeeded' && (
-            <Message type="success">You've been subscribed!</Message>
+            <Message type="success">Setup intent completed!</Message>
           )}
           {/* TODO restyle error states when designs become available */}
           {this.setupIntentError && <Message type="error">{this.setupIntentError}</Message>}

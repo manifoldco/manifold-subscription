@@ -1,0 +1,18 @@
+mutation CreateSubscription(
+  $ownerId: ProfileIdentity
+  $planId: ID!
+  $configuredFeatures: [ConfiguredFeatureInput!]
+) {
+  createSubscription(
+    input: { owner: $ownerId, planId: $planId, configuredFeatures: $configuredFeatures }
+  ) {
+    data {
+      id
+      status {
+        label
+        percentDone
+        message
+      }
+    }
+  }
+}
