@@ -8,6 +8,9 @@ const MockData: SubscriptionsQuery = {
           plan: {
             displayName: 'Free Plan',
             cost: 0,
+            configurableFeatures: {
+              edges: [],
+            },
           },
         },
       },
@@ -16,6 +19,26 @@ const MockData: SubscriptionsQuery = {
           plan: {
             displayName: 'Test Plan',
             cost: 1000,
+            configurableFeatures: {
+              edges: [],
+            },
+          },
+        },
+      },
+      {
+        node: {
+          plan: {
+            displayName: 'Custom Plan',
+            cost: 0,
+            configurableFeatures: {
+              edges: [
+                {
+                  node: {
+                    displayName: 'My Configurable Feature',
+                  },
+                },
+              ],
+            },
           },
         },
       },

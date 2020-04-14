@@ -2,7 +2,7 @@ import { Component, Element, Prop, h, Watch } from '@stencil/core';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
 import { SubscriptionsQuery, SubscriptionsQueryVariables } from '../../types/graphql';
-import SubscriptionCard from './components/SubscriptionCard';
+import ListCard from './components/ListCard';
 import query from './subscriptions.graphql';
 import MockData from './subscription-mock-data';
 
@@ -72,11 +72,17 @@ export class ManifoldSubscriptionList {
 
   render() {
     return (
-      <div class="ManifoldSubscription">
-        {this.heading && <h1 class="ManifoldSubscription__List__Heading">{this.heading}</h1>}
+      <div class="ManifoldSubscriptionCreate ManifoldSubscriptionCreate__List">
+        {this.heading && <h1 class="ManifoldSubscriptionCreate__List__Heading">{this.heading}</h1>}
 
         {this.data?.subscriptions.edges.map(sub => {
-          return <SubscriptionCard isLoading={this.loading} plan={sub.node.plan || undefined} />;
+          return (
+            <ListCard
+              isLoading={this.loading}
+              plan={sub.node.plan || undefined}
+              isConfigurable={sub.node.plan.configurableFeatures.edges[0] && true}
+            />
+          );
         })}
       </div>
     );

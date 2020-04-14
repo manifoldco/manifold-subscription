@@ -1,5 +1,5 @@
 @use "node_modules/@manifoldco/mercury";
-$name: 'ManifoldSubscription';
+$name: 'ManifoldSubscriptionCreate';
 
 @use 'elements/subscription-create' with ($name: $name);
 @use 'elements/subscription-list' with ($name: $name);
@@ -14,7 +14,7 @@ $name: 'ManifoldSubscription';
 @use 'elements/plan-selector' with ($name: $name);
 @use 'elements/skeleton' with ($name: $name);
 
-manifold-subscription-create {
+manifold-subscription-create, manifold-subscription-list {
   box-sizing: border-box;
 
   button,
@@ -39,8 +39,4 @@ manifold-subscription-create {
     display: block;
     width: 1em;
   }
-}
-
-manifold-subscription-list * {
-  all: unset;
 }

@@ -5,6 +5,13 @@ query Subscriptions($owner: ProfileIdentity!) {
         plan {
           displayName
           cost
+          configurableFeatures(first: 1) {
+            edges {
+              node {
+                displayName
+              }
+            }
+          }
         }
       }
     }

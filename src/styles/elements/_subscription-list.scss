@@ -3,15 +3,27 @@ $name: '' !default;
 
 .#{$name}__List {
   display: grid;
-  gap: 2em;
+  gap: 0.5em;
+  grid-gap: 0.5em;
   box-sizing: border-box;
   color: mercury.$color-grayDarker;
   font-size: 1em;
 
+  &__Heading {
+    font-size: 1.5em;
+    text-align: justify;
+    padding-bottom: 0.5em;
+  }
+
   &__Card {
+    position: relative;
+    display: grid;
+    gap: 0.5em;
+    justify-items: start;
+    padding: 1em;
+    background-color: mercury.$color-white;
     border: 1px solid mercury.$color-grayLight;
     border-radius: 0.4em;
-    // margin-top: 10px;
   }
 
   &__Button {
@@ -23,11 +35,13 @@ $name: '' !default;
     justify-self: end;
   }
 
-  &__Heading {
-    font-size: 1.5em;
-    text-align: center;
-    gap: 3em 0;
-    // margin-bottom: 50px;
+  &__Icon {
+    position: absolute;
+    margin-block-start: -.2em;
+    margin-inline-start: .4em;
+    fill: mercury.$color-gray;
+    width: 1.4em;
+    height: 1.4em;
   }
 
   &__HelpText {
