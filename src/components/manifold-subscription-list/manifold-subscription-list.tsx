@@ -4,15 +4,12 @@ import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFe
 import { SubscriptionsQuery, SubscriptionsQueryVariables } from '../../types/graphql';
 import ListCard from './components/ListCard';
 import query from './subscriptions.graphql';
-import MockData from './subscription-mock-data';
 
 @Component({
   tag: 'manifold-subscription-list',
 })
 export class ManifoldSubscriptionList {
   @Element() el: HTMLElement;
-
-  cardPlaceholder?: HTMLDivElement;
 
   @Prop({ mutable: true }) connection?: Connection;
   @Prop({ mutable: true }) loading?: boolean = false;
@@ -39,21 +36,18 @@ export class ManifoldSubscriptionList {
 
     this.loading = true;
 
-    // const variables: SubscriptionsQueryVariables = { owner };
-    // const { data, errors } = await this.connection.graphqlFetch<SubscriptionsQuery>({
-    //   query,
-    //   variables,
-    // });
+    const variables: SubscriptionsQueryVariables = { owner };
+    const { data, errors } = await this.connection.graphqlFetch<SubscriptionsQuery>({
+      query,
+      variables,
+    });
 
-    // if (errors) {
-    //   this.errors = errors;
-    // }
-    if (MockData) {
-      this.data = MockData;
+    if (errors) {
+      this.errors = errors;
     }
-    // if (data) {
-    //   this.data = data;
-    // }
+    if (data) {
+      this.data = data;
+    }
 
     this.loading = false;
   }
