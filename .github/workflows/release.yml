@@ -44,5 +44,5 @@ jobs:
           gsutil -m cp -r ${GITHUB_WORKSPACE}/pkg
           gs://${BUCKET}/${PACKAGE}@${GITHUB_REF#refs/tags/v}
       # Copy all files for latest stable release, after versioned release was successful (/package/)
-      - run: gsutil -m rm gs://${BUCKET}/${PACKAGE}/** # empty latest release folder
+      # - run: gsutil -m rm gs://${BUCKET}/${PACKAGE}/** # empty latest release folder
       - run: gsutil -m cp -r ${GITHUB_WORKSPACE}/pkg gs://${BUCKET}/${PACKAGE}
