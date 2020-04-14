@@ -18,7 +18,7 @@ $name: '' !default;
   &__Card {
     position: relative;
     display: grid;
-    gap: 0em;
+    gap: 0.2em;
     justify-items: start;
     padding: 0.8em;
     background-color: mercury.$color-white;
