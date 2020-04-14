@@ -38,11 +38,9 @@ $name: '' !default;
 
   &__Icon {
     position: absolute;
-    margin-block-start: -.1em;
     margin-inline-start: .4em;
     fill: mercury.$color-gray;
-    width: 1.4em;
-    height: 1.4em;
+    font-size: 1.3em;
   }
 
   &__HelpText {

@@ -120,7 +120,6 @@ export type CreateResourcePayload = {
 
 export type CreateSubscriptionAgreementInput = {
   owner: Maybe<Scalars['ProfileIdentity']>;
-  productId: Scalars['ID'];
   planId: Scalars['ID'];
   configuredFeatures: Maybe<Array<ConfiguredFeatureInput>>;
 };
@@ -163,7 +162,7 @@ export type DeleteResourcePayload = {
 };
 
 export type DeleteSubscriptionAgreementInput = {
-  id: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
 };
 
 export type DeleteSubscriptionAgreementPayload = {

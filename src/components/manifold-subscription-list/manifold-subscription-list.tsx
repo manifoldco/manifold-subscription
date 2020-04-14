@@ -69,15 +69,19 @@ export class ManifoldSubscriptionList {
       <div class="ManifoldSubscriptionCreate ManifoldSubscriptionCreate__List">
         {this.heading && <h1 class="ManifoldSubscriptionCreate__List__Heading">{this.heading}</h1>}
 
-        {this.data?.subscriptions.edges.map(sub => {
-          return (
-            <ListCard
-              isLoading={this.loading}
-              plan={sub.node.plan || undefined}
-              isConfigurable={sub.node.plan.configurableFeatures.edges[0] && true}
-            />
-          );
-        })}
+        {this.data?.subscriptions &&
+          this.data?.subscriptions.edges.map(sub => {
+            return (
+              <ListCard
+                isLoading={this.loading}
+                plan={sub.node.plan || undefined}
+                isConfigurable={
+                  sub.node.plan.configurableFeatures &&
+                  sub.node.plan.configurableFeatures.edges.length > 0
+                }
+              />
+            );
+          })}
       </div>
     );
   }
