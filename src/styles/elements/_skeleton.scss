@@ -65,3 +65,7 @@ $name: '' !default;
 manifold-subscription-create [data-is-loading] {
   @include Skeleton();
 }
+
+manifold-subscription-list [data-is-loading] {
+  @include Skeleton();
+}
