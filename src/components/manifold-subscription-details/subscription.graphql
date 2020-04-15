@@ -1,0 +1,38 @@
+query Subscription($id: ID!) {
+  subscription(id: $id) {
+    status {
+      label
+      percentDone
+      message
+    }
+    plan {
+      label
+      displayName
+      fixedFeatures(first: 100) {
+        edges {
+          node {
+            label
+            displayName
+            displayValue
+          }
+        }
+      }
+      meteredFeatures(first: 100) {
+        edges {
+          node {
+            label
+            displayName
+          }
+        }
+      }
+      configurableFeatures(first: 100) {
+        edges {
+          node {
+            label
+            displayName
+          }
+        }
+      }
+    }
+  }
+}

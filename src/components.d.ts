@@ -45,6 +45,9 @@ export namespace Components {
         "stripePublishableKey": string;
         "subscribing"?: boolean;
     }
+    interface ManifoldSubscriptionDetails {
+        "subscriptionId": string;
+    }
     interface ManifoldSubscriptionList {
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
@@ -73,6 +76,12 @@ declare global {
         prototype: HTMLManifoldSubscriptionCreateElement;
         new (): HTMLManifoldSubscriptionCreateElement;
     };
+    interface HTMLManifoldSubscriptionDetailsElement extends Components.ManifoldSubscriptionDetails, HTMLStencilElement {
+    }
+    var HTMLManifoldSubscriptionDetailsElement: {
+        prototype: HTMLManifoldSubscriptionDetailsElement;
+        new (): HTMLManifoldSubscriptionDetailsElement;
+    };
     interface HTMLManifoldSubscriptionListElement extends Components.ManifoldSubscriptionList, HTMLStencilElement {
     }
     var HTMLManifoldSubscriptionListElement: {
@@ -82,6 +91,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "manifold-configured-feature": HTMLManifoldConfiguredFeatureElement;
         "manifold-subscription-create": HTMLManifoldSubscriptionCreateElement;
+        "manifold-subscription-details": HTMLManifoldSubscriptionDetailsElement;
         "manifold-subscription-list": HTMLManifoldSubscriptionListElement;
     }
 }
@@ -124,6 +134,9 @@ declare namespace LocalJSX {
         "stripePublishableKey"?: string;
         "subscribing"?: boolean;
     }
+    interface ManifoldSubscriptionDetails {
+        "subscriptionId"?: string;
+    }
     interface ManifoldSubscriptionList {
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
@@ -141,6 +154,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "manifold-configured-feature": ManifoldConfiguredFeature;
         "manifold-subscription-create": ManifoldSubscriptionCreate;
+        "manifold-subscription-details": ManifoldSubscriptionDetails;
         "manifold-subscription-list": ManifoldSubscriptionList;
     }
 }
@@ -150,6 +164,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "manifold-configured-feature": LocalJSX.ManifoldConfiguredFeature & JSXBase.HTMLAttributes<HTMLManifoldConfiguredFeatureElement>;
             "manifold-subscription-create": LocalJSX.ManifoldSubscriptionCreate & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionCreateElement>;
+            "manifold-subscription-details": LocalJSX.ManifoldSubscriptionDetails & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionDetailsElement>;
             "manifold-subscription-list": LocalJSX.ManifoldSubscriptionList & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionListElement>;
         }
     }
