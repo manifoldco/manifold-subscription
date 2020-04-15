@@ -7,13 +7,13 @@ import query from './subscription.graphql';
   tag: 'manifold-subscription-details',
 })
 export class ManifoldSubscriptionCreate {
-  @Prop() id: string;
+  @Prop() subscriptionId: string;
   @State() data?: SubscriptionQuery;
   @Element() el: HTMLElement;
 
   connection: Connection;
 
-  @Watch('id')
+  @Watch('subscriptionId')
   async getSubscription(newValue: string, oldValue: string) {
     if (!newValue) {
       throw new Error(`Missing proprty \`id\` on ${this.el.tagName.toLocaleLowerCase()}`);
@@ -40,7 +40,7 @@ export class ManifoldSubscriptionCreate {
       version: 0,
     });
 
-    this.getSubscription(this.id, '');
+    this.getSubscription(this.subscriptionId, '');
   }
 
   render() {
