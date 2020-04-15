@@ -244,7 +244,6 @@ export class ManifoldSubscriptionCreate {
         }
 
         if (data) {
-          console.log(data);
           this.createSuccess.emit({ id: data.createSubscription.data.id });
         }
       }
@@ -336,12 +335,9 @@ export class ManifoldSubscriptionCreate {
           <p class="ManifoldSubscriptionCreate__HelpText" data-centered>
             We charge for plan cost + usage at end of month
           </p>
-          {/* TODO restyle success state when designs are available */}
-          {this.setupIntentStatus === 'succeeded' && (
-            <Message type="success">Setup intent completed!</Message>
-          )}
-          {/* TODO restyle error states when designs become available */}
-          {this.setupIntentError && <Message type="error">{this.setupIntentError}</Message>}
+          {this.errors?.map(error => (
+            <Message type="error">{error.message}</Message>
+          ))}
         </form>
       </div>
     );

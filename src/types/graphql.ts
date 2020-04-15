@@ -1335,10 +1335,6 @@ export type CreateSubscriptionMutation = (
     & { data: (
       { __typename?: 'SubscriptionAgreement' }
       & Pick<SubscriptionAgreement, 'id'>
-      & { status: (
-        { __typename?: 'SubscriptionAgreementStatus' }
-        & Pick<SubscriptionAgreementStatus, 'label' | 'percentDone' | 'message'>
-      ) }
     ) }
   ) }
 );
