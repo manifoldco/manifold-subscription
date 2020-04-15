@@ -6,9 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
-import { PlanListQuery, PlanQuery, } from "./types/graphql";
+import { PlanListQuery, PlanQuery, SubscriptionsQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
 import { FeatureMap, } from "./utils/plan";
+import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
 export namespace Components {
     interface ManifoldConfiguredFeature {
         "label"?: string;
@@ -44,6 +45,20 @@ export namespace Components {
         "stripePublishableKey": string;
         "subscribing"?: boolean;
     }
+    interface ManifoldSubscriptionList {
+        "connection"?: Connection;
+        "data"?: SubscriptionsQuery;
+        "errors"?: GraphqlError[];
+        /**
+          * Component heading text
+         */
+        "heading"?: string;
+        "loading"?: boolean;
+        /**
+          * Owner ID for subscriptions
+         */
+        "owner"?: string;
+    }
 }
 declare global {
     interface HTMLManifoldConfiguredFeatureElement extends Components.ManifoldConfiguredFeature, HTMLStencilElement {
@@ -58,9 +73,16 @@ declare global {
         prototype: HTMLManifoldSubscriptionCreateElement;
         new (): HTMLManifoldSubscriptionCreateElement;
     };
+    interface HTMLManifoldSubscriptionListElement extends Components.ManifoldSubscriptionList, HTMLStencilElement {
+    }
+    var HTMLManifoldSubscriptionListElement: {
+        prototype: HTMLManifoldSubscriptionListElement;
+        new (): HTMLManifoldSubscriptionListElement;
+    };
     interface HTMLElementTagNameMap {
         "manifold-configured-feature": HTMLManifoldConfiguredFeatureElement;
         "manifold-subscription-create": HTMLManifoldSubscriptionCreateElement;
+        "manifold-subscription-list": HTMLManifoldSubscriptionListElement;
     }
 }
 declare namespace LocalJSX {
@@ -102,9 +124,24 @@ declare namespace LocalJSX {
         "stripePublishableKey"?: string;
         "subscribing"?: boolean;
     }
+    interface ManifoldSubscriptionList {
+        "connection"?: Connection;
+        "data"?: SubscriptionsQuery;
+        "errors"?: GraphqlError[];
+        /**
+          * Component heading text
+         */
+        "heading"?: string;
+        "loading"?: boolean;
+        /**
+          * Owner ID for subscriptions
+         */
+        "owner"?: string;
+    }
     interface IntrinsicElements {
         "manifold-configured-feature": ManifoldConfiguredFeature;
         "manifold-subscription-create": ManifoldSubscriptionCreate;
+        "manifold-subscription-list": ManifoldSubscriptionList;
     }
 }
 export { LocalJSX as JSX };
@@ -113,6 +150,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "manifold-configured-feature": LocalJSX.ManifoldConfiguredFeature & JSXBase.HTMLAttributes<HTMLManifoldConfiguredFeatureElement>;
             "manifold-subscription-create": LocalJSX.ManifoldSubscriptionCreate & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionCreateElement>;
+            "manifold-subscription-list": LocalJSX.ManifoldSubscriptionList & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionListElement>;
         }
     }
 }
