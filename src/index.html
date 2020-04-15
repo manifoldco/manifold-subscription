@@ -31,14 +31,11 @@
     <script nomodule src="/build/manifold-subscription.js"></script>
   </head>
   <body>
-    <manifold-init
-      env="stage"
-      client-id="3zx3qeb15z70kcv4nh8cjedhndwz2"
-      auth-token=""
-    ></manifold-init>
+    <manifold-init env="stage" client-id="3zx3qeb15z70kcv4nh8cjedhndwz2"></manifold-init>
     <manifold-subscription-create
       heading="Purchase Subscription"
       plan-id="235151h9fczz1wwv6zvxvrgw8x5ve"
+      stripe-publishable-key="pk_test_Z4VP518UkG6JLlsXhFgdUA0B"
     >
       <manifold-configured-feature label="crackers" value="true"></manifold-configured-feature>
       <manifold-configured-feature label="juice" value="60"></manifold-configured-feature>
