@@ -44,5 +44,11 @@
       heading="Your Subscriptions"
       owner="fake-owner-id"
     ></manifold-subscription-list>
+    <script>
+      const createElement = document.querySelector('manifold-subscription-create');
+      createElement.addEventListener('success', e => {
+        alert(`subscription id: ${e.detail.id}`);
+      });
+    </script>
   </body>
 </html>

@@ -8,11 +8,6 @@ mutation CreateSubscription(
   ) {
     data {
       id
-      status {
-        label
-        percentDone
-        message
-      }
     }
   }
 }
