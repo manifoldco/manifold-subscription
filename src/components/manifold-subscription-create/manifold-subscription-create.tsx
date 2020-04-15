@@ -56,7 +56,7 @@ export class ManifoldSubscriptionCreate {
    * Plan ID for the new subscription
    */
   @Prop({ mutable: true }) planId: string;
-  @Prop({ mutable: true }) stripePublishableKey: string;
+  @Prop() stripePublishableKey: string;
 
   @Prop({ mutable: true }) isEditing: boolean = false;
   /**
@@ -228,6 +228,7 @@ export class ManifoldSubscriptionCreate {
             variables,
           });
 
+          // eslint-disable-next-line no-console
           console.log({ res });
         }
       }
