@@ -1,4 +1,14 @@
-import { Component, Element, Prop, h, Watch, State, Listen } from '@stencil/core';
+import {
+  Component,
+  Element,
+  Prop,
+  h,
+  Watch,
+  State,
+  Listen,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import { loadStripe, Stripe, StripeCardElement, SetupIntent } from '@stripe/stripe-js';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
@@ -205,35 +215,44 @@ export class ManifoldSubscriptionCreate {
         },
       });
 
-      this.subscribing = false;
-
       if (error) {
+        this.subscribing = false;
         this.setupIntentError = error.message;
-      } else {
-        this.setupIntentStatus = setupIntent?.status;
-        if (setupIntent?.status === 'succeeded') {
-          const configuredFeatures = Object.keys(this.configuredFeatures).map(key => ({
-            label: key,
-            value: `${this.configuredFeatures[key]}`,
-          }));
+        return;
+      }
 
-          const variables: CreateSubscriptionMutationVariables = {
-            ownerId: undefined,
-            planId: this.planId,
-            configuredFeatures,
-          };
+      this.setupIntentStatus = setupIntent?.status;
+      if (setupIntent?.status === 'succeeded' && this.connection) {
+        const configuredFeatures = Object.keys(this.configuredFeatures).map(key => ({
+          label: key,
+          value: `${this.configuredFeatures[key]}`,
+        }));
 
-          const res = await this.connection?.graphqlFetch<CreateSubscriptionMutation>({
-            query: createSubscrptionMutation,
-            variables,
-          });
+        const variables: CreateSubscriptionMutationVariables = {
+          ownerId: undefined,
+          planId: this.planId,
+          configuredFeatures,
+        };
 
-          // eslint-disable-next-line no-console
-          console.log({ res });
+        const { data, errors } = await this.connection.graphqlFetch<CreateSubscriptionMutation>({
+          query: createSubscrptionMutation,
+          variables,
+        });
+
+        if (errors) {
+          // TODO handle errors
+        }
+
+        if (data) {
+          console.log(data);
+          this.createSuccess.emit({ id: data.createSubscription.data.id });
         }
       }
+      this.subscribing = false;
     }
   };
+
+  @Event({ eventName: 'success' }) createSuccess: EventEmitter<{ id: string }>;
 
   setPlanId = (planId: string) => {
     this.planId = planId;

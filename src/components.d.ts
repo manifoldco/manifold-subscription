@@ -89,6 +89,9 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         "loading"?: boolean;
+        "onSuccess"?: (event: CustomEvent<{
+            id: string;
+        }>) => void;
         /**
           * Plan ID for the new subscription
          */
