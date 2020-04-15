@@ -1447,6 +1447,53 @@ export type PlanQuery = (
   ) }
 );
 
+export type SubscriptionQueryVariables = {
+  id: Scalars['ID'];
+};
+
+
+export type SubscriptionQuery = (
+  { __typename?: 'Query' }
+  & { subscription: Maybe<(
+    { __typename?: 'SubscriptionAgreement' }
+    & { status: (
+      { __typename?: 'SubscriptionAgreementStatus' }
+      & Pick<SubscriptionAgreementStatus, 'label' | 'percentDone' | 'message'>
+    ), plan: Maybe<(
+      { __typename?: 'Plan' }
+      & Pick<Plan, 'label' | 'displayName'>
+      & { fixedFeatures: Maybe<(
+        { __typename?: 'PlanFixedFeatureConnection' }
+        & { edges: Array<(
+          { __typename?: 'PlanFixedFeatureEdge' }
+          & { node: (
+            { __typename?: 'PlanFixedFeature' }
+            & Pick<PlanFixedFeature, 'label' | 'displayName' | 'displayValue'>
+          ) }
+        )> }
+      )>, meteredFeatures: Maybe<(
+        { __typename?: 'PlanMeteredFeatureConnection' }
+        & { edges: Array<(
+          { __typename?: 'PlanMeteredFeatureEdge' }
+          & { node: (
+            { __typename?: 'PlanMeteredFeature' }
+            & Pick<PlanMeteredFeature, 'label' | 'displayName'>
+          ) }
+        )> }
+      )>, configurableFeatures: Maybe<(
+        { __typename?: 'PlanConfigurableFeatureConnection' }
+        & { edges: Array<(
+          { __typename?: 'PlanConfigurableFeatureEdge' }
+          & { node: (
+            { __typename?: 'PlanConfigurableFeature' }
+            & Pick<PlanConfigurableFeature, 'label' | 'displayName'>
+          ) }
+        )> }
+      )> }
+    )> }
+  )> }
+);
+
 export type SubscriptionsQueryVariables = {
   owner: Scalars['ProfileIdentity'];
 };
