@@ -9,6 +9,8 @@ jobs:
   vrt:
     env:
       CURRENT_SHA: ${{ github.sha }}
+      PREVIOUS_SHA: ${{ github.event.before }}
+      CHANGE_URL: ${{ github.event.compare }}
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
     runs-on: ubuntu-latest

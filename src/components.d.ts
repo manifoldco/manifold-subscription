@@ -39,10 +39,17 @@ export namespace Components {
         /**
           * Plan ID for the new subscription
          */
+        "ownerId": string;
+        /**
+          * Plan ID for the new subscription
+         */
         "planId": string;
         "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
+        /**
+          * Plan ID for the new subscription
+         */
         "stripePublishableKey": string;
         "subscribing"?: boolean;
     }
@@ -128,10 +135,17 @@ declare namespace LocalJSX {
         /**
           * Plan ID for the new subscription
          */
+        "ownerId"?: string;
+        /**
+          * Plan ID for the new subscription
+         */
         "planId"?: string;
         "planListData"?: PlanListQuery;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
+        /**
+          * Plan ID for the new subscription
+         */
         "stripePublishableKey"?: string;
         "subscribing"?: boolean;
     }

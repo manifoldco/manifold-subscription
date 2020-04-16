@@ -1163,12 +1163,14 @@ export type StringConfiguredFeature = ConfiguredFeature & {
 export type StripeAccount = {
    __typename?: 'StripeAccount';
   id: Scalars['String'];
+  business_name: Scalars['String'];
   business_type: StripeBusinessType;
   capabilities: StripeCapabilities;
-  representative: Maybe<StripePerson>;
+  support_email: Scalars['String'];
 };
 
 export enum StripeBusinessType {
+  Unknown = 'UNKNOWN',
   Individual = 'INDIVIDUAL',
   Company = 'COMPANY',
   NonProfit = 'NON_PROFIT',
@@ -1182,17 +1184,11 @@ export type StripeCapabilities = {
 };
 
 export enum StripeCapabilityStatus {
+  Unknown = 'UNKNOWN',
   Active = 'ACTIVE',
   Inactive = 'INACTIVE',
   Pending = 'PENDING'
 }
-
-export type StripePerson = {
-   __typename?: 'StripePerson';
-  email: Maybe<Scalars['String']>;
-  first_name: Maybe<Scalars['String']>;
-  last_name: Maybe<Scalars['String']>;
-};
 
 export type SubLineItem = {
    __typename?: 'SubLineItem';
@@ -1439,7 +1435,7 @@ export type PlanQuery = (
     )> }
   )>, profile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'stripeSetupIntentSecret'>
+    & Pick<Profile, 'stripeSetupIntentSecret'>
     & { stripeAccount: Maybe<(
       { __typename?: 'StripeAccount' }
       & Pick<StripeAccount, 'id'>

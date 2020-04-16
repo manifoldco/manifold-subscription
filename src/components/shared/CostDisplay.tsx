@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from '@stencil/core';
 import errorIcon from '@manifoldco/mercury/icons/alert-circle.svg';
-import { $ } from '../../../utils/currency';
-import { meteredFeatureDisplayValue } from '../../../utils/plan';
-import { PlanMeteredFeatureEdge } from '../../../types/graphql';
+import { $ } from '../../utils/currency';
+import { meteredFeatureDisplayValue } from '../../utils/plan';
+import { PlanMeteredFeatureEdge } from '../../types/graphql';
 
 /**
  * Base Cost

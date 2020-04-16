@@ -18,9 +18,9 @@ import {
   CreateSubscriptionMutationVariables,
   CreateSubscriptionMutation,
 } from '../../types/graphql';
-import PlanSelector from './components/PlanSelector';
-import PlanCard from './components/PlanCard';
-import Message from './components/Message';
+import PlanSelector from '../shared/PlanSelector';
+import PlanCard from '../shared/PlanCard';
+import Message from '../shared/Message';
 import planQuery from './plan.graphql';
 import planListQuery from './plan-list.graphql';
 import createSubscrptionMutation from './create-subscription.graphql';
@@ -57,6 +57,7 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) subscribing?: boolean = false;
   @Prop({ mutable: true }) configuredFeatures: FeatureMap = {};
   @Prop({ mutable: true }) calculatedCost?: number;
+  @Prop({ mutable: true }) isEditing: boolean = false;
 
   /**
    * Component heading text
@@ -66,9 +67,16 @@ export class ManifoldSubscriptionCreate {
    * Plan ID for the new subscription
    */
   @Prop({ mutable: true }) planId: string;
+  /**
+   * Plan ID for the new subscription
+   */
+  @Prop() ownerId: string;
+
+  /**
+   * Plan ID for the new subscription
+   */
   @Prop() stripePublishableKey: string;
 
-  @Prop({ mutable: true }) isEditing: boolean = false;
   /**
    * (Optional) Name given to the new subscription
    */
@@ -301,7 +309,7 @@ export class ManifoldSubscriptionCreate {
         }));
 
         const variables: CreateSubscriptionMutationVariables = {
-          ownerId: undefined,
+          ownerId: this.ownerId,
           planId: this.planId,
           configuredFeatures,
         };

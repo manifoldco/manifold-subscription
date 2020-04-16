@@ -5,12 +5,12 @@ import {
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
   PlanEdge,
-} from '../../../types/graphql';
+} from '../../types/graphql';
 import FixedFeature from './FixedFeature';
 import MeteredFeature from './MeteredFeature';
 import ConfigurableFeature from './ConfigurableFeature';
 import PlanCard from './PlanCard';
-import { FeatureMap, configurableFeatureDefaults } from '../../../utils/plan';
+import { FeatureMap, configurableFeatureDefaults } from '../../utils/plan';
 import CostDisplay from './CostDisplay';
 import SkeletonPlanSelector from './SkeletonPlanSelector';
 import { UIError, filterErrors } from '../../../utils/error';
