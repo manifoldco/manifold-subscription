@@ -306,10 +306,15 @@ export class ManifoldSubscriptionCreate {
           configuredFeatures,
         };
 
-        const { data, errors } = await this.connection.graphqlFetch<CreateSubscriptionMutation>({
-          query: createSubscrptionMutation,
-          variables,
-        });
+        const { data, errors } = await this.connection
+          .graphqlFetch<CreateSubscriptionMutation>({
+            query: createSubscrptionMutation,
+            variables,
+          })
+          .catch(e => {
+            this.addErrors(subscriptionError());
+            throw new Error(e);
+          });
 
         if (errors) {
           this.addErrors(subscriptionError());
