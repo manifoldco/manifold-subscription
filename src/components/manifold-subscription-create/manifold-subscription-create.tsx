@@ -319,9 +319,9 @@ export class ManifoldSubscriptionCreate {
             query: createSubscrptionMutation,
             variables,
           })
-          .catch(e => {
+          .catch(err => {
             this.addErrors(subscriptionError());
-            throw new Error(e);
+            throw new Error(err);
           });
 
         if (errors) {
