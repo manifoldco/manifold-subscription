@@ -1,9 +1,9 @@
 import { h, FunctionalComponent } from '@stencil/core';
 
-import { PlanMeteredFeatureEdge, PlanMeteredFeatureNumericDetails } from '../../../types/graphql';
-import { $ } from '../../../utils/currency';
-import { pluralize } from '../../../utils/string';
-import { featureCost, meteredFeatureDisplayValue, pricingTiers } from '../../../utils/plan';
+import { PlanMeteredFeatureEdge, PlanMeteredFeatureNumericDetails } from '../../types/graphql';
+import { $ } from '../../utils/currency';
+import { pluralize } from '../../utils/string';
+import { featureCost, meteredFeatureDisplayValue, pricingTiers } from '../../utils/plan';
 
 function meteredFeatureCost(numericDetails: PlanMeteredFeatureNumericDetails) {
   const tiers = pricingTiers(numericDetails);

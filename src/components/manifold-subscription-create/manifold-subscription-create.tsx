@@ -19,9 +19,9 @@ import {
   CreateSubscriptionMutationVariables,
   CreateSubscriptionMutation,
 } from '../../types/graphql';
-import PlanSelector from './components/PlanSelector';
-import PlanCard from './components/PlanCard';
-import Message from './components/Message';
+import PlanSelector from '../shared/PlanSelector';
+import PlanCard from '../shared/PlanCard';
+import Message from '../shared/Message';
 import planQuery from './plan.graphql';
 import planListQuery from './plan-list.graphql';
 import createSubscrptionMutation from './create-subscription.graphql';
