@@ -328,6 +328,7 @@ export class ManifoldSubscriptionCreate {
           <button
             class="ManifoldSubscriptionCreate__Button"
             type="submit"
+            data-kind="primary"
             disabled={this.subscribing}
           >
             {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}

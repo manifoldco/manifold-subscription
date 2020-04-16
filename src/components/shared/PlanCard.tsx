@@ -21,11 +21,13 @@ const PlanCard: FunctionalComponent<PlanCardProps> = (
   cta
 ) => (
   <div class="ManifoldSubscriptionCreate__Card" data-is-checked={isChecked}>
-    <div class="ManifoldSubscriptionCreate__PlanName" data-is-loading={isLoading}>
-      {plan.displayName}
+    <div class="ManifoldSubscriptionCreate__PlanName">
+      <span data-is-loading={isLoading}>{plan.displayName}</span>
     </div>
-    <span class="ManifoldSubscriptionCreate__Cost" data-is-loading={isLoading}>
-      <CostDisplay baseCost={plan.cost} isConfigurable compact />
+    <span class="ManifoldSubscriptionCreate__Cost">
+      <span data-is-loading={isLoading}>
+        <CostDisplay baseCost={plan.cost} isConfigurable compact />
+      </span>
     </span>
     {cta}
     <i class="ManifoldSubscriptionCreate__Card__Checkmark" innerHTML={check} />

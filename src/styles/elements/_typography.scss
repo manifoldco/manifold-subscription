@@ -1,0 +1,9 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name} {
+  &__Heading {
+    font-size: 1.5em;
+    text-align: center;
+  }
+}

@@ -8,11 +8,6 @@ $name: '' !default;
   color: mercury.$color-grayDarker;
   font-size: 1em;
 
-  &__Heading {
-    font-size: 1.5em;
-    text-align: center;
-  }
-
   &__Form {
     display: grid;
     grid-template-columns: 1fr;

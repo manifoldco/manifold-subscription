@@ -46,6 +46,7 @@ export namespace Components {
         "subscribing"?: boolean;
     }
     interface ManifoldSubscriptionDetails {
+        "heading"?: string;
         "subscriptionId": string;
     }
     interface ManifoldSubscriptionList {
@@ -135,6 +136,7 @@ declare namespace LocalJSX {
         "subscribing"?: boolean;
     }
     interface ManifoldSubscriptionDetails {
+        "heading"?: string;
         "subscriptionId"?: string;
     }
     interface ManifoldSubscriptionList {
