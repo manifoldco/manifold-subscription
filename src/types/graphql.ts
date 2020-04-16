@@ -10,6 +10,15 @@ export type Scalars = {
   Time: any;
 };
 
+export type Billing = {
+   __typename?: 'Billing';
+  duration: Maybe<SubscriptionAgreementDuration>;
+  chargeTime: Maybe<SubscriptionAgreementChargeTime>;
+  renewalPoint: Maybe<SubscriptionAgreementRenewalPoint>;
+  startTime: Maybe<Scalars['Time']>;
+  endTime: Maybe<Scalars['Time']>;
+};
+
 export type BooleanConfiguredFeature = ConfiguredFeature & {
    __typename?: 'BooleanConfiguredFeature';
   label: Scalars['String'];
@@ -968,6 +977,7 @@ export type QueryProductArgs = {
   id: Maybe<Scalars['ID']>;
   label: Maybe<Scalars['String']>;
   latest: Maybe<Scalars['Boolean']>;
+  version: Maybe<Scalars['Int']>;
 };
 
 
@@ -1225,6 +1235,7 @@ export type SubscriptionAgreement = Node & {
   status: SubscriptionAgreementStatus;
   configuredFeatures: Maybe<ConfiguredFeatureConnection>;
   owner: Maybe<Profile>;
+  billing: Maybe<Billing>;
 };
 
 
@@ -1233,17 +1244,29 @@ export type SubscriptionAgreementConfiguredFeaturesArgs = {
   after: Maybe<Scalars['String']>;
 };
 
+export enum SubscriptionAgreementChargeTime {
+  PostPaid = 'POST_PAID'
+}
+
 export type SubscriptionAgreementConnection = {
    __typename?: 'SubscriptionAgreementConnection';
   pageInfo: PageInfo;
   edges: Array<SubscriptionAgreementEdge>;
 };
 
+export enum SubscriptionAgreementDuration {
+  Monthly = 'MONTHLY'
+}
+
 export type SubscriptionAgreementEdge = {
    __typename?: 'SubscriptionAgreementEdge';
   cursor: Scalars['String'];
   node: Maybe<SubscriptionAgreement>;
 };
+
+export enum SubscriptionAgreementRenewalPoint {
+  Calendar = 'CALENDAR'
+}
 
 export type SubscriptionAgreementStatus = {
    __typename?: 'SubscriptionAgreementStatus';
@@ -1546,10 +1569,6 @@ export type SubscriptionQuery = (
       & { edges: Array<(
         { __typename?: 'ConfiguredFeatureEdge' }
         & { node: (
-          { __typename?: 'BooleanConfiguredFeature' }
-          & Pick<BooleanConfiguredFeature, 'label'>
-          & { booleanValue: BooleanConfiguredFeature['value'] }
-        ) | (
           { __typename?: 'NumberConfiguredFeature' }
           & Pick<NumberConfiguredFeature, 'label'>
           & { numberValue: NumberConfiguredFeature['value'] }
@@ -1557,6 +1576,10 @@ export type SubscriptionQuery = (
           { __typename?: 'StringConfiguredFeature' }
           & Pick<StringConfiguredFeature, 'label'>
           & { stringValue: StringConfiguredFeature['value'] }
+        ) | (
+          { __typename?: 'BooleanConfiguredFeature' }
+          & Pick<BooleanConfiguredFeature, 'label'>
+          & { booleanValue: BooleanConfiguredFeature['value'] }
         ) }
       )> }
     )>, plan: Maybe<(
@@ -1631,7 +1654,7 @@ export type SubscriptionsQuery = (
         { __typename?: 'SubscriptionAgreement' }
         & { plan: Maybe<(
           { __typename?: 'Plan' }
-          & Pick<Plan, 'displayName' | 'cost'>
+          & Pick<Plan, 'id' | 'displayName' | 'cost'>
           & { configurableFeatures: Maybe<(
             { __typename?: 'PlanConfigurableFeatureConnection' }
             & { edges: Array<(

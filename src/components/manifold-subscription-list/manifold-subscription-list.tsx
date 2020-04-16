@@ -1,4 +1,4 @@
-import { Component, Element, Prop, h, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, Element, Prop, h, Watch } from '@stencil/core';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
 import { SubscriptionsQuery, SubscriptionsQueryVariables } from '../../types/graphql';
@@ -11,10 +11,13 @@ import query from './subscriptions.graphql';
 export class ManifoldSubscriptionList {
   @Element() el: HTMLElement;
 
+  @Event() ctaClick: EventEmitter;
+
   @Prop({ mutable: true }) connection?: Connection;
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
   @Prop({ mutable: true }) data?: SubscriptionsQuery;
+  @Prop() baseUrl?: string = '/subscriptions';
 
   /**
    * Component heading text
@@ -64,6 +67,43 @@ export class ManifoldSubscriptionList {
     this.getSubscriptions(this.owner);
   }
 
+  ctaHref(planID: string) {
+    if (!this.baseUrl || this.baseUrl === '#') {
+      return this.baseUrl;
+    }
+
+    // const search = new URLSearchParams();
+    // set plan ID
+    // search.set('planId', planID);
+
+    // // set configurable feature selection (or skip, if no configurable features);
+    // Object.entries(this.userSelection[planID] || {}).forEach(([key, val]) => {
+    //   search.set(key, `${val}`);
+    // });
+
+    return `${this.baseUrl}/${planID.toString()}`;
+  }
+
+  handleCtaClick = (planId: string) => (e: MouseEvent) => {
+    e.preventDefault();
+    this.ctaClick.emit({ id: `manifold-cta-plan-${planId}` });
+
+    // this.connection;
+    // .analytics
+    // .track({
+    //   description: 'Track pricing matrix cta clicks',
+    //   name: 'click',
+    //   type: 'component-analytics',
+    //   properties: {
+    //     planId,
+    //   },
+    // })
+    // .finally(() => {
+    const anchor = e.srcElement as HTMLAnchorElement; // ?
+    window.location.href = anchor.href; // ?
+    // });
+  };
+
   render() {
     return (
       <div class="ManifoldSubscriptionCreate ManifoldSubscriptionCreate__List">
@@ -79,6 +119,8 @@ export class ManifoldSubscriptionList {
                   sub.node.plan.configurableFeatures &&
                   sub.node.plan.configurableFeatures.edges.length > 0
                 }
+                ctaHref={this.ctaHref(sub.node.plan.id)}
+                onCtaClick={this.handleCtaClick(sub.node.plan.id)}
               />
             );
           })}

@@ -9,6 +9,8 @@ interface ListCardProps {
     cost: number;
   };
   isConfigurable?: boolean;
+  ctaHref?: string;
+  onCtaClick?: EventHandlerNonNull; // ?
 }
 
 const defaultPlan: ListCardProps['plan'] = {
@@ -20,6 +22,8 @@ const ListCard: FunctionalComponent<ListCardProps> = ({
   isLoading,
   plan = defaultPlan,
   isConfigurable,
+  ctaHref,
+  onCtaClick,
 }) => (
   <div class="ManifoldSubscriptionCreate__List__Card">
     <div class="ManifoldSubscriptionCreate__PlanName" data-is-loading={isLoading}>
@@ -34,7 +38,9 @@ const ListCard: FunctionalComponent<ListCardProps> = ({
       {$(plan.cost)}
       <span class="ManifoldSubscriptionCreate__Cost__Suffix">/mo</span>
     </span>
-    <button class="ManifoldSubscription__Button">Modify Subscription</button>
+    <a href={ctaHref} onClick={onCtaClick} class="ManifoldSubscription__Button">
+      Modify Subscription
+    </a>
   </div>
 );
 

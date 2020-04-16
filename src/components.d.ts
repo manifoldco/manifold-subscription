@@ -59,6 +59,7 @@ export namespace Components {
         "subscriptionId": string;
     }
     interface ManifoldSubscriptionList {
+        "baseUrl"?: string;
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
         "errors"?: GraphqlError[];
@@ -157,6 +158,7 @@ declare namespace LocalJSX {
         "subscriptionId"?: string;
     }
     interface ManifoldSubscriptionList {
+        "baseUrl"?: string;
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
         "errors"?: GraphqlError[];
@@ -165,6 +167,7 @@ declare namespace LocalJSX {
          */
         "heading"?: string;
         "loading"?: boolean;
+        "onCtaClick"?: (event: CustomEvent<any>) => void;
         /**
           * Owner ID for subscriptions
          */
