@@ -4,8 +4,16 @@ $name: '' !default;
 .#{$name}__Button {
   @include mercury.Manifold__Button;
 
-  color: mercury.$color-white;
-  text-align: center;
-  background-image: mercury.$gradient-blue;
-  border-color: transparent;
+  &[data-kind='primary'] {
+    color: mercury.$color-white;
+    text-align: center;
+    background-image: mercury.$gradient-blue;
+    border-color: transparent;
+  }
+
+  &[data-kind='black'] {
+    color: mercury.$color-white;
+    background-color: mercury.$color-black;
+    border-color: transparent;
+  }
 }

@@ -1,0 +1,57 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__Details {
+  display: grid;
+  gap: 1em;
+
+  .#{$name}__Card {
+    padding: 0;
+  }
+
+  &__Header {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 0.75em;
+    align-items: center;
+    justify-content: start;
+    padding: 1em 1.5em;
+    border-bottom: 1px solid mercury.$color-grayLight;
+  }
+
+  .#{$name}__PlanName {
+    font-size: 1.25em;
+  }
+
+  &__FeatureList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    // temporary
+    padding: 0.5em;
+  }
+
+  // TODO refactor to class
+  footer {
+    border-top: 1px solid mercury.$color-grayLight;
+  }
+}
+
+.#{$name}__SubscriptionStatus {
+  display: flex;
+  align-items: center;
+  padding: 0.5em 0.75em;
+  color: mercury.$color-grayDark;
+  font-size: 0.6em;
+  line-height: 1;
+  border: 1px solid mercury.$color-grayLight;
+  border-radius: 2em;
+
+  &Indicator {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-right: 0.75em;
+    background-color: mercury.$color-green;
+    border-radius: 1em;
+  }
+}

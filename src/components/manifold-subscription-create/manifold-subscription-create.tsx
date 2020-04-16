@@ -457,6 +457,7 @@ export class ManifoldSubscriptionCreate {
           <button
             class="ManifoldSubscriptionCreate__Button"
             type="submit"
+            data-kind="primary"
             disabled={
               this.subscribing ||
               filterErrors(this.errors, 'type', ['data', 'interface']).length > 0

@@ -2,7 +2,9 @@
 $name: 'ManifoldSubscriptionCreate';
 
 @use 'elements/subscription-create' with ($name: $name);
+@use 'elements/subscription-details' with ($name: $name);
 @use 'elements/subscription-list' with ($name: $name);
+@use 'elements/typography' with ($name: $name);
 @use 'elements/card' with ($name: $name);
 @use 'elements/cost' with ($name: $name);
 @use 'elements/field' with ($name: $name);
@@ -15,6 +17,7 @@ $name: 'ManifoldSubscriptionCreate';
 @use 'elements/skeleton' with ($name: $name);
 
 manifold-subscription-create,
+manifold-subscription-details,
 manifold-subscription-list {
   box-sizing: border-box;
 
