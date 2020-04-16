@@ -54,7 +54,7 @@ export class ManifoldSubscriptionCreate {
   }
 
   render() {
-    if (!this.data) {
+    if (!this.data || !this.data.subscription) {
       return null;
     }
 
