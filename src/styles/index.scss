@@ -14,7 +14,8 @@ $name: 'ManifoldSubscriptionCreate';
 @use 'elements/plan-selector' with ($name: $name);
 @use 'elements/skeleton' with ($name: $name);
 
-manifold-subscription-create, manifold-subscription-list {
+manifold-subscription-create,
+manifold-subscription-list {
   box-sizing: border-box;
 
   button,
@@ -36,7 +37,13 @@ manifold-subscription-create, manifold-subscription-list {
   }
 
   i {
-    display: block;
+    display: inline-block;
     width: 1em;
+    line-height: 1;
+    vertical-align: bottom;
+  }
+
+  svg {
+    fill: currentColor;
   }
 }

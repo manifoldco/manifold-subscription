@@ -17,6 +17,20 @@ $name: '' !default;
     display: grid;
     grid-template-columns: 1fr;
     gap: 1em;
+
+    &[data-data-error],
+    &[data-interface-error] {
+      opacity: 0.5;
+      pointer-events: none;
+
+      * {
+        pointer-events: inherit;
+      }
+    }
+
+    &[data-interface-error] {
+      filter: contrast(0);
+    }
   }
 
   &__ModifyPlanButton {

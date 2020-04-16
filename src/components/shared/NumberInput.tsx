@@ -22,6 +22,7 @@ const NumberInput: FunctionalComponent<NumberInputProps> = props => {
   return (
     <div class="ManifoldSubscriptionCreate__NumberInput">
       <button
+        type="button"
         tabindex="-1"
         onClick={() => onChange(name, value - increment)}
         disabled={lowerBoundReached || disabled}
@@ -45,6 +46,7 @@ const NumberInput: FunctionalComponent<NumberInputProps> = props => {
         {...rest}
       />
       <button
+        type="button"
         tabindex="-1"
         onClick={() => onChange(name, value + increment)}
         disabled={upperBoundReached || disabled}

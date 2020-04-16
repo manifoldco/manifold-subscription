@@ -5,11 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
+import { UIError, } from "./utils/error";
 import { PlanListQuery, PlanQuery, SubscriptionsQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
 import { FeatureMap, } from "./utils/plan";
 import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
+import { GraphqlError, } from "@manifoldco/manifold-init-types/types/v0/graphqlFetch";
 export namespace Components {
     interface ManifoldConfiguredFeature {
         "label"?: string;
@@ -23,7 +24,7 @@ export namespace Components {
           * (Optional) Name given to the new subscription
          */
         "displayName"?: string;
-        "errors"?: GraphqlError[];
+        "errors": UIError[];
         /**
           * Component heading text
          */
@@ -116,7 +117,7 @@ declare namespace LocalJSX {
           * (Optional) Name given to the new subscription
          */
         "displayName"?: string;
-        "errors"?: GraphqlError[];
+        "errors"?: UIError[];
         /**
           * Component heading text
          */
