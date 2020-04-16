@@ -381,7 +381,7 @@ export class ManifoldSubscriptionCreate {
     return (
       <div class="ManifoldSubscriptionCreate">
         {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
-        {interfaceDataErrors && (
+        {interfaceDataErrors.length > 0 && (
           <div class="ManifoldSubscriptionCreate__MessageContainer">
             {interfaceDataErrors.map(error => (
               <Message type="error">{error.message}</Message>
@@ -452,7 +452,7 @@ export class ManifoldSubscriptionCreate {
           >
             {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
           </button>
-          {subscriptionErrors && (
+          {subscriptionErrors.length > 0 && (
             <div class="ManifoldSubscriptionCreate__MessageContainer">
               {subscriptionErrors.map(error => (
                 <Message type="error">{error.message}</Message>
