@@ -69,4 +69,8 @@ $name: '' !default;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
   }
+
+  &__Error {
+    color: mercury.$color-red;
+  }
 }

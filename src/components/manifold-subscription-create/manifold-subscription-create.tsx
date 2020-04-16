@@ -11,7 +11,6 @@ import {
 } from '@stencil/core';
 import { loadStripe, Stripe, StripeCardElement, SetupIntent } from '@stripe/stripe-js';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
-import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
 import {
   PlanQuery,
   PlanQueryVariables,
@@ -26,14 +25,13 @@ import planQuery from './plan.graphql';
 import planListQuery from './plan-list.graphql';
 import createSubscrptionMutation from './create-subscription.graphql';
 import { FeatureMap } from '../../utils/plan';
-
-// TODO add all these to the component API
-//   $planId: ID! (done)
-//   $regionId: ID!
-//   $label: String
-//   $displayName: String
-//   $configuredFeatures: [ConfiguredFeatureInput!] (in progress)
-//   $ownerId: ID!
+import {
+  UIError,
+  filterErrors,
+  interfaceError,
+  dataError,
+  subscriptionError,
+} from '../../utils/error';
 
 @Component({
   tag: 'manifold-subscription-create',
@@ -49,7 +47,7 @@ export class ManifoldSubscriptionCreate {
 
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) isLoadingPlanSelector?: boolean = false;
-  @Prop({ mutable: true }) errors?: GraphqlError[];
+  @Prop({ mutable: true }) errors: UIError[] = [];
   @Prop({ mutable: true }) data?: PlanQuery;
   @Prop({ mutable: true }) planListData?: PlanListQuery;
   @Prop({ mutable: true }) setupIntentStatus?: SetupIntent.Status;
@@ -90,20 +88,36 @@ export class ManifoldSubscriptionCreate {
     this.updatePlan(this.planId);
   }
 
+  addErrors = (...errors: UIError[]) => {
+    this.errors = [...this.errors, ...errors];
+  };
+
+  removeErrors = (...labels: string[]) => {
+    this.errors = filterErrors(this.errors, 'label', labels, false);
+  };
+
   @Watch('data')
   async initializeStripeElements(data: PlanQuery) {
     // Only initialize once
     if (this.stripe) {
       return;
     }
-    // TODO replace token with a Manifold Stripe token.
+
+    this.removeErrors('stripe-init');
+
     // Initialize Stripe
     this.stripe = await loadStripe(this.stripePublishableKey, {
       stripeAccount: data.profile.stripeAccount.id,
     });
+
     if (!this.stripe) {
-      // TODO handle stripe error
-      return;
+      this.addErrors(interfaceError('stripe-init'));
+
+      throw new Error(
+        'Could not load Stripe with the following credentials:' +
+          `\n\tStripePublishable Key: ${this.stripePublishableKey}` +
+          `\n\tStripe Account ID: ${data.profile.stripeAccount.id}`
+      );
     }
 
     // Create and mount Stripe card element
@@ -112,17 +126,26 @@ export class ManifoldSubscriptionCreate {
     if (this.card && this.cardPlaceholder) {
       this.card.mount(this.cardPlaceholder);
       this.cardPlaceholder.removeAttribute('data-is-loading');
+    } else {
+      this.addErrors(interfaceError('stripe-init'));
+      throw new Error('Could not mount Stripe element.');
     }
   }
 
   @Watch('planId') async updatePlan(planId?: string) {
+    this.removeErrors('plan-query');
+
     if (!planId) {
+      this.addErrors(interfaceError('plan-query'));
       throw new Error('Missing property `planId` on `manifold-subscription-create`');
     }
 
     if (!this.connection) {
+      this.addErrors(interfaceError('plan-query'));
       throw new Error('Missing property `connection` on `manifold-subscription-create`.');
     }
+
+    this.data = undefined;
 
     this.loading = true;
 
@@ -133,8 +156,9 @@ export class ManifoldSubscriptionCreate {
     });
 
     if (errors) {
-      this.errors = errors;
+      this.addErrors(dataError('plan-query', 'selected plan'));
     }
+
     if (data) {
       this.data = data;
     }
@@ -160,9 +184,7 @@ export class ManifoldSubscriptionCreate {
 
   @Watch('configuredFeatures')
   async fetchCustomCost(configuredFeatures: FeatureMap) {
-    if (!this.connection) {
-      return undefined;
-    }
+    this.removeErrors('cost');
 
     // if not configurable, return plan cost
     if (Object.keys(this.configuredFeatures).length === 0) {
@@ -170,22 +192,30 @@ export class ManifoldSubscriptionCreate {
       return undefined;
     }
 
+    if (!this.connection) {
+      this.addErrors(dataError('cost', 'cost of selected plan'));
+      throw new Error('Missing property `connection` on `manifold-subscription-create`.');
+    }
+
     // Hide display while calculating
     this.calculatedCost = undefined;
-    this.errors = undefined;
+
+    // If a request is in flight, cancel it
     if (this.controller) {
       this.controller.abort();
     }
 
-    // If a request is in flight, cancel it
     this.controller = new AbortController();
 
-    // TODO pass controller to the request (might need to do this in manifold-init)
     try {
-      const { cost } = await this.connection.gateway.post<
-        { cost: number },
-        { features: FeatureMap }
-      >(
+      interface CostResponse {
+        cost: number;
+      }
+      interface CostRequest {
+        features: FeatureMap;
+      }
+
+      const { cost } = await this.connection.gateway.post<CostResponse, CostRequest>(
         `/id/plan/${this.planId}/cost`,
         {
           features: configuredFeatures,
@@ -196,8 +226,7 @@ export class ManifoldSubscriptionCreate {
       this.calculatedCost = cost;
     } catch (e) {
       if (e.name !== 'AbortError') {
-        // TODO store error in a better way so it can be displayed in place of cost in UI
-        this.errors = [{ message: 'Error getting plan cost.' }];
+        this.addErrors(dataError('cost', 'cost of selected plan'));
       }
     }
     return undefined;
@@ -205,6 +234,13 @@ export class ManifoldSubscriptionCreate {
 
   subscribe = async (e: UIEvent) => {
     e.preventDefault();
+    this.removeErrors('subscription');
+
+    if (!this.connection) {
+      this.addErrors(subscriptionError());
+      throw new Error('Missing property `connection` on `manifold-subscription-create`.');
+    }
+
     if (this.data && this.stripe && !this.subscribing) {
       this.subscribing = true;
       const { stripeSetupIntentSecret } = this.data.profile;
@@ -217,12 +253,15 @@ export class ManifoldSubscriptionCreate {
 
       if (error) {
         this.subscribing = false;
-        this.setupIntentError = error.message;
-        return;
+        this.addErrors(subscriptionError());
+
+        throw new Error(
+          'Stripe could not confirm card setup with the following credentials:' +
+            `\n\tStripe Setup Intent Secret: ${stripeSetupIntentSecret}`
+        );
       }
 
-      this.setupIntentStatus = setupIntent?.status;
-      if (setupIntent?.status === 'succeeded' && this.connection) {
+      if (setupIntent?.status === 'succeeded') {
         const configuredFeatures = Object.keys(this.configuredFeatures).map(key => ({
           label: key,
           value: `${this.configuredFeatures[key]}`,
@@ -240,13 +279,17 @@ export class ManifoldSubscriptionCreate {
         });
 
         if (errors) {
-          // TODO handle errors
+          this.addErrors(subscriptionError());
         }
 
         if (data) {
           this.createSuccess.emit({ id: data.createSubscription.data.id });
         }
+      } else {
+        // davejs: Should this be an error?
+        this.addErrors(subscriptionError());
       }
+
       this.subscribing = false;
     }
   };
@@ -259,9 +302,16 @@ export class ManifoldSubscriptionCreate {
 
   toggleIsEditing = async () => {
     this.isEditing = !this.isEditing;
+    this.removeErrors('plan-list-query');
 
-    if (!this.connection || !this.data) {
-      return undefined;
+    if (!this.connection) {
+      this.addErrors(interfaceError('plan-list-query'));
+      throw new Error('Missing property `connection` on `manifold-subscription-create`.');
+    }
+
+    if (!this.data) {
+      this.addErrors(dataError('plan-list-query', 'selected plan'));
+      throw new Error('Missing property `data` on `manifold-subscription-create`.');
     }
 
     this.isLoadingPlanSelector = true;
@@ -272,7 +322,7 @@ export class ManifoldSubscriptionCreate {
     });
 
     if (errors) {
-      this.errors = errors;
+      this.addErrors(dataError('plan-list-query', 'all plans for this product'));
     }
 
     if (data) {
@@ -287,32 +337,52 @@ export class ManifoldSubscriptionCreate {
     return (
       <div class="ManifoldSubscriptionCreate">
         {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
-        {this.isEditing ? (
-          <PlanSelector
-            planId={{
-              value: this.planId,
-              set: this.setPlanId,
-            }}
-            configuredFeatures={{
-              value: this.configuredFeatures,
-              set: this.setConfiguredFeature,
-              setAll: this.setAllConfiguredFeatures,
-            }}
-            calculatedCost={this.calculatedCost}
-            data={this.planListData}
-            isLoading={this.isLoadingPlanSelector}
-          />
-        ) : (
-          <PlanCard isLoading={this.loading} plan={this.data?.plan || undefined}>
-            <button
-              class="ManifoldSubscriptionCreate__ModifyPlanButton"
-              onClick={this.toggleIsEditing}
-            >
-              Change Plan
-            </button>
-          </PlanCard>
+        {this.errors && (
+          <div class="ManifoldSubscriptionCreate__MessageContainer">
+            {filterErrors(this.errors, 'type', ['interface', 'data']).map(error => (
+              <Message type="error">{error.message}</Message>
+            ))}
+          </div>
         )}
-        <form class="ManifoldSubscriptionCreate__Form" method="post" onSubmit={this.subscribe}>
+        <form
+          class="ManifoldSubscriptionCreate__Form"
+          method="post"
+          onSubmit={this.subscribe}
+          data-interface-error={filterErrors(this.errors, 'type', ['interface']).length > 0}
+          data-data-error={filterErrors(this.errors, 'type', ['data']).length > 0}
+        >
+          {this.isEditing ? (
+            <PlanSelector
+              planId={{
+                value: this.planId,
+                set: this.setPlanId,
+              }}
+              configuredFeatures={{
+                value: this.configuredFeatures,
+                set: this.setConfiguredFeature,
+                setAll: this.setAllConfiguredFeatures,
+              }}
+              calculatedCost={this.calculatedCost}
+              errors={filterErrors(this.errors, 'label', ['cost', 'plan-list-query'])}
+              data={this.planListData}
+              isLoading={this.isLoadingPlanSelector}
+            />
+          ) : (
+            <PlanCard
+              isLoading={this.loading}
+              plan={this.data?.plan || undefined}
+              errors={filterErrors(this.errors, 'label', ['plan-query'])}
+            >
+              <button
+                type="button"
+                class="ManifoldSubscriptionCreate__ModifyPlanButton"
+                onClick={this.toggleIsEditing}
+              >
+                Change Plan
+              </button>
+            </PlanCard>
+          )}
+
           <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__CardField">
             <span class="ManifoldSubscriptionCreate__Field__Label">Credit Card</span>
             <div
@@ -328,16 +398,16 @@ export class ManifoldSubscriptionCreate {
           <button
             class="ManifoldSubscriptionCreate__Button"
             type="submit"
-            disabled={this.subscribing}
+            disabled={
+              this.subscribing ||
+              filterErrors(this.errors, 'type', ['data', 'interface']).length > 0
+            }
           >
             {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
           </button>
           <p class="ManifoldSubscriptionCreate__HelpText" data-centered>
             We charge for plan cost + usage at end of month
           </p>
-          {this.errors?.map(error => (
-            <Message type="error">{error.message}</Message>
-          ))}
         </form>
       </div>
     );

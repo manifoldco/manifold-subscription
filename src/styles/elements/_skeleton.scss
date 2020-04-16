@@ -17,8 +17,9 @@ $name: '' !default;
   color: transparent;
   border-radius: 2px;
 
-  & * {
+  * {
     color: inherit;
+    filter: opacity(0);
   }
 
   &::before {
