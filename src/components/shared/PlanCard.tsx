@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from '@stencil/core';
 import check from '@manifoldco/mercury/icons/check.svg';
 import CostDisplay from './CostDisplay';
-import { UIError } from '../../../utils/error';
+import { UIError } from '../../utils/error';
 
 interface PlanCardProps {
   isLoading?: boolean;

@@ -13,7 +13,7 @@ import PlanCard from './PlanCard';
 import { FeatureMap, configurableFeatureDefaults } from '../../utils/plan';
 import CostDisplay from './CostDisplay';
 import SkeletonPlanSelector from './SkeletonPlanSelector';
-import { UIError, filterErrors } from '../../../utils/error';
+import { UIError, filterErrors } from '../../utils/error';
 
 interface PlanMenuProps {
   plans: PlanListQuery['product']['plans']['edges'];
