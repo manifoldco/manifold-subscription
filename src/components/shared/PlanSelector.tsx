@@ -13,6 +13,7 @@ import PlanCard from './PlanCard';
 import { FeatureMap, configurableFeatureDefaults } from '../../utils/plan';
 import CostDisplay from './CostDisplay';
 import SkeletonPlanSelector from './SkeletonPlanSelector';
+import { UIError, filterErrors } from '../../utils/error';
 
 interface PlanMenuProps {
   plans: PlanListQuery['product']['plans']['edges'];
@@ -61,6 +62,7 @@ interface ConfiguredFeatures {
 interface PlanSelectorProps {
   planId: PlanId;
   configuredFeatures: ConfiguredFeatures;
+  errors: UIError[];
   calculatedCost?: number;
   data?: PlanListQuery;
   isLoading?: boolean;
@@ -71,9 +73,9 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
     return <SkeletonPlanSelector />;
   }
 
-  const { planId, configuredFeatures, data } = props;
+  const { planId, configuredFeatures, data, errors } = props;
 
-  if (!data) {
+  if (!data || filterErrors(errors, 'label', ['plan-list-query']).length > 0) {
     return null;
   }
 
@@ -122,6 +124,7 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
               isConfigurable={
                 currentPlan ? currentPlan.configurableFeatures.edges.length > 0 : false
               }
+              hasError={filterErrors(props.errors, 'label', ['cost']).length > 0}
             />
             <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
           </div>

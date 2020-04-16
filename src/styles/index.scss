@@ -40,7 +40,13 @@ manifold-subscription-list {
   }
 
   i {
-    display: block;
+    display: inline-block;
     width: 1em;
+    line-height: 1;
+    vertical-align: bottom;
+  }
+
+  svg {
+    fill: currentColor;
   }
 }

@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from '@stencil/core';
+import errorIcon from '@manifoldco/mercury/icons/alert-circle.svg';
 import { $ } from '../../utils/currency';
 import { meteredFeatureDisplayValue } from '../../utils/plan';
 import { PlanMeteredFeatureEdge } from '../../types/graphql';
@@ -63,6 +64,7 @@ interface CostDisplayProps {
   compact?: boolean;
   isConfigurable?: boolean;
   meteredFeatures?: PlanMeteredFeatureEdge[];
+  hasError?: boolean;
 }
 
 const CostDisplay: FunctionalComponent<CostDisplayProps> = props => {
@@ -74,6 +76,16 @@ const CostDisplay: FunctionalComponent<CostDisplayProps> = props => {
           class="ManifoldSubscriptionCreate__CostDisplay__Calculating"
           title="Calculating cost..."
         />
+      </div>
+    );
+  }
+
+  if (props.hasError) {
+    return (
+      <div class="ManifoldSubscriptionCreate__CostDisplay" data-compact={props.compact}>
+        <div class="ManifoldSubscriptionCreate__CostDisplay__Error">
+          <i innerHTML={errorIcon} /> Error calculating cost
+        </div>
       </div>
     );
   }

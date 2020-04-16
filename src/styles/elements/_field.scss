@@ -11,6 +11,11 @@ $name: '' !default;
     font-size: 0.8em;
     text-transform: uppercase;
   }
+
+  &__InlineError {
+    color: mercury.$color-red;
+    font-size: 0.8em;
+  }
 }
 
 .#{$name}__NumberInput {

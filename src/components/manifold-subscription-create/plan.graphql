@@ -7,7 +7,6 @@ query Plan($planId: ID!) {
     }
   }
   profile {
-    id
     stripeSetupIntentSecret
     stripeAccount {
       id

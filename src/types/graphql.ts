@@ -1435,7 +1435,7 @@ export type PlanQuery = (
     )> }
   )>, profile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'id' | 'stripeSetupIntentSecret'>
+    & Pick<Profile, 'stripeSetupIntentSecret'>
     & { stripeAccount: Maybe<(
       { __typename?: 'StripeAccount' }
       & Pick<StripeAccount, 'id'>
@@ -1457,7 +1457,7 @@ export type SubscriptionQuery = (
       & Pick<SubscriptionAgreementStatus, 'label' | 'percentDone' | 'message'>
     ), plan: Maybe<(
       { __typename?: 'Plan' }
-      & Pick<Plan, 'label' | 'displayName' | 'cost'>
+      & Pick<Plan, 'id' | 'label' | 'displayName' | 'cost'>
       & { fixedFeatures: Maybe<(
         { __typename?: 'PlanFixedFeatureConnection' }
         & { edges: Array<(

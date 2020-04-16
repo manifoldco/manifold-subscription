@@ -2,14 +2,29 @@
 $name: '' !default;
 
 @mixin Message($color) {
-  color: $color;
-  background-color: rgba($color, 0.1);
-  border: 1px solid $color;
+  border-color: $color;
+
+  svg {
+    fill: $color;
+  }
+}
+
+.#{$name}__MessageContainer {
+  display: grid;
+  gap: 0.5rem;
 }
 
 .#{$name}__Message {
-  display: block;
-  padding: 0.5em;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5em;
+  align-items: center;
+  padding: 0.75em;
+  color: mercury.$color-grayDark;
+  font-size: 0.9em;
+  background-color: mercury.$color-white;
+  border: 1px solid;
+  border-left-width: 4px;
   border-radius: 3px;
 
   &--success {
