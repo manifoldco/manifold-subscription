@@ -1,6 +1,6 @@
 import { h, FunctionalComponent } from '@stencil/core';
 import check from '@manifoldco/mercury/icons/check.svg';
-import { PlanFixedFeatureEdge } from '../../../types/graphql';
+import { PlanFixedFeatureEdge } from '../../types/graphql';
 
 export const fixedDisplayValue = (displayValue: string = '') => {
   // normalize true/false features

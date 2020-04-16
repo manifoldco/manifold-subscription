@@ -1,11 +1,11 @@
 import { h, FunctionalComponent } from '@stencil/core';
 import lock from '@manifoldco/mercury/icons/lock.svg';
-import { $ } from '../../../utils/currency';
+import { $ } from '../../utils/currency';
 import {
   PlanConfigurableFeatureEdge,
   PlanFeatureType,
   PlanConfigurableFeature,
-} from '../../../types/graphql';
+} from '../../types/graphql';
 import { fixedDisplayValue } from './FixedFeature';
 import NumberInput from './NumberInput';
 import Select, { Option } from './Select';
