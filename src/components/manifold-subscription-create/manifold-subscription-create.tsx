@@ -31,6 +31,7 @@ import {
   interfaceError,
   dataError,
   subscriptionError,
+  validationError,
 } from '../../utils/error';
 
 @Component({
@@ -44,6 +45,7 @@ export class ManifoldSubscriptionCreate {
   stripe: Stripe | null;
   cardPlaceholder?: HTMLDivElement;
   @State() card: StripeCardElement;
+  @State() cardStatus: 'empty' | 'partial' | 'complete' = 'empty';
 
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) isLoadingPlanSelector?: boolean = false;
@@ -126,6 +128,22 @@ export class ManifoldSubscriptionCreate {
     if (this.card && this.cardPlaceholder) {
       this.card.mount(this.cardPlaceholder);
       this.cardPlaceholder.removeAttribute('data-is-loading');
+
+      this.card.on('change', e => {
+        if (e.empty) {
+          this.cardStatus = 'empty';
+        } else if (e.complete) {
+          this.cardStatus = 'complete';
+        } else {
+          this.cardStatus = 'partial';
+        }
+
+        this.removeErrors('card', 'validation_error');
+
+        if (e.error) {
+          this.addErrors(validationError(e.error.type, e.error.message));
+        }
+      });
     } else {
       this.addErrors(interfaceError('stripe-init'));
       throw new Error('Could not mount Stripe element.');
@@ -150,10 +168,15 @@ export class ManifoldSubscriptionCreate {
     this.loading = true;
 
     const variables: PlanQueryVariables = { planId };
-    const { data, errors } = await this.connection.graphqlFetch<PlanQuery>({
-      query: planQuery,
-      variables,
-    });
+    const { data, errors } = await this.connection
+      .graphqlFetch<PlanQuery>({
+        query: planQuery,
+        variables,
+      })
+      .catch(e => {
+        this.addErrors(dataError('plan-query', 'selected plan'));
+        throw new Error(e);
+      });
 
     if (errors) {
       this.addErrors(dataError('plan-query', 'selected plan'));
@@ -234,7 +257,17 @@ export class ManifoldSubscriptionCreate {
 
   subscribe = async (e: UIEvent) => {
     e.preventDefault();
-    this.removeErrors('subscription');
+    await this.removeErrors('subscription', 'card');
+
+    if (this.cardStatus === 'empty') {
+      this.addErrors(validationError('card', 'Card is empty.'));
+      return;
+    }
+
+    if (this.cardStatus !== 'complete' || this.cardStatus !== 'complete') {
+      this.addErrors(validationError('card', 'Card is invalid.'));
+      return;
+    }
 
     if (!this.connection) {
       this.addErrors(subscriptionError());
@@ -316,10 +349,15 @@ export class ManifoldSubscriptionCreate {
 
     this.isLoadingPlanSelector = true;
 
-    const { data, errors } = await this.connection.graphqlFetch<PlanListQuery>({
-      query: planListQuery,
-      variables: { productLabel: this.data?.plan.product.label },
-    });
+    const { data, errors } = await this.connection
+      .graphqlFetch<PlanListQuery>({
+        query: planListQuery,
+        variables: { productLabel: this.data?.plan.product.label },
+      })
+      .catch(e => {
+        this.addErrors(dataError('plan-list-query', 'all plans for this product'));
+        throw new Error(e);
+      });
 
     if (errors) {
       this.addErrors(dataError('plan-list-query', 'all plans for this product'));
@@ -334,12 +372,18 @@ export class ManifoldSubscriptionCreate {
   };
 
   render() {
+    const interfaceErrors = filterErrors(this.errors, 'type', ['interface']);
+    const dataErrors = filterErrors(this.errors, 'type', ['data']);
+    const interfaceDataErrors = [...interfaceErrors, ...dataErrors];
+    const subscriptionErrors = filterErrors(this.errors, 'type', ['subscription']);
+    const validationErrors = filterErrors(this.errors, 'type', ['validation']);
+
     return (
       <div class="ManifoldSubscriptionCreate">
         {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
-        {this.errors && (
+        {interfaceDataErrors && (
           <div class="ManifoldSubscriptionCreate__MessageContainer">
-            {filterErrors(this.errors, 'type', ['interface', 'data']).map(error => (
+            {interfaceDataErrors.map(error => (
               <Message type="error">{error.message}</Message>
             ))}
           </div>
@@ -394,6 +438,9 @@ export class ManifoldSubscriptionCreate {
             >
               Credit Card Field
             </div>
+            {validationErrors.map(error => (
+              <p class="ManifoldSubscriptionCreate__Field__InlineError">{error.message}</p>
+            ))}
           </label>
           <button
             class="ManifoldSubscriptionCreate__Button"
@@ -405,6 +452,13 @@ export class ManifoldSubscriptionCreate {
           >
             {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
           </button>
+          {subscriptionErrors && (
+            <div class="ManifoldSubscriptionCreate__MessageContainer">
+              {subscriptionErrors.map(error => (
+                <Message type="error">{error.message}</Message>
+              ))}
+            </div>
+          )}
           <p class="ManifoldSubscriptionCreate__HelpText" data-centered>
             We charge for plan cost + usage at end of month
           </p>
