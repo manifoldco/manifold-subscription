@@ -319,7 +319,6 @@ export class ManifoldSubscriptionCreate {
           this.createSuccess.emit({ id: data.createSubscription.data.id });
         }
       } else {
-        // davejs: Should this be an error?
         this.addErrors(subscriptionError());
       }
 
@@ -392,8 +391,8 @@ export class ManifoldSubscriptionCreate {
           class="ManifoldSubscriptionCreate__Form"
           method="post"
           onSubmit={this.subscribe}
-          data-interface-error={filterErrors(this.errors, 'type', ['interface']).length > 0}
-          data-data-error={filterErrors(this.errors, 'type', ['data']).length > 0}
+          data-interface-error={interfaceErrors.length > 0}
+          data-data-error={dataErrors.length > 0}
         >
           {this.isEditing ? (
             <PlanSelector
