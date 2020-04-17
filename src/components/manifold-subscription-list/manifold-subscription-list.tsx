@@ -70,7 +70,7 @@ export class ManifoldSubscriptionList {
     this.getSubscriptions(this.owner);
   }
 
-  handleCtaClick = (subId: string) => (e: MouseEvent) => {
+  handleCtaClick = (subId: string, href: string) => (e: MouseEvent) => {
     e.preventDefault();
     this.ctaClick.emit({ id: `manifold-cta-sub-${subId}` });
 
@@ -85,8 +85,8 @@ export class ManifoldSubscriptionList {
           },
         })
         .finally(() => {
-          const anchor = e.srcElement as HTMLAnchorElement;
-          if (anchor.href) {
+          if (href) {
+            const anchor = e.srcElement as HTMLAnchorElement;
             window.location.href = anchor.href;
           }
         });
@@ -113,7 +113,7 @@ export class ManifoldSubscriptionList {
                   sub.node.plan.configurableFeatures.edges.length > 0
                 }
                 ctaHref={href}
-                onCtaClick={this.handleCtaClick(sub.node.id)}
+                onCtaClick={this.handleCtaClick(sub.node.id, href)}
               />
             );
           })}
