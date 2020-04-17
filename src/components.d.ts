@@ -59,7 +59,6 @@ export namespace Components {
         "subscriptionId": string;
     }
     interface ManifoldSubscriptionList {
-        "baseUrl"?: string;
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
         "errors"?: GraphqlError[];
@@ -69,9 +68,13 @@ export namespace Components {
         "heading"?: string;
         "loading"?: boolean;
         /**
-          * Owner ID for subscriptions
+          * Owner for subscriptions
          */
         "owner"?: string;
+        /**
+          * Component subscription link format
+         */
+        "subLinkFormat"?: string;
     }
 }
 declare global {
@@ -158,7 +161,6 @@ declare namespace LocalJSX {
         "subscriptionId"?: string;
     }
     interface ManifoldSubscriptionList {
-        "baseUrl"?: string;
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
         "errors"?: GraphqlError[];
@@ -169,9 +171,13 @@ declare namespace LocalJSX {
         "loading"?: boolean;
         "onCtaClick"?: (event: CustomEvent<any>) => void;
         /**
-          * Owner ID for subscriptions
+          * Owner for subscriptions
          */
         "owner"?: string;
+        /**
+          * Component subscription link format
+         */
+        "subLinkFormat"?: string;
     }
     interface IntrinsicElements {
         "manifold-configured-feature": ManifoldConfiguredFeature;

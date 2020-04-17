@@ -2,8 +2,8 @@ query Subscriptions($owner: ProfileIdentity!) {
   subscriptions(first: 1000, owner: $owner) {
     edges {
       node {
+        id
         plan {
-          id
           displayName
           cost
           configurableFeatures(first: 1) {

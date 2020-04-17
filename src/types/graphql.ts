@@ -1652,9 +1652,10 @@ export type SubscriptionsQuery = (
       { __typename?: 'SubscriptionAgreementEdge' }
       & { node: Maybe<(
         { __typename?: 'SubscriptionAgreement' }
+        & Pick<SubscriptionAgreement, 'id'>
         & { plan: Maybe<(
           { __typename?: 'Plan' }
-          & Pick<Plan, 'id' | 'displayName' | 'cost'>
+          & Pick<Plan, 'displayName' | 'cost'>
           & { configurableFeatures: Maybe<(
             { __typename?: 'PlanConfigurableFeatureConnection' }
             & { edges: Array<(

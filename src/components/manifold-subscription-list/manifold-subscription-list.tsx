@@ -17,14 +17,17 @@ export class ManifoldSubscriptionList {
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
   @Prop({ mutable: true }) data?: SubscriptionsQuery;
-  @Prop() baseUrl?: string = '/subscriptions';
 
+  /**
+   * Component subscription link format
+   */
+  @Prop() subLinkFormat?: string;
   /**
    * Component heading text
    */
   @Prop() heading?: string;
   /**
-   * Owner ID for subscriptions
+   * Owner for subscriptions
    */
   @Prop() owner?: string;
 
@@ -67,41 +70,27 @@ export class ManifoldSubscriptionList {
     this.getSubscriptions(this.owner);
   }
 
-  ctaHref(planID: string) {
-    if (!this.baseUrl || this.baseUrl === '#') {
-      return this.baseUrl;
-    }
-
-    // const search = new URLSearchParams();
-    // set plan ID
-    // search.set('planId', planID);
-
-    // // set configurable feature selection (or skip, if no configurable features);
-    // Object.entries(this.userSelection[planID] || {}).forEach(([key, val]) => {
-    //   search.set(key, `${val}`);
-    // });
-
-    return `${this.baseUrl}/${planID.toString()}`;
-  }
-
-  handleCtaClick = (planId: string) => (e: MouseEvent) => {
+  handleCtaClick = (subId: string) => (e: MouseEvent) => {
     e.preventDefault();
-    this.ctaClick.emit({ id: `manifold-cta-plan-${planId}` });
+    this.ctaClick.emit({ id: `manifold-cta-sub-${subId}` });
 
-    // this.connection;
-    // .analytics
-    // .track({
-    //   description: 'Track pricing matrix cta clicks',
-    //   name: 'click',
-    //   type: 'component-analytics',
-    //   properties: {
-    //     planId,
-    //   },
-    // })
-    // .finally(() => {
-    const anchor = e.srcElement as HTMLAnchorElement; // ?
-    window.location.href = anchor.href; // ?
-    // });
+    if (this.connection) {
+      this.connection.analytics
+        .track({
+          description: 'Track modify subscription button cta clicks',
+          name: 'click',
+          type: 'component-analytics',
+          properties: {
+            subId,
+          },
+        })
+        .finally(() => {
+          const anchor = e.srcElement as HTMLAnchorElement;
+          if (anchor.href) {
+            window.location.href = anchor.href;
+          }
+        });
+    }
   };
 
   render() {
@@ -111,6 +100,10 @@ export class ManifoldSubscriptionList {
 
         {this.data?.subscriptions &&
           this.data?.subscriptions.edges.map(sub => {
+            const href =
+              sub.node.id && this.subLinkFormat
+                ? this.subLinkFormat.replace(/:subscription/gi, sub.node.id)
+                : '';
             return (
               <ListCard
                 isLoading={this.loading}
@@ -119,8 +112,8 @@ export class ManifoldSubscriptionList {
                   sub.node.plan.configurableFeatures &&
                   sub.node.plan.configurableFeatures.edges.length > 0
                 }
-                ctaHref={this.ctaHref(sub.node.plan.id)}
-                onCtaClick={this.handleCtaClick(sub.node.plan.id)}
+                ctaHref={href}
+                onCtaClick={this.handleCtaClick(sub.node.id)}
               />
             );
           })}
