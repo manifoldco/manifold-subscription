@@ -72,7 +72,7 @@ export class ManifoldSubscriptionList {
 
   handleCtaClick = (subId: string, href: string) => (e: MouseEvent) => {
     e.preventDefault();
-    this.ctaClick.emit({ id: `manifold-cta-sub-${subId}` });
+    this.ctaClick.emit({ subscriptionId: subId });
 
     if (this.connection) {
       this.connection.analytics
