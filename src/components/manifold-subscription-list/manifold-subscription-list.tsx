@@ -21,7 +21,7 @@ export class ManifoldSubscriptionList {
   /**
    * Component subscription link format
    */
-  @Prop() subLinkFormat?: string;
+  @Prop({ mutable: true }) subLinkFormat?: string;
   /**
    * Component heading text
    */
