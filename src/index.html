@@ -27,10 +27,47 @@
       src="https://js.cdn.manifold.co/@manifoldco/manifold-init/dist/manifold-init/manifold-init.js"
     ></script>
 
+    <script type="module" src="/build/index.esm.js"></script>
+    <script nomodule src="/build/index.js"></script>
+
     <script type="module" src="/build/manifold-subscription.esm.js"></script>
     <script nomodule src="/build/manifold-subscription.js"></script>
+    <style>
+      body {
+        margin-top: 4rem;
+        background-color: #f8f8f8;
+      }
+      .auth {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 0.5rem;
+        color: #888;
+        background-color: #111;
+        box-shadow: 0 0 10px #0002;
+      }
+
+      .auth input,
+      .auth button {
+        padding: 0.5rem;
+        color: inherit;
+        font-family: 'Roboto Mono', Menlo, monospace;
+        background-color: #fff1;
+        border: 1px solid #fff2;
+      }
+    </style>
   </head>
   <body>
+    <label class="auth">
+      Auth Token:
+      <input id="auth-token" type="text" placeholder="Manifold Auth Token" />
+      <button id="update-auth-token" type="button">Update</button>
+    </label>
     <manifold-init env="stage" client-id="3zx3qeb15z70kcv4nh8cjedhndwz2"></manifold-init>
     <h2>Create a subscription</h2>
     <manifold-subscription-create
