@@ -114,7 +114,6 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
             />
           ))}
         </dl>
-        {/* TODO add regions */}
         <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
           <div>
             <CostDisplay

@@ -603,6 +603,9 @@ export type Product = Node & {
   fixedFeatures: Maybe<ProductFixedFeatureConnection>;
   meteredFeatures: Maybe<ProductMeteredFeatureConnection>;
   configurableFeatures: Maybe<ProductConfigurableFeatureConnection>;
+  version: Maybe<Scalars['Int']>;
+  versionID: Maybe<Scalars['ID']>;
+  published: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -964,6 +967,7 @@ export type QueryPlanArgs = {
 export type QueryProductArgs = {
   id: Maybe<Scalars['ID']>;
   label: Maybe<Scalars['String']>;
+  latest: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -1219,6 +1223,7 @@ export type SubscriptionAgreement = Node & {
   id: Scalars['ID'];
   plan: Maybe<Plan>;
   status: SubscriptionAgreementStatus;
+  owner: Maybe<Profile>;
 };
 
 export type SubscriptionAgreementConnection = {
@@ -1382,15 +1387,6 @@ export type PlanFragment = (
             & Pick<PlanFeatureCostTier, 'limit' | 'cost'>
           )>> }
         )> }
-      ) }
-    )> }
-  )>, regions: Maybe<(
-    { __typename?: 'RegionConnection' }
-    & { edges: Array<(
-      { __typename?: 'RegionEdge' }
-      & { node: (
-        { __typename?: 'Region' }
-        & Pick<Region, 'id' | 'displayName' | 'platform' | 'dataCenter'>
       ) }
     )> }
   )> }
