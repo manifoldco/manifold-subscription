@@ -5,6 +5,13 @@ query Plan($planId: ID!) {
     product {
       label
     }
+    configurableFeatures(first: 1) {
+      edges {
+        node {
+          id
+        }
+      }
+    }
   }
   profile {
     stripeSetupIntentSecret

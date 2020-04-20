@@ -1,5 +1,6 @@
 import { h, FunctionalComponent } from '@stencil/core';
 import check from '@manifoldco/mercury/icons/check.svg';
+import sliders from '@manifoldco/mercury/icons/sliders.svg';
 import CostDisplay from './CostDisplay';
 import { UIError } from '../../utils/error';
 
@@ -10,6 +11,9 @@ interface PlanCardProps {
   plan?: {
     displayName: string;
     cost: number;
+    configurableFeatures?: {
+      edges: object[];
+    };
   };
 }
 
@@ -26,10 +30,19 @@ const PlanCard: FunctionalComponent<PlanCardProps> = (
     return null;
   }
 
+  const isConfigurable = (plan.configurableFeatures?.edges.length || 0) > 0;
+
   return (
     <div class="ManifoldSubscriptionCreate__Card" data-is-checked={isChecked}>
       <div class="ManifoldSubscriptionCreate__PlanName">
         <span data-is-loading={isLoading}>{plan.displayName}</span>
+        {isConfigurable && (
+          <i
+            class="ManifoldSubscriptionCreate__Card__ConfigurableIndicator"
+            innerHTML={sliders}
+            title="Configurable"
+          />
+        )}
       </div>
       <span class="ManifoldSubscriptionCreate__Cost">
         <span data-is-loading={isLoading}>
