@@ -427,6 +427,7 @@ export class ManifoldSubscriptionCreate {
             <PlanCard
               isLoading={this.loading}
               plan={this.data?.plan || undefined}
+              calculatedCost={this.calculatedCost}
               errors={filterErrors(this.errors, 'label', ['plan-query'])}
             >
               <button

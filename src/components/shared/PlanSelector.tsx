@@ -41,7 +41,7 @@ const PlanMenu: FunctionalComponent<PlanMenuProps> = ({
               setAllConfiguredFeatures(configurableFeatureDefaults(plans as PlanEdge[], plan.id));
             }}
           />
-          <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} />
+          <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} calculatedCost={0} />
         </label>
       </li>
     ))}
