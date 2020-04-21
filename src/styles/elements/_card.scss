@@ -41,4 +41,10 @@ $name: '' !default;
     transform: scale(1);
     opacity: 1;
   }
+
+  &__ConfigurableIndicator {
+    margin-left: 0.5em;
+    font-size: 0.9em;
+    opacity: 0.5;
+  }
 }
