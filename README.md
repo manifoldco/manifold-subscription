@@ -99,13 +99,12 @@ Options are passed to the component in the form of HTML Attributes or children:
 
 #### Attributes
 
-| Name                     | Required | Description                                                                    | Example                                                                                 |
-| ------------------------ | -------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| `plan-id`                | Y        | Your Plan’s identifier                                                         | `<manifold-subscription-create product-id="234qkjvrptpy3thna4qttwt7m2nf6">`             |
-| `owner-id`               | Y        | The owner of the subscription                                                  | `<manifold-subscription-create owner-id="[id]">`                                        |
-| `region-id`              |          | The desired region identifier of the selected plan (defaults to global region) | `<manifold-subscription-create region-id="[region-id]">`                                |
-| `heading`                |          | Heading at the top of the component                                            | `<manifold-subscription-create heading="Purchase Subscription">`                        |
-| `stripe-publishable-key` | Y        | A publishable key for your Stripe account                                      | `<manifold-subscription-create stripe-publishable-key="pk_test_[hash]|pk_live_[hash]">` |
+| Name                     | Required | Description                               | Example                                                                                 |
+| ------------------------ | -------- | ----------------------------------------- | --------------------------------------------------------------------------------------- |
+| `plan-id`                | Y        | Your Plan’s identifier                    | `<manifold-subscription-create product-id="234qkjvrptpy3thna4qttwt7m2nf6">`             |
+| `owner-id`               | Y        | The owner of the subscription             | `<manifold-subscription-create owner-id="[id]">`                                        |
+| `heading`                |          | Heading at the top of the component       | `<manifold-subscription-create heading="Purchase Subscription">`                        |
+| `stripe-publishable-key` | Y        | A publishable key for your Stripe account | `<manifold-subscription-create stripe-publishable-key="pk_test_[hash]|pk_live_[hash]">` |
 
 #### Children
 

@@ -1389,15 +1389,6 @@ export type PlanFragment = (
         )> }
       ) }
     )> }
-  )>, regions: Maybe<(
-    { __typename?: 'RegionConnection' }
-    & { edges: Array<(
-      { __typename?: 'RegionEdge' }
-      & { node: (
-        { __typename?: 'Region' }
-        & Pick<Region, 'id' | 'displayName' | 'platform' | 'dataCenter'>
-      ) }
-    )> }
   )> }
 );
 
