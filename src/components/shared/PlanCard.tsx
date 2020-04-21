@@ -7,7 +7,7 @@ import { UIError } from '../../utils/error';
 interface PlanCardProps {
   isLoading?: boolean;
   isChecked?: boolean;
-  calculatedCost?: number;
+  calculatedCost?: number | null;
   errors?: UIError[];
   plan?: {
     displayName: string;
@@ -47,7 +47,7 @@ const PlanCard: FunctionalComponent<PlanCardProps> = (props, cta) => {
       <span class="ManifoldSubscriptionCreate__Cost">
         <span data-is-loading={isLoading}>
           <CostDisplay
-            isCalculating={calculatedCost === undefined}
+            isCalculating={calculatedCost === null}
             baseCost={calculatedCost || plan.cost || 0}
             isConfigurable
             compact

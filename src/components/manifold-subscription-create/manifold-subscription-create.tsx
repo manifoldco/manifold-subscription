@@ -56,7 +56,7 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) setupIntentError?: string;
   @Prop({ mutable: true }) subscribing?: boolean = false;
   @Prop({ mutable: true }) configuredFeatures: FeatureMap = {};
-  @Prop({ mutable: true }) calculatedCost?: number;
+  @Prop({ mutable: true }) calculatedCost?: number | null;
   @Prop({ mutable: true }) isEditing: boolean = false;
 
   /**
@@ -219,7 +219,7 @@ export class ManifoldSubscriptionCreate {
 
     // if not configurable, return plan cost
     if (Object.keys(this.configuredFeatures).length === 0) {
-      this.calculatedCost = 0;
+      this.calculatedCost = undefined;
       return undefined;
     }
 
@@ -229,7 +229,7 @@ export class ManifoldSubscriptionCreate {
     }
 
     // Hide display while calculating
-    this.calculatedCost = undefined;
+    this.calculatedCost = null;
 
     // If a request is in flight, cancel it
     if (this.controller) {

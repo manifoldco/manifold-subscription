@@ -41,7 +41,7 @@ const PlanMenu: FunctionalComponent<PlanMenuProps> = ({
               setAllConfiguredFeatures(configurableFeatureDefaults(plans as PlanEdge[], plan.id));
             }}
           />
-          <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} calculatedCost={0} />
+          <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} />
         </label>
       </li>
     ))}
@@ -63,7 +63,7 @@ interface PlanSelectorProps {
   planId: PlanId;
   configuredFeatures: ConfiguredFeatures;
   errors: UIError[];
-  calculatedCost?: number;
+  calculatedCost?: number | null;
   data?: PlanListQuery;
   isLoading?: boolean;
 }
@@ -118,7 +118,7 @@ const PlanSelector: FunctionalComponent<PlanSelectorProps> = props => {
         <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
           <div>
             <CostDisplay
-              isCalculating={props.calculatedCost === undefined}
+              isCalculating={props.calculatedCost === null}
               baseCost={props.calculatedCost || currentPlan?.cost || 0}
               meteredFeatures={currentPlan?.meteredFeatures.edges as PlanMeteredFeatureEdge[]}
               isConfigurable={

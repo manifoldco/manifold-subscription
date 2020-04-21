@@ -17,7 +17,7 @@ export namespace Components {
         "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
-        "calculatedCost"?: number;
+        "calculatedCost"?: number | null;
         "configuredFeatures": FeatureMap;
         "data"?: PlanQuery;
         /**
@@ -111,7 +111,7 @@ declare namespace LocalJSX {
         "value"?: string | number | boolean;
     }
     interface ManifoldSubscriptionCreate {
-        "calculatedCost"?: number;
+        "calculatedCost"?: number | null;
         "configuredFeatures"?: FeatureMap;
         "data"?: PlanQuery;
         /**
