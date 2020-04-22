@@ -52,7 +52,7 @@ $name: '' !default;
   }
 
   button {
-    @include mercury.Manifold__Button;
+    @include mercury.Button;
 
     padding: 0.5em 0.75em;
     font-size: 1em;
