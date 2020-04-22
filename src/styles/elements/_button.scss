@@ -2,7 +2,7 @@
 $name: '' !default;
 
 .#{$name}__Button {
-  @include mercury.Manifold__Button;
+  @include mercury.Button;
 
   &[data-kind='primary'] {
     color: mercury.$color-white;

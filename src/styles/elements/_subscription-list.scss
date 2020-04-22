@@ -4,15 +4,14 @@ $name: '' !default;
 .#{$name}__List {
   display: grid;
   gap: 1em;
-  grid-gap: 1em;
   box-sizing: border-box;
   color: mercury.$color-grayDarker;
   font-size: 1em;
 
   &__Heading {
+    padding-bottom: 0.25em;
     font-size: 1.5em;
     text-align: justify;
-    padding-bottom: 0.25em;
   }
 
   &__Card {
@@ -27,7 +26,7 @@ $name: '' !default;
   }
 
   &__Button {
-    @include mercury.Manifold__Button;
+    @include mercury.Button;
 
     grid-row: 1 / span 2;
     grid-column: 2;
@@ -38,9 +37,9 @@ $name: '' !default;
 
   &__Icon {
     position: absolute;
-    margin-inline-start: .4em;
-    fill: mercury.$color-gray;
+    margin-inline-start: 0.4em;
     font-size: 1.3em;
+    fill: mercury.$color-gray;
   }
 
   &__HelpText {
