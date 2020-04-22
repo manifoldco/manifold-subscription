@@ -2,23 +2,30 @@
 $name: '' !default;
 
 .#{$name}__Field {
-  display: grid;
-  gap: 0.25em;
+  @include mercury.Input;
 
   &__Label {
-    color: mercury.$color-grayDark;
-    font-weight: 500;
-    font-size: 0.8em;
-    text-transform: uppercase;
+    @include mercury.Typography--SmallScreenLabel;
+
+    @media (min-width: 600px) {
+      @include mercury.Typography--Label;
+    }
   }
 
   &__InlineError {
+    @include mercury.Typography--SmallScreenCaption;
+
     color: mercury.$color-red;
-    font-size: 0.8em;
+
+    @media (min-width: 600px) {
+      @include mercury.Typography--Caption;
+    }
   }
 }
 
 .#{$name}__NumberInput {
+  @include mercury.Input;
+
   display: grid;
   grid-gap: 0.5em;
   grid-template-columns: repeat(3, auto);
@@ -26,28 +33,12 @@ $name: '' !default;
   font-size: 0.8em;
 
   input {
-    width: 3.5em;
-    padding: 0.5em 0.75em;
-    line-height: 1em;
-    border: 1px solid mercury.$color-grayLight;
-    border-radius: 0.2em;
-
-    &:focus {
-      border-color: mercury.$color-blue;
-    }
-
-    &:invalid {
-      border-color: mercury.$color-red;
-    }
+    height: 2.25em;
+    font-size: 0.8em;
 
     &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
       display: none;
-    }
-
-    &::placeholder {
-      color: mercury.$color-gray;
-      font-style: italic;
     }
   }
 
@@ -56,33 +47,9 @@ $name: '' !default;
 
     padding: 0.5em 0.75em;
     font-size: 1em;
-    border-radius: 0.25em;
   }
 }
 
 .#{$name}__Select {
-  --default-color: #{mercury.$color-gray};
-  --focus-color: #{mercury.$color-blue};
-
-  max-width: 100%;
-  padding: 0.5em 3.5em 0.5em 1em;
-  font-size: 0.8em;
-  line-height: 1.5em;
-  background-color: mercury.$color-white;
-  background-image: linear-gradient(45deg, transparent 50%, var(--default-color) 50%),
-    linear-gradient(135deg, var(--default-color) 50%, transparent 50%),
-    linear-gradient(to right, var(--default-color), var(--default-color));
-  background-repeat: no-repeat;
-  background-position: calc(100% - 1.3em) calc(1em + 0.1em), calc(100% - 0.95em) calc(1em + 0.1em),
-    calc(100% - 2.5em) 0.5em;
-  background-size: 0.35em 0.35em, 0.35em 0.35em, 1px 1.5em;
-  border: 1px solid var(--default-color);
-  border-radius: 0.25em;
-
-  &:focus {
-    background-image: linear-gradient(45deg, transparent 50%, var(--focus-color) 50%),
-      linear-gradient(135deg, var(--focus-color) 50%, transparent 50%),
-      linear-gradient(to right, var(--focus-color), var(--focus-color));
-    border: 1px solid var(--focus-color);
-  }
+  @include mercury.Select;
 }
