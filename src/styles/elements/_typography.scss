@@ -3,7 +3,22 @@ $name: '' !default;
 
 .#{$name} {
   &__Heading {
-    font-size: 1.5em;
-    text-align: center;
+    @include mercury.Typography--SmallScreenHeadingLarge;
+
+    @media (min-width: 600px) {
+      @include mercury.Typography--HeadingLarge;
+    }
+  }
+
+  &__HelpText {
+    @include mercury.Typography--SmallScreenCaption;
+
+    @media (min-width: 600px) {
+      @include mercury.Typography--Caption;
+    }
+
+    &[data-centered] {
+      text-align: center;
+    }
   }
 }

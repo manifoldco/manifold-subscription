@@ -18,7 +18,7 @@ const Select: FunctionalComponent<SelectProps> = props => {
   const { options, selectedValue, onChange, ...rest } = props;
 
   return (
-    <div class="ManifoldSubscriptionCreate__Select">
+    <div class="ManifoldSubscription__Select">
       <select onChange={e => onChange(rest.name, (e.target as HTMLInputElement).value)} {...rest}>
         {options.map(({ value, label }) => (
           <option value={value} selected={value === selectedValue}>

@@ -62,7 +62,7 @@ export class ManifoldSubscriptionCreate {
 
     return (
       <div class="ManifoldSubscriptionCreate__Details">
-        {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
+        {this.heading && <h1 class="ManifoldSubscription__Heading">{this.heading}</h1>}
         <section class="ManifoldSubscriptionCreate__Card">
           <header class="ManifoldSubscriptionCreate__Details__Header">
             <h2 class="ManifoldSubscriptionCreate__PlanName">{plan.displayName}</h2>
@@ -92,7 +92,7 @@ export class ManifoldSubscriptionCreate {
               <CostDisplay baseCost={plan.cost} />
               <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
             </div>
-            <button type="button" class="ManifoldSubscriptionCreate__Button" data-kind="black">
+            <button type="button" class="ManifoldSubscription__Button" data-kind="black">
               Modify Subsciption
             </button>
           </footer>

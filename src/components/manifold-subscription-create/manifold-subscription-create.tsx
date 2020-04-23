@@ -392,7 +392,7 @@ export class ManifoldSubscriptionCreate {
 
     return (
       <div class="ManifoldSubscriptionCreate">
-        {this.heading && <h1 class="ManifoldSubscriptionCreate__Heading">{this.heading}</h1>}
+        {this.heading && <h1 class="ManifoldSubscription__Heading">{this.heading}</h1>}
         {interfaceDataErrors.length > 0 && (
           <div class="ManifoldSubscriptionCreate__MessageContainer">
             {interfaceDataErrors.map(error => (
@@ -440,8 +440,8 @@ export class ManifoldSubscriptionCreate {
             </PlanCard>
           )}
 
-          <label class="ManifoldSubscriptionCreate__Field ManifoldSubscriptionCreate__CardField">
-            <span class="ManifoldSubscriptionCreate__Field__Label">Credit Card</span>
+          <div class="ManifoldSubscription__Field ManifoldSubscription__Field--Card">
+            <label class="ManifoldSubscription__Field__Label">Credit Card</label>
             <div
               class="StripeElement"
               ref={el => {
@@ -452,11 +452,11 @@ export class ManifoldSubscriptionCreate {
               Credit Card Field
             </div>
             {validationErrors.map(error => (
-              <p class="ManifoldSubscriptionCreate__Field__InlineError">{error.message}</p>
+              <p class="ManifoldSubscription__Field__InlineError">{error.message}</p>
             ))}
-          </label>
+          </div>
           <button
-            class="ManifoldSubscriptionCreate__Button"
+            class="ManifoldSubscription__Button"
             type="submit"
             data-kind="primary"
             disabled={
@@ -473,7 +473,7 @@ export class ManifoldSubscriptionCreate {
               ))}
             </div>
           )}
-          <p class="ManifoldSubscriptionCreate__HelpText" data-centered>
+          <p class="ManifoldSubscription__HelpText" data-centered>
             We charge for plan cost + usage at end of month
           </p>
         </form>
