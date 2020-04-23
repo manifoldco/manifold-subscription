@@ -11,6 +11,8 @@ import {
   PlanMeteredFeatureEdge,
   PlanConfigurableFeatureEdge,
 } from '../../types/graphql';
+import state from './store';
+import PlanSelector from './components/PlanSelector';
 
 @Component({
   tag: 'manifold-subscription-details',
@@ -18,6 +20,7 @@ import {
 export class ManifoldSubscriptionCreate {
   @Prop() subscriptionId: string;
   @Prop() heading?: string;
+  @Prop() isEditing?: boolean = false;
   @State() data?: SubscriptionQuery;
   @Element() el: HTMLElement;
 
@@ -44,11 +47,15 @@ export class ManifoldSubscriptionCreate {
   async componentWillLoad() {
     await customElements.whenDefined('manifold-init');
     const core = document.querySelector('manifold-init') as HTMLManifoldInitElement;
-    this.connection = await core.initialize({
+
+    const connection = await core.initialize({
       element: this.el,
       componentVersion: '<@NPM_PACKAGE_VERSION@>',
       version: 0,
     });
+
+    state.connection = connection;
+    this.connection = connection;
 
     this.getSubscription(this.subscriptionId, '');
   }
@@ -56,6 +63,10 @@ export class ManifoldSubscriptionCreate {
   render() {
     if (!this.data || !this.data.subscription) {
       return null;
+    }
+
+    if (this.isEditing) {
+      return <PlanSelector productId={this.data.subscription.plan.product.id} />;
     }
 
     const { plan, status } = this.data.subscription;
@@ -92,7 +103,14 @@ export class ManifoldSubscriptionCreate {
               <CostDisplay baseCost={plan.cost} />
               <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
             </div>
-            <button type="button" class="ManifoldSubscription__Button" data-kind="black">
+            <button
+              type="button"
+              class="ManifoldSubscription__Button"
+              data-kind="black"
+              onClick={() => {
+                this.isEditing = true;
+              }}
+            >
               Modify Subsciption
             </button>
           </footer>

@@ -10,6 +10,9 @@ query Subscription($id: ID!) {
       label
       displayName
       cost
+      product {
+        id
+      }
       fixedFeatures(first: 500) {
         edges {
           node {

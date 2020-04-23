@@ -1223,7 +1223,14 @@ export type SubscriptionAgreement = Node & {
   id: Scalars['ID'];
   plan: Maybe<Plan>;
   status: SubscriptionAgreementStatus;
+  configuredFeatures: Maybe<ConfiguredFeatureConnection>;
   owner: Maybe<Profile>;
+};
+
+
+export type SubscriptionAgreementConfiguredFeaturesArgs = {
+  first: Scalars['Int'];
+  after: Maybe<Scalars['String']>;
 };
 
 export type SubscriptionAgreementConnection = {
@@ -1448,6 +1455,80 @@ export type PlanQuery = (
   ) }
 );
 
+export type ProductPlanFragment = (
+  { __typename?: 'Plan' }
+  & Pick<Plan, 'id' | 'displayName' | 'label' | 'free' | 'cost'>
+  & { fixedFeatures: Maybe<(
+    { __typename?: 'PlanFixedFeatureConnection' }
+    & { edges: Array<(
+      { __typename?: 'PlanFixedFeatureEdge' }
+      & { node: (
+        { __typename?: 'PlanFixedFeature' }
+        & Pick<PlanFixedFeature, 'displayName' | 'displayValue' | 'label'>
+      ) }
+    )> }
+  )>, meteredFeatures: Maybe<(
+    { __typename?: 'PlanMeteredFeatureConnection' }
+    & { edges: Array<(
+      { __typename?: 'PlanMeteredFeatureEdge' }
+      & { node: (
+        { __typename?: 'PlanMeteredFeature' }
+        & Pick<PlanMeteredFeature, 'label' | 'displayName'>
+        & { numericDetails: (
+          { __typename?: 'PlanMeteredFeatureNumericDetails' }
+          & Pick<PlanMeteredFeatureNumericDetails, 'unit'>
+          & { costTiers: Maybe<Array<(
+            { __typename?: 'PlanFeatureCostTier' }
+            & Pick<PlanFeatureCostTier, 'limit' | 'cost'>
+          )>> }
+        ) }
+      ) }
+    )> }
+  )>, configurableFeatures: Maybe<(
+    { __typename?: 'PlanConfigurableFeatureConnection' }
+    & { edges: Array<(
+      { __typename?: 'PlanConfigurableFeatureEdge' }
+      & { node: (
+        { __typename?: 'PlanConfigurableFeature' }
+        & Pick<PlanConfigurableFeature, 'label' | 'displayName' | 'type' | 'upgradable' | 'downgradable'>
+        & { featureOptions: Maybe<Array<(
+          { __typename?: 'PlanConfigurableFeatureOption' }
+          & Pick<PlanConfigurableFeatureOption, 'displayName' | 'value' | 'cost'>
+        )>>, numericDetails: Maybe<(
+          { __typename?: 'PlanConfigurableFeatureNumericDetails' }
+          & Pick<PlanConfigurableFeatureNumericDetails, 'increment' | 'min' | 'max' | 'unit'>
+          & { costTiers: Maybe<Array<(
+            { __typename?: 'PlanFeatureCostTier' }
+            & Pick<PlanFeatureCostTier, 'limit' | 'cost'>
+          )>> }
+        )> }
+      ) }
+    )> }
+  )> }
+);
+
+export type ProductPlansQueryVariables = {
+  productId: Scalars['ID'];
+};
+
+
+export type ProductPlansQuery = (
+  { __typename?: 'Query' }
+  & { product: Maybe<(
+    { __typename?: 'Product' }
+    & { plans: Maybe<(
+      { __typename?: 'PlanConnection' }
+      & { edges: Array<(
+        { __typename?: 'PlanEdge' }
+        & { node: (
+          { __typename?: 'Plan' }
+          & ProductPlanFragment
+        ) }
+      )> }
+    )> }
+  )> }
+);
+
 export type SubscriptionQueryVariables = {
   id: Scalars['ID'];
 };
@@ -1463,7 +1544,10 @@ export type SubscriptionQuery = (
     ), plan: Maybe<(
       { __typename?: 'Plan' }
       & Pick<Plan, 'id' | 'label' | 'displayName' | 'cost'>
-      & { fixedFeatures: Maybe<(
+      & { product: Maybe<(
+        { __typename?: 'Product' }
+        & Pick<Product, 'id'>
+      )>, fixedFeatures: Maybe<(
         { __typename?: 'PlanFixedFeatureConnection' }
         & { edges: Array<(
           { __typename?: 'PlanFixedFeatureEdge' }
