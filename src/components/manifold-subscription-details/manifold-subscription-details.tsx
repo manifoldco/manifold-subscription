@@ -66,7 +66,12 @@ export class ManifoldSubscriptionCreate {
     }
 
     if (this.isEditing) {
-      return <PlanSelector productId={this.data.subscription.plan.product.id} />;
+      return (
+        <PlanSelector
+          productId={this.data.subscription.plan.product.id}
+          planId={this.data.subscription.plan.id}
+        />
+      );
     }
 
     const { plan, status } = this.data.subscription;

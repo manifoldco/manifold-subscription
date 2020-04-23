@@ -3,17 +3,22 @@ import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
 import { ProductPlansQuery, ProductPlansQueryVariables } from '../../types/graphql';
 import productPlansQuery from './product-plans.graphql';
+import { FeatureMap } from '../../utils/plan';
 
 interface Store {
   connection?: Connection;
-  productId?: string;
   isLoading: boolean;
-  plans?: ProductPlansQuery['product']['plans']['edges'];
   errors?: GraphqlError[];
+
+  productId?: string;
+  planId?: string;
+  plans?: ProductPlansQuery['product']['plans']['edges'];
+  configuredFeatures: FeatureMap;
 }
 
 const { state, onChange } = createStore<Store>({
   isLoading: false,
+  configuredFeatures: {},
 });
 
 onChange('productId', async (productId: string) => {
