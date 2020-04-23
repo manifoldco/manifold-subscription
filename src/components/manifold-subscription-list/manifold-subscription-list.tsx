@@ -67,7 +67,7 @@ export class ManifoldSubscriptionList {
   render() {
     return (
       <div class="ManifoldSubscriptionCreate ManifoldSubscriptionCreate__List">
-        {this.heading && <h1 class="ManifoldSubscriptionCreate__List__Heading">{this.heading}</h1>}
+        {this.heading && <h1 class="ManifoldSubscription__Heading">{this.heading}</h1>}
 
         {this.data?.subscriptions &&
           this.data?.subscriptions.edges.map(sub => {

@@ -20,7 +20,7 @@ const NumberInput: FunctionalComponent<NumberInputProps> = props => {
   const upperBoundReached = value >= max;
 
   return (
-    <div class="ManifoldSubscriptionCreate__NumberInput">
+    <div class="ManifoldSubscription__NumberInput">
       <button
         type="button"
         tabindex="-1"

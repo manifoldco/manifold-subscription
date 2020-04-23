@@ -8,12 +8,6 @@ $name: '' !default;
   color: mercury.$color-grayDarker;
   font-size: 1em;
 
-  &__Heading {
-    padding-bottom: 0.25em;
-    font-size: 1.5em;
-    text-align: justify;
-  }
-
   &__Card {
     position: relative;
     display: grid;
@@ -25,26 +19,10 @@ $name: '' !default;
     border-radius: 0.4em;
   }
 
-  &__Button {
-    @include mercury.Button;
-
-    grid-row: 1 / span 2;
-    grid-column: 2;
-    align-self: center;
-    justify-self: end;
-    font-size: 0.9em;
-  }
-
   &__Icon {
     position: absolute;
     margin-inline-start: 0.4em;
     font-size: 1.3em;
     fill: mercury.$color-gray;
-  }
-
-  &__HelpText {
-    color: mercury.$color-gray;
-    font-size: 0.8em;
-    text-align: center;
   }
 }

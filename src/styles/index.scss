@@ -1,14 +1,15 @@
 @use "node_modules/@manifoldco/mercury";
 $name: 'ManifoldSubscriptionCreate';
+$newName: 'ManifoldSubscription';
 
 @use 'elements/subscription-create' with ($name: $name);
 @use 'elements/subscription-details' with ($name: $name);
 @use 'elements/subscription-list' with ($name: $name);
-@use 'elements/typography' with ($name: $name);
+@use 'elements/typography' with ($name: $newName);
 @use 'elements/card' with ($name: $name);
 @use 'elements/cost' with ($name: $name);
-@use 'elements/field' with ($name: $name);
-@use 'elements/button' with ($name: $name);
+@use 'elements/field' with ($name: $newName);
+@use 'elements/button' with ($name: $newName);
 @use 'elements/message' with ($name: $name);
 @use 'elements/badge' with ($name: $name);
 @use 'elements/cost-display' with ($name: $name);

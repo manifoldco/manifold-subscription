@@ -34,7 +34,7 @@ const ListCard: FunctionalComponent<ListCardProps> = ({
       {$(plan.cost)}
       <span class="ManifoldSubscriptionCreate__Cost__Suffix">/mo</span>
     </span>
-    <button class="ManifoldSubscriptionCreate__List__Button">Modify Subscription</button>
+    <button class="ManifoldSubscription__Button">Modify Subscription</button>
   </div>
 );
 

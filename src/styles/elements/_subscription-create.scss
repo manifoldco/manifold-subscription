@@ -44,17 +44,6 @@ $name: '' !default;
     }
   }
 
-  &__HelpText {
-    display: block;
-    color: mercury.$color-gray;
-    font-weight: normal;
-    font-size: 0.8em;
-
-    &[data-centered] {
-      text-align: center;
-    }
-  }
-
   &__TextInput {
     padding: 0.75em;
     border: 1px solid mercury.$color-grayLight;
@@ -72,6 +61,7 @@ $name: '' !default;
 
 .StripeElement {
   padding: 0.75em;
+  background-color: mercury.$color-white;
   border: 1px solid mercury.$color-grayLight;
   border-radius: 0.2em;
 }
