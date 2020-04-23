@@ -40,6 +40,27 @@ export class ManifoldSubscriptionCreate {
 
       if (response.data) {
         this.data = response.data;
+
+        const normalizeValue = (node: any) => {
+          if (node.stringValue !== undefined) {
+            return node.stringValue;
+          }
+          if (node.numberValue !== undefined) {
+            return node.numberValue;
+          }
+          if (node.booleanValue !== undefined) {
+            return node.booleanValue;
+          }
+          return undefined;
+        };
+        const featureMap = response.data.subscription.configuredFeatures.edges.reduce(
+          (features, { node }) => ({
+            ...features,
+            [node.label]: normalizeValue(node),
+          }),
+          {}
+        );
+        state.configuredFeatures = featureMap;
       }
     }
   }

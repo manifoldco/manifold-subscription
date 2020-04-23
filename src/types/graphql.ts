@@ -1541,7 +1541,25 @@ export type SubscriptionQuery = (
     & { status: (
       { __typename?: 'SubscriptionAgreementStatus' }
       & Pick<SubscriptionAgreementStatus, 'label' | 'percentDone' | 'message'>
-    ), plan: Maybe<(
+    ), configuredFeatures: Maybe<(
+      { __typename?: 'ConfiguredFeatureConnection' }
+      & { edges: Array<(
+        { __typename?: 'ConfiguredFeatureEdge' }
+        & { node: (
+          { __typename?: 'BooleanConfiguredFeature' }
+          & Pick<BooleanConfiguredFeature, 'label'>
+          & { booleanValue: BooleanConfiguredFeature['value'] }
+        ) | (
+          { __typename?: 'NumberConfiguredFeature' }
+          & Pick<NumberConfiguredFeature, 'label'>
+          & { numberValue: NumberConfiguredFeature['value'] }
+        ) | (
+          { __typename?: 'StringConfiguredFeature' }
+          & Pick<StringConfiguredFeature, 'label'>
+          & { stringValue: StringConfiguredFeature['value'] }
+        ) }
+      )> }
+    )>, plan: Maybe<(
       { __typename?: 'Plan' }
       & Pick<Plan, 'id' | 'label' | 'displayName' | 'cost'>
       & { product: Maybe<(

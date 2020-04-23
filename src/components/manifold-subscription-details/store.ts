@@ -1,19 +1,24 @@
 import { createStore } from '@stencil/store';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
-import { ProductPlansQuery, ProductPlansQueryVariables } from '../../types/graphql';
+import { ProductPlansQuery, ProductPlansQueryVariables, PlanEdge } from '../../types/graphql';
 import productPlansQuery from './product-plans.graphql';
-import { FeatureMap } from '../../utils/plan';
+import { FeatureMap, configurableFeatureDefaults } from '../../utils/plan';
 
-interface Store {
+export interface Store {
   connection?: Connection;
   isLoading: boolean;
   errors?: GraphqlError[];
 
+  // Plan selector
   productId?: string;
   planId?: string;
   plans?: ProductPlansQuery['product']['plans']['edges'];
   configuredFeatures: FeatureMap;
+
+  // Cost
+  cost?: number;
+  isCalculating?: boolean;
 }
 
 const { state, onChange } = createStore<Store>({
@@ -41,6 +46,58 @@ onChange('productId', async (productId: string) => {
   }
 
   state.isLoading = false;
+});
+
+let controller: AbortController;
+
+onChange('planId', async (planId: string) => {
+  state.configuredFeatures = configurableFeatureDefaults(state.plans as PlanEdge[], planId);
+
+  const currentPlan = state.plans?.find(plan => plan.node.id === planId)?.node;
+
+  // if not configurable, return plan cost
+  if (Object.keys(state.configuredFeatures).length === 0) {
+    state.cost = currentPlan?.cost;
+    return undefined;
+  }
+
+  if (!state.connection) {
+    // this.addErrors(dataError('cost', 'cost of selected plan'));
+    throw new Error('Missing property `connection` on `manifold-subscription-create`.');
+  }
+
+  state.isCalculating = true;
+
+  // If a request is in flight, cancel it
+  if (controller) {
+    controller.abort();
+  }
+
+  controller = new AbortController();
+
+  try {
+    interface CostResponse {
+      cost: number;
+    }
+    interface CostRequest {
+      features: FeatureMap;
+    }
+
+    const { cost } = await state.connection.gateway.post<CostResponse, CostRequest>(
+      `/id/plan/${planId}/cost`,
+      {
+        features: state.configuredFeatures,
+      },
+      { signal: controller.signal }
+    );
+
+    state.cost = cost;
+  } catch (e) {
+    if (e.name !== 'AbortError') {
+      // this.addErrors(dataError('cost', 'cost of selected plan'));
+    }
+  }
+  return undefined;
 });
 
 export default state;

@@ -1,18 +1,14 @@
 import { h, FunctionalComponent } from '@stencil/core';
-import state from '../store';
-import { configurableFeatureDefaults } from '../../../utils/plan';
+import FixedFeature from 'components/shared/FixedFeature';
+import MeteredFeature from 'components/shared/MeteredFeature';
+import ConfigurableFeature from 'components/shared/ConfigurableFeature';
+import PlanCard from '../../shared/PlanCard';
 import {
-  PlanEdge,
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
   PlanConfigurableFeatureEdge,
 } from '../../../types/graphql';
-import PlanCard from '../../shared/PlanCard';
-import FixedFeature from 'components/shared/FixedFeature';
-import MeteredFeature from 'components/shared/MeteredFeature';
-import ConfigurableFeature from 'components/shared/ConfigurableFeature';
-import CostDisplay from 'components/shared/CostDisplay';
-import { filterErrors } from 'utils/error';
+import state from '../store';
 
 const PlanMenu: FunctionalComponent = () => {
   if (!state.plans) {
@@ -30,10 +26,6 @@ const PlanMenu: FunctionalComponent = () => {
               checked={plan.id === state.planId}
               onClick={() => {
                 state.planId = plan.id;
-                state.configuredFeatures = configurableFeatureDefaults(
-                  state.plans as PlanEdge[],
-                  plan.id
-                );
               }}
             />
             <PlanCard plan={plan} isChecked={plan.id === state.planId} />
@@ -49,7 +41,8 @@ const PlanDetails: FunctionalComponent = () => {
     return null;
   }
 
-  const currentPlan = state.plans.find(plan => plan.node.id === state.planId)?.node;
+  const currentPlan =
+    state.plans.find(plan => plan.node.id === state.planId)?.node || state.plans[0].node;
 
   return (
     <div
@@ -70,7 +63,10 @@ const PlanDetails: FunctionalComponent = () => {
         {currentPlan?.configurableFeatures.edges.map(configurableFeature => (
           <ConfigurableFeature
             setConfiguredFeature={(label, value) => {
-              state.configuredFeatures[label] = value;
+              state.configuredFeatures = {
+                ...state.configuredFeatures,
+                [label]: value,
+              };
             }}
             configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
             value={state.configuredFeatures?.[configurableFeature.node.label]}
@@ -78,16 +74,10 @@ const PlanDetails: FunctionalComponent = () => {
         ))}
       </dl>
       <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
-        {/* <div>
-          <CostDisplay
-            isCalculating={state.calculatedCost === null}
-            baseCost={state.calculatedCost || currentPlan?.cost || 0}
-            meteredFeatures={currentPlan?.meteredFeatures.edges as PlanMeteredFeatureEdge[]}
-            isConfigurable={currentPlan ? currentPlan.configurableFeatures.edges.length > 0 : false}
-            hasError={filterErrors(state.errors, 'label', ['cost']).length > 0}
-          />
+        <div>
+          {/* TODO add Cost component */}
           <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
-        </div> */}
+        </div>
       </footer>
     </div>
   );
