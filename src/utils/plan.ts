@@ -1,6 +1,13 @@
 import { $ } from './currency';
 import { pluralize } from './string';
-import { PlanMeteredFeatureNumericDetails, PlanFeatureType, PlanEdge } from '../types/graphql';
+import {
+  PlanMeteredFeatureNumericDetails,
+  PlanFeatureType,
+  PlanEdge,
+  BooleanConfiguredFeature,
+  NumberConfiguredFeature,
+  StringConfiguredFeature,
+} from '../types/graphql';
 
 export interface PricingTier {
   cost: number;
@@ -126,6 +133,34 @@ export function meteredFeatureDisplayValue(
 export interface FeatureMap {
   [label: string]: string | number | boolean | undefined;
 }
+
+type ToFeatureMapConfiguredFeatures = {
+  edges: Array<{
+    node:
+      | (Pick<BooleanConfiguredFeature, 'label'> & {
+          booleanValue: BooleanConfiguredFeature['value'];
+        })
+      | (Pick<NumberConfiguredFeature, 'label'> & {
+          numberValue: NumberConfiguredFeature['value'];
+        })
+      | (Pick<StringConfiguredFeature, 'label'> & {
+          stringValue: StringConfiguredFeature['value'];
+        });
+  }>;
+};
+
+export const toFeatureMap = (configuredFeatures: ToFeatureMapConfiguredFeatures) => {
+  const featureMap: FeatureMap = configuredFeatures.edges.reduce((result, { node }) => {
+    // The only field left will be the value field. We don't care what it's called.
+    const { label, ...rest } = node;
+    const value = Object.values(rest)[0];
+
+    return { ...result, [label]: value };
+  }, {});
+
+  return featureMap;
+};
+
 /**
  * Get default feature map for configurableFeatures
  */
