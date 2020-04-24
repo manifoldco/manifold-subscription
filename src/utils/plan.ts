@@ -4,7 +4,6 @@ import {
   PlanMeteredFeatureNumericDetails,
   PlanFeatureType,
   PlanEdge,
-  ConfiguredFeatureConnection,
   BooleanConfiguredFeature,
   NumberConfiguredFeature,
   StringConfiguredFeature,
