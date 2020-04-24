@@ -5,6 +5,9 @@ import {
   PlanFeatureType,
   PlanEdge,
   ConfiguredFeatureConnection,
+  BooleanConfiguredFeature,
+  NumberConfiguredFeature,
+  StringConfiguredFeature,
 } from '../types/graphql';
 
 export interface PricingTier {
@@ -132,7 +135,22 @@ export interface FeatureMap {
   [label: string]: string | number | boolean | undefined;
 }
 
-export const toFeatureMap = (configuredFeatures: ConfiguredFeatureConnection) => {
+type ToFeatureMapConfiguredFeatures = {
+  edges: Array<{
+    node:
+      | (Pick<BooleanConfiguredFeature, 'label'> & {
+          booleanValue: BooleanConfiguredFeature['value'];
+        })
+      | (Pick<NumberConfiguredFeature, 'label'> & {
+          numberValue: NumberConfiguredFeature['value'];
+        })
+      | (Pick<StringConfiguredFeature, 'label'> & {
+          stringValue: StringConfiguredFeature['value'];
+        });
+  }>;
+};
+
+export const toFeatureMap = (configuredFeatures: ToFeatureMapConfiguredFeatures) => {
   const featureMap: FeatureMap = configuredFeatures.edges.reduce((result, { node }) => {
     // The only field left will be the value field. We don't care what it's called.
     const { label, ...rest } = node;

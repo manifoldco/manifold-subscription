@@ -42,9 +42,7 @@ export class ManifoldSubscriptionCreate {
       if (response.data) {
         this.data = response.data;
 
-        state.configuredFeatures = toFeatureMap(
-          response.data.subscription.configuredFeatures as any
-        );
+        state.configuredFeatures = toFeatureMap(response.data.subscription.configuredFeatures);
       }
     }
   }
@@ -105,7 +103,7 @@ export class ManifoldSubscriptionCreate {
                 readOnly
                 setConfiguredFeature={() => null}
                 configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
-                value={toFeatureMap(configuredFeatures as any)[configurableFeature.node.label]}
+                value={toFeatureMap(configuredFeatures)[configurableFeature.node.label]}
               />
             ))}
           </dl>
