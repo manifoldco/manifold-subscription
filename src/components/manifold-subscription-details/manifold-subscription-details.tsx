@@ -13,6 +13,7 @@ import {
 } from '../../types/graphql';
 import state from './store';
 import PlanSelector from './components/PlanSelector';
+import { toFeatureMap } from '../../utils/plan';
 
 @Component({
   tag: 'manifold-subscription-details',
@@ -41,26 +42,9 @@ export class ManifoldSubscriptionCreate {
       if (response.data) {
         this.data = response.data;
 
-        const normalizeValue = (node: any) => {
-          if (node.stringValue !== undefined) {
-            return node.stringValue;
-          }
-          if (node.numberValue !== undefined) {
-            return node.numberValue;
-          }
-          if (node.booleanValue !== undefined) {
-            return node.booleanValue;
-          }
-          return undefined;
-        };
-        const featureMap = response.data.subscription.configuredFeatures.edges.reduce(
-          (features, { node }) => ({
-            ...features,
-            [node.label]: normalizeValue(node),
-          }),
-          {}
+        state.configuredFeatures = toFeatureMap(
+          response.data.subscription.configuredFeatures as any
         );
-        state.configuredFeatures = featureMap;
       }
     }
   }
@@ -95,7 +79,7 @@ export class ManifoldSubscriptionCreate {
       );
     }
 
-    const { plan, status } = this.data.subscription;
+    const { plan, status, configuredFeatures } = this.data.subscription;
 
     return (
       <div class="ManifoldSubscriptionCreate__Details">
@@ -118,14 +102,15 @@ export class ManifoldSubscriptionCreate {
             {plan.configurableFeatures.edges.map(configurableFeature => (
               // TODO format configured feature so it displays as fixed
               <ConfigurableFeature
+                readOnly
                 setConfiguredFeature={() => null}
                 configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
+                value={toFeatureMap(configuredFeatures as any)[configurableFeature.node.label]}
               />
             ))}
           </dl>
           <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
             <div>
-              {/* TODO use actual subscription cost */}
               <CostDisplay baseCost={plan.cost} />
               <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
             </div>
