@@ -68,9 +68,13 @@ export namespace Components {
         "heading"?: string;
         "loading"?: boolean;
         /**
-          * Owner ID for subscriptions
+          * Owner for subscriptions
          */
         "owner"?: string;
+        /**
+          * Component subscription link format
+         */
+        "subLinkFormat"?: string;
     }
 }
 declare global {
@@ -165,10 +169,15 @@ declare namespace LocalJSX {
          */
         "heading"?: string;
         "loading"?: boolean;
+        "onCtaClick"?: (event: CustomEvent<any>) => void;
         /**
-          * Owner ID for subscriptions
+          * Owner for subscriptions
          */
         "owner"?: string;
+        /**
+          * Component subscription link format
+         */
+        "subLinkFormat"?: string;
     }
     interface IntrinsicElements {
         "manifold-configured-feature": ManifoldConfiguredFeature;

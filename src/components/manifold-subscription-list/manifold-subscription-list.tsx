@@ -1,4 +1,4 @@
-import { Component, Element, Prop, h, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, Element, Prop, h, Watch } from '@stencil/core';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
 import { SubscriptionsQuery, SubscriptionsQueryVariables } from '../../types/graphql';
@@ -11,17 +11,23 @@ import query from './subscriptions.graphql';
 export class ManifoldSubscriptionList {
   @Element() el: HTMLElement;
 
+  @Event() ctaClick: EventEmitter;
+
   @Prop({ mutable: true }) connection?: Connection;
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
   @Prop({ mutable: true }) data?: SubscriptionsQuery;
 
   /**
+   * Component subscription link format
+   */
+  @Prop({ mutable: true }) subLinkFormat?: string;
+  /**
    * Component heading text
    */
   @Prop() heading?: string;
   /**
-   * Owner ID for subscriptions
+   * Owner for subscriptions
    */
   @Prop() owner?: string;
 
@@ -64,6 +70,29 @@ export class ManifoldSubscriptionList {
     this.getSubscriptions(this.owner);
   }
 
+  handleCtaClick = (subId: string, href: string) => (e: MouseEvent) => {
+    e.preventDefault();
+    this.ctaClick.emit({ subscriptionId: subId });
+
+    if (this.connection) {
+      this.connection.analytics
+        .track({
+          description: 'Track modify subscription button cta clicks',
+          name: 'click',
+          type: 'component-analytics',
+          properties: {
+            subId,
+          },
+        })
+        .finally(() => {
+          if (href) {
+            const anchor = e.srcElement as HTMLAnchorElement;
+            window.location.href = anchor.href;
+          }
+        });
+    }
+  };
+
   render() {
     return (
       <div class="ManifoldSubscriptionCreate ManifoldSubscriptionCreate__List">
@@ -71,6 +100,10 @@ export class ManifoldSubscriptionList {
 
         {this.data?.subscriptions &&
           this.data?.subscriptions.edges.map(sub => {
+            const href =
+              sub.node.id && this.subLinkFormat
+                ? this.subLinkFormat.replace(/:subscription/gi, sub.node.id)
+                : '';
             return (
               <ListCard
                 isLoading={this.loading}
@@ -79,6 +112,8 @@ export class ManifoldSubscriptionList {
                   sub.node.plan.configurableFeatures &&
                   sub.node.plan.configurableFeatures.edges.length > 0
                 }
+                ctaHref={href}
+                onCtaClick={this.handleCtaClick(sub.node.id, href)}
               />
             );
           })}
