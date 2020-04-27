@@ -1478,24 +1478,6 @@ export type PlanQuery = (
   ) }
 );
 
-export type ModifySubscriptionMutationVariables = {
-  id: Scalars['ID'];
-  planId: Scalars['ID'];
-  configuredFeatures: Maybe<Array<ConfiguredFeatureInput>>;
-};
-
-
-export type ModifySubscriptionMutation = (
-  { __typename?: 'Mutation' }
-  & { updateSubscription: (
-    { __typename?: 'UpdateSubscriptionAgreementPayload' }
-    & { data: (
-      { __typename?: 'SubscriptionAgreement' }
-      & Pick<SubscriptionAgreement, 'id'>
-    ) }
-  ) }
-);
-
 export type ProductPlanFragment = (
   { __typename?: 'Plan' }
   & Pick<Plan, 'id' | 'displayName' | 'label' | 'free' | 'cost'>
@@ -1591,13 +1573,13 @@ export type SubscriptionQuery = (
           & Pick<NumberConfiguredFeature, 'label'>
           & { numberValue: NumberConfiguredFeature['value'] }
         ) | (
-          { __typename?: 'BooleanConfiguredFeature' }
-          & Pick<BooleanConfiguredFeature, 'label'>
-          & { booleanValue: BooleanConfiguredFeature['value'] }
-        ) | (
           { __typename?: 'StringConfiguredFeature' }
           & Pick<StringConfiguredFeature, 'label'>
           & { stringValue: StringConfiguredFeature['value'] }
+        ) | (
+          { __typename?: 'BooleanConfiguredFeature' }
+          & Pick<BooleanConfiguredFeature, 'label'>
+          & { booleanValue: BooleanConfiguredFeature['value'] }
         ) }
       )> }
     )>, plan: Maybe<(
@@ -1655,6 +1637,24 @@ export type SubscriptionQuery = (
       )> }
     )> }
   )> }
+);
+
+export type UpdateSubscriptionMutationVariables = {
+  id: Scalars['ID'];
+  planId: Scalars['ID'];
+  configuredFeatures: Maybe<Array<ConfiguredFeatureInput>>;
+};
+
+
+export type UpdateSubscriptionMutation = (
+  { __typename?: 'Mutation' }
+  & { updateSubscription: (
+    { __typename?: 'UpdateSubscriptionAgreementPayload' }
+    & { data: (
+      { __typename?: 'SubscriptionAgreement' }
+      & Pick<SubscriptionAgreement, 'id'>
+    ) }
+  ) }
 );
 
 export type SubscriptionsQueryVariables = {

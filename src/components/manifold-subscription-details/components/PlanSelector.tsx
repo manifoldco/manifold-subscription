@@ -7,8 +7,33 @@ import {
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
   PlanConfigurableFeatureEdge,
+  UpdateSubscriptionMutation,
+  UpdateSubscriptionMutationVariables,
 } from '../../../types/graphql';
 import state from '../store';
+
+import updateSubscriptionMutation from '../update-subscription.graphql';
+
+const updateSubscription = async () => {
+  if (!state.connection || !state.planId) {
+    return;
+  }
+  const variables: UpdateSubscriptionMutationVariables = {
+    id: state.subscriptionId,
+    planId: state.planId,
+    configuredFeatures: Object.entries(state.configuredFeatures).map(([label, value]) => ({
+      label,
+      value: `${value}`,
+    })),
+  };
+
+  const { data, errors } = await state.connection.graphqlFetch<UpdateSubscriptionMutation>({
+    query: updateSubscriptionMutation,
+    variables,
+  });
+
+  alert(errors ? 'Subscription Updated!' : 'There was an error... :/');
+};
 
 const PlanMenu: FunctionalComponent = () => {
   if (!state.plans) {
@@ -78,7 +103,7 @@ const PlanDetails: FunctionalComponent = () => {
           {/* TODO add Cost component */}
           <p class="ManifoldSubscription__HelpText">Usage billed at the end of month</p>
         </div>
-        <button class="ManifoldSubscription__Button" type="button">
+        <button class="ManifoldSubscription__Button" type="button" onClick={updateSubscription}>
           Update Subscription
         </button>
       </footer>

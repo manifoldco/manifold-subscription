@@ -10,6 +10,8 @@ export interface Store {
   isLoading: boolean;
   errors?: GraphqlError[];
 
+  subscriptionId: string;
+
   // Plan selector
   productId?: string;
   planId?: string;
@@ -19,11 +21,15 @@ export interface Store {
   // Cost
   cost?: number;
   isCalculating?: boolean;
+
+  // Modify
+  isUpdating?: boolean;
 }
 
 const { state, onChange } = createStore<Store>({
   isLoading: false,
   configuredFeatures: {},
+  subscriptionId: '',
 });
 
 onChange('productId', async (productId: string) => {

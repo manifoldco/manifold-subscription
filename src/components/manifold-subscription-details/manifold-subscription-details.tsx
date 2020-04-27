@@ -20,6 +20,9 @@ import { toFeatureMap } from '../../utils/plan';
 })
 export class ManifoldSubscriptionCreate {
   @Prop() subscriptionId: string;
+  @Watch('subscriptionId') updateSubscriptionId(subscriptionId: string) {
+    state.subscriptionId = subscriptionId;
+  }
   @Prop() heading?: string;
   @Prop() isEditing?: boolean = false;
   @State() data?: SubscriptionQuery;
@@ -59,6 +62,8 @@ export class ManifoldSubscriptionCreate {
 
     state.connection = connection;
     this.connection = connection;
+
+    this.updateSubscriptionId(this.subscriptionId);
 
     this.getSubscription(this.subscriptionId, '');
   }
