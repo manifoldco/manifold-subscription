@@ -13,6 +13,7 @@ import {
 import state from '../store';
 
 import updateSubscriptionMutation from '../update-subscription.graphql';
+import { toFeatureMap } from '../../../utils/plan';
 
 const updateSubscription = async () => {
   if (!state.connection || !state.planId) {
@@ -36,8 +37,14 @@ const updateSubscription = async () => {
   });
 
   state.isUpdating = false;
+  state.isEditing = false;
 
-  alert(errors ? 'Subscription Updated!' : 'There was an error... :/');
+  state.planId = data?.updateSubscription?.data?.plan?.id;
+  state.configuredFeatures = data
+    ? toFeatureMap(data?.updateSubscription?.data?.configuredFeatures)
+    : {};
+
+  console.log(data, errors);
 };
 
 const PlanMenu: FunctionalComponent = () => {
@@ -71,8 +78,7 @@ const PlanDetails: FunctionalComponent = () => {
     return null;
   }
 
-  const currentPlan =
-    state.plans.find(plan => plan.node.id === state.planId)?.node || state.plans[0].node;
+  const { currentPlan } = state;
 
   return (
     <div

@@ -25,6 +25,9 @@ export class ManifoldSubscriptionCreate {
   }
   @Prop() heading?: string;
   @Prop() isEditing?: boolean = false;
+  @Watch('isEditing') updateisEditing(value?: boolean) {
+    state.isEditing = value;
+  }
   @State() data?: SubscriptionQuery;
   @Element() el: HTMLElement;
 
@@ -44,7 +47,7 @@ export class ManifoldSubscriptionCreate {
 
       if (response.data) {
         this.data = response.data;
-
+        state.currentPlan = response.data.subscription.plan;
         state.configuredFeatures = toFeatureMap(response.data.subscription.configuredFeatures);
       }
     }
@@ -63,6 +66,7 @@ export class ManifoldSubscriptionCreate {
     state.connection = connection;
     this.connection = connection;
 
+    this.updateisEditing(this.isEditing);
     this.updateSubscriptionId(this.subscriptionId);
 
     this.getSubscription(this.subscriptionId, '');
@@ -73,7 +77,7 @@ export class ManifoldSubscriptionCreate {
       return null;
     }
 
-    if (this.isEditing) {
+    if (state.isEditing) {
       return (
         <PlanSelector
           productId={this.data.subscription.plan.product.id}
@@ -82,7 +86,12 @@ export class ManifoldSubscriptionCreate {
       );
     }
 
-    const { plan, status, configuredFeatures } = this.data.subscription;
+    const { status } = this.data.subscription;
+    const plan = state.currentPlan;
+
+    if (!plan) {
+      return null;
+    }
 
     return (
       <div class="ManifoldSubscriptionCreate__Details">
@@ -108,7 +117,7 @@ export class ManifoldSubscriptionCreate {
                 readOnly
                 setConfiguredFeature={() => null}
                 configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
-                value={toFeatureMap(configuredFeatures)[configurableFeature.node.label]}
+                value={state.configuredFeatures[configurableFeature.node.label]}
               />
             ))}
           </dl>
@@ -122,7 +131,7 @@ export class ManifoldSubscriptionCreate {
               class="ManifoldSubscription__Button"
               data-kind="black"
               onClick={() => {
-                this.isEditing = true;
+                state.isEditing = true;
               }}
             >
               Modify Subsciption

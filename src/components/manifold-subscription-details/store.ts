@@ -15,6 +15,7 @@ export interface Store {
   // Plan selector
   productId?: string;
   planId?: string;
+  currentPlan?: ProductPlansQuery['product']['plans']['edges'][0]['node'];
   plans?: ProductPlansQuery['product']['plans']['edges'];
   configuredFeatures: FeatureMap;
 
@@ -24,6 +25,7 @@ export interface Store {
 
   // Modify
   isUpdating?: boolean;
+  isEditing?: boolean;
 }
 
 const { state, onChange } = createStore<Store>({
@@ -60,6 +62,7 @@ onChange('planId', async (planId: string) => {
   state.configuredFeatures = configurableFeatureDefaults(state.plans as PlanEdge[], planId);
 
   const currentPlan = state.plans?.find(plan => plan.node.id === planId)?.node;
+  state.currentPlan = currentPlan;
 
   // if not configurable, return plan cost
   if (Object.keys(state.configuredFeatures).length === 0) {

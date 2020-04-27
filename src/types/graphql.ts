@@ -1573,18 +1573,18 @@ export type SubscriptionQuery = (
           & Pick<NumberConfiguredFeature, 'label'>
           & { numberValue: NumberConfiguredFeature['value'] }
         ) | (
-          { __typename?: 'StringConfiguredFeature' }
-          & Pick<StringConfiguredFeature, 'label'>
-          & { stringValue: StringConfiguredFeature['value'] }
-        ) | (
           { __typename?: 'BooleanConfiguredFeature' }
           & Pick<BooleanConfiguredFeature, 'label'>
           & { booleanValue: BooleanConfiguredFeature['value'] }
+        ) | (
+          { __typename?: 'StringConfiguredFeature' }
+          & Pick<StringConfiguredFeature, 'label'>
+          & { stringValue: StringConfiguredFeature['value'] }
         ) }
       )> }
     )>, plan: Maybe<(
       { __typename?: 'Plan' }
-      & Pick<Plan, 'id' | 'label' | 'displayName' | 'cost'>
+      & Pick<Plan, 'id' | 'label' | 'displayName' | 'cost' | 'free'>
       & { product: Maybe<(
         { __typename?: 'Product' }
         & Pick<Product, 'id'>
@@ -1653,6 +1653,31 @@ export type UpdateSubscriptionMutation = (
     & { data: (
       { __typename?: 'SubscriptionAgreement' }
       & Pick<SubscriptionAgreement, 'id'>
+      & { status: (
+        { __typename?: 'SubscriptionAgreementStatus' }
+        & Pick<SubscriptionAgreementStatus, 'label' | 'percentDone' | 'message'>
+      ), configuredFeatures: Maybe<(
+        { __typename?: 'ConfiguredFeatureConnection' }
+        & { edges: Array<(
+          { __typename?: 'ConfiguredFeatureEdge' }
+          & { node: (
+            { __typename?: 'NumberConfiguredFeature' }
+            & Pick<NumberConfiguredFeature, 'label'>
+            & { numberValue: NumberConfiguredFeature['value'] }
+          ) | (
+            { __typename?: 'BooleanConfiguredFeature' }
+            & Pick<BooleanConfiguredFeature, 'label'>
+            & { booleanValue: BooleanConfiguredFeature['value'] }
+          ) | (
+            { __typename?: 'StringConfiguredFeature' }
+            & Pick<StringConfiguredFeature, 'label'>
+            & { stringValue: StringConfiguredFeature['value'] }
+          ) }
+        )> }
+      )>, plan: Maybe<(
+        { __typename?: 'Plan' }
+        & Pick<Plan, 'id'>
+      )> }
     ) }
   ) }
 );

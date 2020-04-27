@@ -8,6 +8,30 @@ mutation UpdateSubscription(
   ) {
     data {
       id
+      status {
+        label
+        percentDone
+        message
+      }
+      configuredFeatures(first: 100) {
+        edges {
+          node {
+            label
+            ... on StringConfiguredFeature {
+              stringValue: value
+            }
+            ... on BooleanConfiguredFeature {
+              booleanValue: value
+            }
+            ... on NumberConfiguredFeature {
+              numberValue: value
+            }
+          }
+        }
+      }
+      plan {
+        id
+      }
     }
   }
 }
