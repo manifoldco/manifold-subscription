@@ -1,0 +1,13 @@
+mutation ModifySubscription(
+  $id: ID!
+  $planId: ID!
+  $configuredFeatures: [ConfiguredFeatureInput!]
+) {
+  updateSubscription(
+    input: { id: $id, configuredFeatures: $configuredFeatures, newPlanID: $planId }
+  ) {
+    data {
+      id
+    }
+  }
+}

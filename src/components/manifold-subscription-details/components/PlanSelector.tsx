@@ -76,8 +76,11 @@ const PlanDetails: FunctionalComponent = () => {
       <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
         <div>
           {/* TODO add Cost component */}
-          <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
+          <p class="ManifoldSubscription__HelpText">Usage billed at the end of month</p>
         </div>
+        <button class="ManifoldSubscription__Button" type="button">
+          Update Subscription
+        </button>
       </footer>
     </div>
   );
