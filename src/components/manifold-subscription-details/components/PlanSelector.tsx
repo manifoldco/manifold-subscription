@@ -18,6 +18,9 @@ const updateSubscription = async () => {
   if (!state.connection || !state.planId) {
     return;
   }
+
+  state.isUpdating = true;
+
   const variables: UpdateSubscriptionMutationVariables = {
     id: state.subscriptionId,
     planId: state.planId,
@@ -31,6 +34,8 @@ const updateSubscription = async () => {
     query: updateSubscriptionMutation,
     variables,
   });
+
+  state.isUpdating = false;
 
   alert(errors ? 'Subscription Updated!' : 'There was an error... :/');
 };
@@ -103,7 +108,12 @@ const PlanDetails: FunctionalComponent = () => {
           {/* TODO add Cost component */}
           <p class="ManifoldSubscription__HelpText">Usage billed at the end of month</p>
         </div>
-        <button class="ManifoldSubscription__Button" type="button" onClick={updateSubscription}>
+        <button
+          class="ManifoldSubscription__Button"
+          type="button"
+          onClick={updateSubscription}
+          disabled={state.isUpdating}
+        >
           Update Subscription
         </button>
       </footer>
