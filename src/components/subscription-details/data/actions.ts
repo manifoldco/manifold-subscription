@@ -189,6 +189,15 @@ export const updateSubscription = async () => {
     });
 
     setIsEditing(false);
+
+    if (data.configuredFeatures.edges.length > 0) {
+      setState('view.cost.isLoading', true);
+      const cost = await loadCost(data.plan.id, featureMap);
+      setState('view.cost', {
+        ...cost,
+        isLoading: false,
+      });
+    }
   }
 
   setState('edit.isUpdating', false);
