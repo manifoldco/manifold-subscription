@@ -58,11 +58,6 @@ export namespace Components {
         "isEditing"?: boolean;
         "subscriptionId": string;
     }
-    interface ManifoldSubscriptionDetails2 {
-        "heading"?: string;
-        "isEditing"?: boolean;
-        "subscriptionId": string;
-    }
     interface ManifoldSubscriptionList {
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
@@ -101,12 +96,6 @@ declare global {
         prototype: HTMLManifoldSubscriptionDetailsElement;
         new (): HTMLManifoldSubscriptionDetailsElement;
     };
-    interface HTMLManifoldSubscriptionDetails2Element extends Components.ManifoldSubscriptionDetails2, HTMLStencilElement {
-    }
-    var HTMLManifoldSubscriptionDetails2Element: {
-        prototype: HTMLManifoldSubscriptionDetails2Element;
-        new (): HTMLManifoldSubscriptionDetails2Element;
-    };
     interface HTMLManifoldSubscriptionListElement extends Components.ManifoldSubscriptionList, HTMLStencilElement {
     }
     var HTMLManifoldSubscriptionListElement: {
@@ -117,7 +106,6 @@ declare global {
         "manifold-configured-feature": HTMLManifoldConfiguredFeatureElement;
         "manifold-subscription-create": HTMLManifoldSubscriptionCreateElement;
         "manifold-subscription-details": HTMLManifoldSubscriptionDetailsElement;
-        "manifold-subscription-details-2": HTMLManifoldSubscriptionDetails2Element;
         "manifold-subscription-list": HTMLManifoldSubscriptionListElement;
     }
 }
@@ -172,11 +160,6 @@ declare namespace LocalJSX {
         "isEditing"?: boolean;
         "subscriptionId"?: string;
     }
-    interface ManifoldSubscriptionDetails2 {
-        "heading"?: string;
-        "isEditing"?: boolean;
-        "subscriptionId"?: string;
-    }
     interface ManifoldSubscriptionList {
         "connection"?: Connection;
         "data"?: SubscriptionsQuery;
@@ -200,7 +183,6 @@ declare namespace LocalJSX {
         "manifold-configured-feature": ManifoldConfiguredFeature;
         "manifold-subscription-create": ManifoldSubscriptionCreate;
         "manifold-subscription-details": ManifoldSubscriptionDetails;
-        "manifold-subscription-details-2": ManifoldSubscriptionDetails2;
         "manifold-subscription-list": ManifoldSubscriptionList;
     }
 }
@@ -211,7 +193,6 @@ declare module "@stencil/core" {
             "manifold-configured-feature": LocalJSX.ManifoldConfiguredFeature & JSXBase.HTMLAttributes<HTMLManifoldConfiguredFeatureElement>;
             "manifold-subscription-create": LocalJSX.ManifoldSubscriptionCreate & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionCreateElement>;
             "manifold-subscription-details": LocalJSX.ManifoldSubscriptionDetails & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionDetailsElement>;
-            "manifold-subscription-details-2": LocalJSX.ManifoldSubscriptionDetails2 & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionDetails2Element>;
             "manifold-subscription-list": LocalJSX.ManifoldSubscriptionList & JSXBase.HTMLAttributes<HTMLManifoldSubscriptionListElement>;
         }
     }
