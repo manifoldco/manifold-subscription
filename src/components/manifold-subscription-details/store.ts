@@ -15,6 +15,7 @@ export interface Store {
   // Plan selector
   productId?: string;
   planId?: string;
+  subscribedPlan?: ProductPlansQuery['product']['plans']['edges'][0]['node'];
   currentPlan?: ProductPlansQuery['product']['plans']['edges'][0]['node'];
   plans?: ProductPlansQuery['product']['plans']['edges'];
   configuredFeatures: FeatureMap;

@@ -4,6 +4,7 @@ import FixedFeature from 'components/shared/FixedFeature';
 import MeteredFeature from 'components/shared/MeteredFeature';
 import ConfigurableFeature from 'components/shared/ConfigurableFeature';
 import CostDisplay from 'components/shared/CostDisplay';
+import x from '@manifoldco/mercury/icons/x.svg';
 import query from './subscription.graphql';
 import {
   SubscriptionQuery,
@@ -47,6 +48,7 @@ export class ManifoldSubscriptionCreate {
 
       if (response.data) {
         this.data = response.data;
+        state.subscribedPlan = response.data.subscription.plan;
         state.currentPlan = response.data.subscription.plan;
         state.configuredFeatures = toFeatureMap(response.data.subscription.configuredFeatures);
       }
@@ -77,17 +79,38 @@ export class ManifoldSubscriptionCreate {
       return null;
     }
 
+    const header = (
+      <header class="ManifoldSubscription__Header">
+        {this.heading && <h1 class="ManifoldSubscription__Heading">{this.heading}</h1>}
+        {state.isEditing && (
+          <button
+            class="ManifoldSubscription__Button ManifoldSubscription__Button--Small"
+            type="button"
+            onClick={() => {
+              state.isEditing = false;
+            }}
+          >
+            <i innerHTML={x} />
+            Cancel Modify
+          </button>
+        )}
+      </header>
+    );
+
     if (state.isEditing) {
       return (
-        <PlanSelector
-          productId={this.data.subscription.plan.product.id}
-          planId={this.data.subscription.plan.id}
-        />
+        <div class="ManifoldSubscriptionCreate__Details--PlanSelector">
+          {header}
+          <PlanSelector
+            productId={this.data.subscription.plan.product.id}
+            planId={this.data.subscription.plan.id}
+          />
+        </div>
       );
     }
 
     const { status } = this.data.subscription;
-    const plan = state.currentPlan;
+    const plan = state.subscribedPlan;
 
     if (!plan) {
       return null;
@@ -95,7 +118,7 @@ export class ManifoldSubscriptionCreate {
 
     return (
       <div class="ManifoldSubscriptionCreate__Details">
-        {this.heading && <h1 class="ManifoldSubscription__Heading">{this.heading}</h1>}
+        {header}
         <section class="ManifoldSubscriptionCreate__Card">
           <header class="ManifoldSubscriptionCreate__Details__Header">
             <h2 class="ManifoldSubscriptionCreate__PlanName">{plan.displayName}</h2>

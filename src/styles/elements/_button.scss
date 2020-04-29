@@ -4,6 +4,8 @@ $name: '' !default;
 .#{$name}__Button {
   @include mercury.Button;
 
+  vertical-align: middle;
+
   &[data-kind='primary'] {
     color: mercury.$color-white;
     text-align: center;
@@ -15,5 +17,21 @@ $name: '' !default;
     color: mercury.$color-white;
     background-color: mercury.$color-black;
     border-color: transparent;
+  }
+
+  &--Small {
+    @include mercury.Button--Small;
+  }
+
+  i {
+    vertical-align: middle;
+
+    &:first-child {
+      margin-right: 0.5ch;
+    }
+
+    &:last-child {
+      margin-left: 0.5ch;
+    }
   }
 }

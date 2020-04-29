@@ -38,8 +38,9 @@ const updateSubscription = async () => {
 
   state.isUpdating = false;
   state.isEditing = false;
-
-  state.planId = data?.updateSubscription?.data?.plan?.id;
+  const id = data?.updateSubscription?.data?.plan?.id;
+  state.planId = id;
+  state.subscribedPlan = state.plans?.find(plan => plan.node.id === id)?.node;
   state.configuredFeatures = data
     ? toFeatureMap(data?.updateSubscription?.data?.configuredFeatures)
     : {};

@@ -2,9 +2,6 @@
 $name: '' !default;
 
 .#{$name}__Details {
-  display: grid;
-  gap: 1em;
-
   .#{$name}__Card {
     padding: 0;
   }
