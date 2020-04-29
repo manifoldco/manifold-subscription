@@ -3,13 +3,19 @@ import FixedFeature from 'components/shared/FixedFeature';
 import MeteredFeature from 'components/shared/MeteredFeature';
 import ConfigurableFeature from 'components/shared/ConfigurableFeature';
 import PlanCard from 'components/shared/PlanCard';
+import CostDisplay from 'components/shared/CostDisplay';
 import {
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
   PlanConfigurableFeatureEdge,
 } from '../../../../types/graphql';
 import store from '../../data/store';
-import { selectPlan, getSelectedPlan, setState, updateSubscription } from '../../data/actions';
+import {
+  selectPlan,
+  getSelectedPlan,
+  updateSubscription,
+  setConfiguredFeature,
+} from '../../data/actions';
 
 const PlanMenu: FunctionalComponent = () => {
   const { plans, selectedPlanId } = store.state.edit;
@@ -44,7 +50,7 @@ const PlanDetails: FunctionalComponent = () => {
     return null;
   }
 
-  const { configuredFeatures, isLoading } = store.state.edit;
+  const { configuredFeatures, isLoading, cost } = store.state.edit;
 
   return (
     <div
@@ -64,9 +70,7 @@ const PlanDetails: FunctionalComponent = () => {
         ))}
         {plan?.configurableFeatures.edges.map(configurableFeature => (
           <ConfigurableFeature
-            setConfiguredFeature={(label, value) =>
-              setState(`edit.configuredFeatures.${label}`, value)
-            }
+            setConfiguredFeature={setConfiguredFeature}
             configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
             value={configuredFeatures?.[configurableFeature.node.label]}
           />
@@ -74,7 +78,11 @@ const PlanDetails: FunctionalComponent = () => {
       </dl>
       <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
         <div>
-          {/* TODO add Cost component */}
+          <CostDisplay
+            isCalculating={cost.isLoading}
+            baseCost={cost.amount || plan.cost}
+            meteredFeatures={plan.meteredFeatures.edges as PlanMeteredFeatureEdge[]}
+          />
           <p class="ManifoldSubscription__HelpText">Usage billed at the end of month</p>
         </div>
         <button

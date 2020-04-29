@@ -10,6 +10,12 @@ export interface Subscription {
   configuredFeatures: FeatureMap;
 }
 
+export interface Cost {
+  isLoading?: boolean;
+  amount?: number;
+  error?: string;
+}
+
 export interface SubscriptionDetailsStore {
   state: {
     connection?: Connection;
@@ -19,17 +25,14 @@ export interface SubscriptionDetailsStore {
     view: {
       isLoading?: boolean;
       subscription?: Subscription;
-      cost: {
-        isLoading?: boolean;
-        amount?: number;
-        error?: string;
-      };
+      cost: Cost;
     };
     edit: {
       isLoading?: boolean;
       plans?: SubscriptionEditQuery['subscription']['plan']['product']['plans']['edges'];
       selectedPlanId?: string;
       configuredFeatures?: FeatureMap;
+      cost: Cost;
     };
   };
 }
@@ -39,7 +42,9 @@ const { state } = createStore<SubscriptionDetailsStore>({
     view: {
       cost: {},
     },
-    edit: {},
+    edit: {
+      cost: {},
+    },
   },
 });
 

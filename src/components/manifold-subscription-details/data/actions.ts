@@ -68,6 +68,21 @@ export const loadCost = async (
   return {};
 };
 
+const updateCost = async (
+  context: 'view' | 'edit',
+  planId: string,
+  configuredFeatures: FeatureMap
+) => {
+  if (Object.keys(configuredFeatures).length > 0) {
+    setState(`${context}.cost.isLoading`, true);
+    const cost = await loadCost(planId, configuredFeatures);
+    setState(`${context}.cost`, {
+      ...cost,
+      isLoading: false,
+    });
+  }
+};
+
 // TODO separate fetch logic from state logic
 export const loadSubscription = async (subscriptionId: string) => {
   setState('view.isLoading', true);
@@ -85,25 +100,25 @@ export const loadSubscription = async (subscriptionId: string) => {
       configuredFeatures: featureMap,
     });
 
-    if (subscription.configuredFeatures.edges.length > 0) {
-      setState('view.cost.isLoading', true);
-      const cost = await loadCost(subscription.plan.id, featureMap);
-      setState('view.cost', {
-        ...cost,
-        isLoading: false,
-      });
-    }
+    setState('view.isLoading', false);
+
+    updateCost('view', subscription.plan.id, featureMap);
   }
 
   setState('view.isLoading', false);
 };
 
 export const selectPlan = (planId: string) => {
+  const { edit } = store.state;
+  const configuredFeatures = configurableFeatureDefaults(edit.plans as PlanEdge[], planId);
+
   setState('edit', {
-    ...store.state.edit,
+    ...edit,
     selectedPlanId: planId,
-    configuredFeatures: configurableFeatureDefaults(store.state.edit.plans as PlanEdge[], planId),
+    configuredFeatures,
   });
+
+  updateCost('edit', planId, configuredFeatures);
 };
 
 export const getSelectedPlan = () => {
@@ -133,11 +148,12 @@ const fetchSubscriptionEdit = async (variables: SubscriptionEditQueryVariables) 
 export const editSubscription = async () => {
   setIsEditing(true);
   setState('edit.isLoading', true);
-
-  const res = await fetchSubscriptionEdit({ subscriptionId: store.state.subscriptionId || '' });
+  const { edit, subscriptionId = '' } = store.state;
+  const res = await fetchSubscriptionEdit({ subscriptionId });
 
   if (res.data) {
     setState('edit', {
+      ...edit,
       ...res.data,
       configuredFeatures: toFeatureMap(res.data.configuredFeatures),
     });
@@ -189,16 +205,14 @@ export const updateSubscription = async () => {
     });
 
     setIsEditing(false);
-
-    if (data.configuredFeatures.edges.length > 0) {
-      setState('view.cost.isLoading', true);
-      const cost = await loadCost(data.plan.id, featureMap);
-      setState('view.cost', {
-        ...cost,
-        isLoading: false,
-      });
-    }
+    updateCost('view', data.plan.id, featureMap);
   }
 
   setState('edit.isUpdating', false);
+};
+
+export const setConfiguredFeature = (label: string, value: unknown) => {
+  setState(`edit.configuredFeatures.${label}`, value);
+  const { selectedPlanId = '', configuredFeatures = {} } = store.state.edit;
+  updateCost('edit', selectedPlanId, configuredFeatures);
 };
