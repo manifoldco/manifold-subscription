@@ -56,7 +56,7 @@ fragment SubscriptionPlan on Plan {
   }
 }
 
-query SubscriptionPlanList($subscriptionId: ID!) {
+query SubscriptionEdit($subscriptionId: ID!) {
   subscription(id: $subscriptionId) {
     configuredFeatures(first: 100) {
       edges {

@@ -2,16 +2,17 @@ import set from 'lodash/set';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import store, { SubscriptionDetailsStore } from './store';
 import {
-  SubscriptionDetailsQuery,
-  SubscriptionPlanListQueryVariables,
-  SubscriptionPlanListQuery,
-  UpdateSubscriptionMutationVariables,
-  UpdateSubscriptionMutation,
+  SubscriptionViewQuery,
+  SubscriptionEditQueryVariables,
+  SubscriptionEditQuery,
+  SubscriptionUpdateMutationVariables,
+  SubscriptionUpdateMutation,
+  PlanEdge,
 } from '../../../types/graphql';
-import { toFeatureMap, FeatureMap } from '../../../utils/plan';
-import subscriptionQuery from './subscription-details.graphql';
-import subscriptionPlanListQuery from './plan-list.graphql';
-import updateSubscriptionMutation from './update-subscription.graphql';
+import { toFeatureMap, FeatureMap, configurableFeatureDefaults } from '../../../utils/plan';
+import subscriptionQuery from './subscription-view.graphql';
+import subscriptionPlanListQuery from './subscription-edit.graphql';
+import updateSubscriptionMutation from './subscription-update.graphql';
 
 export const setState = (
   path: string,
@@ -71,7 +72,7 @@ export const loadCost = async (
 export const loadSubscription = async (subscriptionId: string) => {
   setState('view.isLoading', true);
 
-  const res = await store.state.connection?.graphqlFetch<SubscriptionDetailsQuery>({
+  const res = await store.state.connection?.graphqlFetch<SubscriptionViewQuery>({
     query: subscriptionQuery,
     variables: { id: subscriptionId },
   });
@@ -97,15 +98,21 @@ export const loadSubscription = async (subscriptionId: string) => {
   setState('view.isLoading', false);
 };
 
-export const selectPlan = (planId: string) => setState('edit.selectedPlanId', planId);
+export const selectPlan = (planId: string) => {
+  setState('edit', {
+    ...store.state.edit,
+    selectedPlanId: planId,
+    configuredFeatures: configurableFeatureDefaults(store.state.edit.plans as PlanEdge[], planId),
+  });
+};
 
 export const getSelectedPlan = () => {
   const { plans, selectedPlanId } = store.state.edit;
   return plans?.find(plan => plan.node.id === selectedPlanId)?.node;
 };
 
-const fetchPlans = async (variables: SubscriptionPlanListQueryVariables) => {
-  const res = await store.state.connection?.graphqlFetch<SubscriptionPlanListQuery>({
+const fetchSubscriptionEdit = async (variables: SubscriptionEditQueryVariables) => {
+  const res = await store.state.connection?.graphqlFetch<SubscriptionEditQuery>({
     query: subscriptionPlanListQuery,
     variables,
   });
@@ -127,7 +134,7 @@ export const editSubscription = async () => {
   setIsEditing(true);
   setState('edit.isLoading', true);
 
-  const res = await fetchPlans({ subscriptionId: store.state.subscriptionId || '' });
+  const res = await fetchSubscriptionEdit({ subscriptionId: store.state.subscriptionId || '' });
 
   if (res.data) {
     setState('edit', {
@@ -143,8 +150,8 @@ export const cancelEditSubscription = () => {
   setIsEditing(false);
 };
 
-const fetchUpdateSubscription = async (variables: UpdateSubscriptionMutationVariables) => {
-  const res = await store.state.connection?.graphqlFetch<UpdateSubscriptionMutation>({
+const fetchUpdateSubscription = async (variables: SubscriptionUpdateMutationVariables) => {
+  const res = await store.state.connection?.graphqlFetch<SubscriptionUpdateMutation>({
     query: updateSubscriptionMutation,
     variables,
   });

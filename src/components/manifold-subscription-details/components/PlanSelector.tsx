@@ -7,46 +7,8 @@ import {
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
   PlanConfigurableFeatureEdge,
-  UpdateSubscriptionMutation,
-  UpdateSubscriptionMutationVariables,
 } from '../../../types/graphql';
 import state from '../store';
-
-import updateSubscriptionMutation from '../update-subscription.graphql';
-import { toFeatureMap } from '../../../utils/plan';
-
-const updateSubscription = async () => {
-  if (!state.connection || !state.planId) {
-    return;
-  }
-
-  state.isUpdating = true;
-
-  const variables: UpdateSubscriptionMutationVariables = {
-    id: state.subscriptionId,
-    planId: state.planId,
-    configuredFeatures: Object.entries(state.configuredFeatures).map(([label, value]) => ({
-      label,
-      value: `${value}`,
-    })),
-  };
-
-  const { data, errors } = await state.connection.graphqlFetch<UpdateSubscriptionMutation>({
-    query: updateSubscriptionMutation,
-    variables,
-  });
-
-  state.isUpdating = false;
-  state.isEditing = false;
-  const id = data?.updateSubscription?.data?.plan?.id;
-  state.planId = id;
-  state.subscribedPlan = state.plans?.find(plan => plan.node.id === id)?.node;
-  state.configuredFeatures = data
-    ? toFeatureMap(data?.updateSubscription?.data?.configuredFeatures)
-    : {};
-
-  console.log(data, errors);
-};
 
 const PlanMenu: FunctionalComponent = () => {
   if (!state.plans) {
@@ -115,12 +77,7 @@ const PlanDetails: FunctionalComponent = () => {
           {/* TODO add Cost component */}
           <p class="ManifoldSubscription__HelpText">Usage billed at the end of month</p>
         </div>
-        <button
-          class="ManifoldSubscription__Button"
-          type="button"
-          onClick={updateSubscription}
-          disabled={state.isUpdating}
-        >
+        <button class="ManifoldSubscription__Button" type="button" disabled={state.isUpdating}>
           Update Subscription
         </button>
       </footer>
