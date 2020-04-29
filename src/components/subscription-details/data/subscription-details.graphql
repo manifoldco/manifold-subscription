@@ -1,5 +1,6 @@
-query Subscription($id: ID!) {
+query SubscriptionDetails($id: ID!) {
   subscription(id: $id) {
+    id
     status {
       label
       percentDone

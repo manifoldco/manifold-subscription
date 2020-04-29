@@ -9,7 +9,7 @@ import {
   PlanConfigurableFeatureEdge,
 } from '../../../../types/graphql';
 import store from '../../data/store';
-import { selectPlan, getSelectedPlan, setState } from '../../data/actions';
+import { selectPlan, getSelectedPlan, setState, updateSubscription } from '../../data/actions';
 
 const PlanMenu: FunctionalComponent = () => {
   const { plans, selectedPlanId } = store.state.edit;
@@ -40,7 +40,6 @@ const PlanMenu: FunctionalComponent = () => {
 
 const PlanDetails: FunctionalComponent = () => {
   const plan = getSelectedPlan();
-
   if (!plan) {
     return null;
   }
@@ -81,7 +80,7 @@ const PlanDetails: FunctionalComponent = () => {
         <button
           class="ManifoldSubscription__Button"
           type="button"
-          // onClick={updateSubscription}
+          onClick={updateSubscription}
           disabled={isLoading}
         >
           Update Subscription

@@ -16,6 +16,7 @@ export class ManifoldSubscriptionDetails2 {
   async componentWillLoad() {
     setConnection(await getManifoldConnection(this.el));
     setState('heading', this.heading);
+    setState('subscriptionId', this.subscriptionId);
     setIsEditing(this.isEditing || false);
     loadSubscription(this.subscriptionId);
   }

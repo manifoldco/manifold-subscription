@@ -1,6 +1,6 @@
 import { h, FunctionalComponent } from '@stencil/core';
 import store, { Subscription } from '../../data/store';
-import { setIsEditing } from '../../data/actions';
+import { editSubscription } from '../../data/actions';
 import FixedFeature from '../../../shared/FixedFeature';
 import {
   PlanFixedFeatureEdge,
@@ -78,7 +78,7 @@ export const View = () => {
           type="button"
           class="ManifoldSubscription__Button"
           data-kind="black"
-          onClick={() => setIsEditing(true)}
+          onClick={() => editSubscription()}
         >
           Modify Subsciption
         </button>

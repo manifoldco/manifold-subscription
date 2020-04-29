@@ -1,11 +1,12 @@
 import { createStore } from '@stencil/store';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
-import { SubscriptionQuery, PlanListQuery } from '../../../types/graphql';
+import { SubscriptionDetailsQuery, PlanListQuery } from '../../../types/graphql';
 import { FeatureMap } from '../../../utils/plan';
 
 export interface Subscription {
-  status: SubscriptionQuery['subscription']['status'];
-  plan: SubscriptionQuery['subscription']['plan'];
+  id: string;
+  status: SubscriptionDetailsQuery['subscription']['status'];
+  plan: SubscriptionDetailsQuery['subscription']['plan'];
   configuredFeatures: FeatureMap;
 }
 
@@ -14,6 +15,7 @@ export interface SubscriptionDetailsStore {
     connection?: Connection;
     isEditing?: boolean;
     heading?: string;
+    subscriptionId?: string;
     view: {
       isLoading?: boolean;
       subscription?: Subscription;

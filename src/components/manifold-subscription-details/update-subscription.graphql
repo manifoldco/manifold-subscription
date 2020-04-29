@@ -1,4 +1,4 @@
-mutation UpdateSubscription(
+mutation UpdateSubscription2(
   $id: ID!
   $planId: ID!
   $configuredFeatures: [ConfiguredFeatureInput!]

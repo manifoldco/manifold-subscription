@@ -1,0 +1,90 @@
+fragment SubscriptionPlan on Plan {
+  id
+  displayName
+  label
+  free
+  cost
+  fixedFeatures(first: 500) {
+    edges {
+      node {
+        displayName
+        displayValue
+        label
+      }
+    }
+  }
+  meteredFeatures(first: 500) {
+    edges {
+      node {
+        label
+        displayName
+        numericDetails {
+          unit
+          costTiers {
+            limit
+            cost
+          }
+        }
+      }
+    }
+  }
+  configurableFeatures(first: 500) {
+    edges {
+      node {
+        label
+        displayName
+        type
+        upgradable
+        downgradable
+        featureOptions {
+          displayName
+          value
+          cost
+        }
+        numericDetails {
+          increment
+          min
+          max
+          unit
+          costTiers {
+            limit
+            cost
+          }
+        }
+      }
+    }
+  }
+}
+
+query SubscriptionPlanList($subscriptionId: ID!) {
+  subscription(id: $subscriptionId) {
+    configuredFeatures(first: 100) {
+      edges {
+        node {
+          label
+          ... on StringConfiguredFeature {
+            stringValue: value
+          }
+          ... on BooleanConfiguredFeature {
+            booleanValue: value
+          }
+          ... on NumberConfiguredFeature {
+            numberValue: value
+          }
+        }
+      }
+    }
+    plan {
+      id
+      product {
+        plans(first: 25, orderBy: { field: COST, direction: ASC }) {
+          edges {
+            node {
+              ...SubscriptionPlan
+            }
+          }
+        }
+      }
+    }
+  }
+}
