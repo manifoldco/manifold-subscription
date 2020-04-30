@@ -2,33 +2,41 @@ import { h, FunctionalComponent } from '@stencil/core';
 import FixedFeature from 'components/shared/FixedFeature';
 import MeteredFeature from 'components/shared/MeteredFeature';
 import ConfigurableFeature from 'components/shared/ConfigurableFeature';
-import PlanCard from '../../shared/PlanCard';
+import PlanCard from 'components/shared/PlanCard';
+import CostDisplay from 'components/shared/CostDisplay';
 import {
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
   PlanConfigurableFeatureEdge,
-} from '../../../types/graphql';
-import state from '../store';
+} from '../../../../types/graphql';
+import store from '../../data/store';
+import {
+  selectPlan,
+  getSelectedPlan,
+  updateSubscription,
+  setConfiguredFeature,
+} from '../../data/actions';
 
 const PlanMenu: FunctionalComponent = () => {
-  if (!state.plans) {
+  const { plans, selectedPlanId } = store.state.edit;
+  if (!plans) {
     return null;
   }
 
   return (
     <ul class="ManifoldSubscriptionCreate__PlanSelector__Menu">
-      {state.plans.map(({ node: plan }) => (
+      {plans.map(({ node: plan }) => (
         <li>
           <label>
             <input
               type="radio"
               value={plan.id}
-              checked={plan.id === state.planId}
+              checked={plan.id === selectedPlanId}
               onClick={() => {
-                state.planId = plan.id;
+                selectPlan(plan.id);
               }}
             />
-            <PlanCard plan={plan} isChecked={plan.id === state.planId} />
+            <PlanCard plan={plan} isChecked={plan.id === selectedPlanId} />
           </label>
         </li>
       ))}
@@ -37,12 +45,12 @@ const PlanMenu: FunctionalComponent = () => {
 };
 
 const PlanDetails: FunctionalComponent = () => {
-  if (!state.plans || !state.planId) {
+  const plan = getSelectedPlan();
+  if (!plan) {
     return null;
   }
 
-  const currentPlan =
-    state.plans.find(plan => plan.node.id === state.planId)?.node || state.plans[0].node;
+  const { configuredFeatures, isLoading, cost } = store.state.edit;
 
   return (
     <div
@@ -51,55 +59,53 @@ const PlanDetails: FunctionalComponent = () => {
       itemtype="https://schema.org/IndividualProduct"
     >
       <h2 class="ManifoldSubscriptionCreate__PlanSelector__Heading" itemprop="name">
-        {currentPlan?.displayName}
+        {plan?.displayName}
       </h2>
       <dl class="ManifoldSubscriptionCreate__PlanSelector__FeatureList">
-        {currentPlan?.fixedFeatures.edges.map(fixedFeature => (
+        {plan?.fixedFeatures.edges.map(fixedFeature => (
           <FixedFeature fixedFeature={fixedFeature as PlanFixedFeatureEdge} />
         ))}
-        {currentPlan?.meteredFeatures.edges.map(meteredFeature => (
+        {plan?.meteredFeatures.edges.map(meteredFeature => (
           <MeteredFeature meteredFeature={meteredFeature as PlanMeteredFeatureEdge} />
         ))}
-        {currentPlan?.configurableFeatures.edges.map(configurableFeature => (
+        {plan?.configurableFeatures.edges.map(configurableFeature => (
           <ConfigurableFeature
-            setConfiguredFeature={(label, value) => {
-              state.configuredFeatures = {
-                ...state.configuredFeatures,
-                [label]: value,
-              };
-            }}
+            setConfiguredFeature={setConfiguredFeature}
             configurableFeature={configurableFeature as PlanConfigurableFeatureEdge}
-            value={state.configuredFeatures?.[configurableFeature.node.label]}
+            value={configuredFeatures?.[configurableFeature.node.label]}
           />
         ))}
       </dl>
       <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
         <div>
-          {/* TODO add Cost component */}
-          <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
+          <CostDisplay
+            isCalculating={cost.isLoading}
+            baseCost={cost.amount || plan.cost}
+            meteredFeatures={plan.meteredFeatures.edges as PlanMeteredFeatureEdge[]}
+          />
+          <p class="ManifoldSubscription__HelpText">Usage billed at the end of month</p>
         </div>
+        <button
+          class="ManifoldSubscription__Button"
+          type="button"
+          onClick={updateSubscription}
+          disabled={isLoading}
+        >
+          Update Subscription
+        </button>
       </footer>
     </div>
   );
 };
 
-interface PlanSelectorProps {
-  productId: string;
-  planId?: string;
-}
+const PlanSelector: FunctionalComponent = () => {
+  const { isLoading, plans } = store.state.edit;
 
-const PlanSelector: FunctionalComponent<PlanSelectorProps> = ({ productId, planId }) => {
-  state.productId = productId;
-
-  if (state.planId === undefined) {
-    state.planId = planId;
-  }
-
-  if (state.isLoading) {
+  if (isLoading) {
     return 'Loading...';
   }
 
-  if (!state.plans) {
+  if (!plans) {
     return null;
   }
 

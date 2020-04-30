@@ -1,9 +1,12 @@
-fragment productPlan on Plan {
+fragment plan on Plan {
   id
-  displayName
   label
-  free
+  displayName
   cost
+  free
+  product {
+    id
+  }
   fixedFeatures(first: 500) {
     edges {
       node {
@@ -50,18 +53,6 @@ fragment productPlan on Plan {
             limit
             cost
           }
-        }
-      }
-    }
-  }
-}
-
-query ProductPlans($productId: ID!) {
-  product(id: $productId) {
-    plans(first: 25, orderBy: { field: COST, direction: ASC }) {
-      edges {
-        node {
-          ...productPlan
         }
       }
     }

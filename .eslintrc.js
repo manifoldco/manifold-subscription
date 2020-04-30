@@ -64,5 +64,6 @@ module.exports = {
     'no-irregular-whitespace': 'off',
     'object-curly-newline': 'off', // let Prettier decide,
     'prettier/prettier': 'error',
+    'no-return-assign': 'off',
   },
 };

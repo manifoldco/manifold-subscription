@@ -1,0 +1,19 @@
+# @include "./plan-fragment.graphql"
+# @include "./configured-features-fragment.graphql"
+
+query SubscriptionView($id: ID!) {
+  subscription(id: $id) {
+    id
+    status {
+      label
+      percentDone
+      message
+    }
+    configuredFeatures(first: 100) {
+      ...configuredFeatures
+    }
+    plan {
+      ...plan
+    }
+  }
+}

@@ -1,0 +1,11 @@
+@use "node_modules/@manifoldco/mercury";
+$name: '' !default;
+
+.#{$name}__Header {
+  display: grid;
+  grid-auto-columns: auto;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: end;
+}

@@ -16,6 +16,7 @@ $newName: 'ManifoldSubscription';
 @use 'elements/boolean-input' with ($name: $name);
 @use 'elements/plan-selector' with ($name: $name);
 @use 'elements/skeleton' with ($name: $name);
+@use 'elements/header' with ($name: $newName);
 
 manifold-subscription-create,
 manifold-subscription-details,

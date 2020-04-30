@@ -5,6 +5,8 @@ $name: '' !default;
   &__Heading {
     @include mercury.Typography--SmallScreenHeadingLarge;
 
+    margin-top: 0.35rem;
+
     @media (min-width: 600px) {
       @include mercury.Typography--HeadingLarge;
     }

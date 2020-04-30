@@ -42,6 +42,7 @@
         top: 0;
         right: 0;
         left: 0;
+        z-index: 99999;
         display: grid;
         grid-template-columns: auto 1fr auto;
         gap: 0.5rem;
@@ -69,6 +70,11 @@
       <button id="update-auth-token" type="button">Update</button>
     </label>
     <manifold-init env="stage" client-id="3zx3qeb15z70kcv4nh8cjedhndwz2"></manifold-init>
+    <h2>View subscription details</h2>
+    <manifold-subscription-details
+      heading="Plan Details"
+      subscription-id="24721qkhabu70na8gnht56nzbq24a"
+    ></manifold-subscription-details>
     <h2>Create a subscription</h2>
     <manifold-subscription-create
       heading="Purchase Subscription"
@@ -84,10 +90,6 @@
       heading="Your Subscriptions"
       owner="bran"
     ></manifold-subscription-list>
-    <h2>View subscription details</h2>
-    <manifold-subscription-details
-      subscription-id="24721qkhabu70na8gnht56nzbq24a"
-    ></manifold-subscription-details>
 
     <script>
       const createElement = document.querySelector('manifold-subscription-create');

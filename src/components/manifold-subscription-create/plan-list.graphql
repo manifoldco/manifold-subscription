@@ -1,4 +1,4 @@
-fragment plan on Plan {
+fragment planCreate on Plan {
   id
   displayName
   label
@@ -65,7 +65,7 @@ query PlanList($productLabel: String!) {
     plans(first: 25, orderBy: { field: COST, direction: ASC }) {
       edges {
         node {
-          ...plan
+          ...planCreate
         }
       }
     }

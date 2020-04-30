@@ -3,9 +3,9 @@ $name: '' !default;
 
 .#{$name}__Details {
   display: grid;
-  gap: 1em;
+  gap: 1rem;
 
-  .#{$name}__Card {
+  > .#{$name}__Card {
     padding: 0;
   }
 

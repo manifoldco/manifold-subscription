@@ -1,0 +1,22 @@
+# @include "./plan-fragment.graphql"
+# @include "./configured-features-fragment.graphql"
+
+query SubscriptionEdit($subscriptionId: ID!) {
+  subscription(id: $subscriptionId) {
+    configuredFeatures(first: 100) {
+      ...configuredFeatures
+    }
+    plan {
+      id
+      product {
+        plans(first: 25, orderBy: { field: COST, direction: ASC }) {
+          edges {
+            node {
+              ...plan
+            }
+          }
+        }
+      }
+    }
+  }
+}

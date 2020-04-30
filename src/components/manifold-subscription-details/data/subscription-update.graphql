@@ -1,0 +1,27 @@
+# @include "./plan-fragment.graphql"
+# @include "./configured-features-fragment.graphql"
+
+mutation SubscriptionUpdate(
+  $id: ID!
+  $planId: ID!
+  $configuredFeatures: [ConfiguredFeatureInput!]
+) {
+  updateSubscription(
+    input: { id: $id, configuredFeatures: $configuredFeatures, newPlanID: $planId }
+  ) {
+    data {
+      id
+      status {
+        label
+        percentDone
+        message
+      }
+      configuredFeatures(first: 100) {
+        ...configuredFeatures
+      }
+      plan {
+        ...plan
+      }
+    }
+  }
+}
