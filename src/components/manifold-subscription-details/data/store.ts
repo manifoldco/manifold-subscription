@@ -23,6 +23,7 @@ export interface SubscriptionDetailsStore {
     heading?: string;
     subscriptionId?: string;
     isUpdated?: boolean;
+    isUpdating?: boolean;
     view: {
       isLoading?: boolean;
       subscription?: Subscription;

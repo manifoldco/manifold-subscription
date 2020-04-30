@@ -20,15 +20,13 @@ function resolveGqlIncludes(code, id) {
   // Loop over @include statements until there's none left
   // eslint-disable-next-line no-cond-assign
   while ((result = regex.exec(resolvedCode)) !== null) {
-    if (result) {
-      // Resolve absole path from the file path and @include paths
-      const dir = path.dirname(id);
-      const absPath = path.normalize(path.join(dir, result.groups.path));
+    // Resolve absole path from the file path and @include paths
+    const dir = path.dirname(id);
+    const absPath = path.normalize(path.join(dir, result.groups.path));
 
-      // Replace the @include statement with the file contents
-      const includedFile = fs.readFileSync(absPath, 'utf8');
-      resolvedCode = resolvedCode.replace(result[0], includedFile);
-    }
+    // Replace the @include statement with the file contents
+    const includedFile = fs.readFileSync(absPath, 'utf8');
+    resolvedCode = resolvedCode.replace(result[0], includedFile);
   }
   return resolvedCode;
 }

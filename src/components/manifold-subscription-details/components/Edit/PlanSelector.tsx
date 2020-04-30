@@ -4,12 +4,15 @@ import MeteredFeature from 'components/shared/MeteredFeature';
 import ConfigurableFeature from 'components/shared/ConfigurableFeature';
 import PlanCard from 'components/shared/PlanCard';
 import CostDisplay from 'components/shared/CostDisplay';
+import SkeletonPlanSelector from 'components/shared/SkeletonPlanSelector';
+import { FeatureMap } from 'utils/plan';
 import {
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
   PlanConfigurableFeatureEdge,
+  PlanFragment,
 } from '../../../../types/graphql';
-import store from '../../data/store';
+import store, { Cost } from '../../data/store';
 import {
   selectPlan,
   getSelectedPlan,
@@ -17,11 +20,13 @@ import {
   setConfiguredFeature,
 } from '../../data/actions';
 
-const PlanMenu: FunctionalComponent = () => {
-  const { plans, selectedPlanId } = store.state.edit;
-  if (!plans) {
-    return null;
-  }
+interface PlanMenuProps {
+  plans: { node: PlanFragment }[];
+  selectedPlanId?: string;
+}
+
+const PlanMenu: FunctionalComponent<PlanMenuProps> = props => {
+  const { plans, selectedPlanId } = props;
 
   return (
     <ul class="ManifoldSubscriptionCreate__PlanSelector__Menu">
@@ -44,14 +49,15 @@ const PlanMenu: FunctionalComponent = () => {
   );
 };
 
-const PlanDetails: FunctionalComponent = () => {
-  const plan = getSelectedPlan();
-  if (!plan) {
-    return null;
-  }
+interface PlanDetailsProps {
+  plan: PlanFragment;
+  configuredFeatures: FeatureMap;
+  isUpdating?: boolean;
+  cost: Cost;
+}
 
-  const { configuredFeatures, isLoading, cost } = store.state.edit;
-
+const PlanDetails: FunctionalComponent<PlanDetailsProps> = props => {
+  const { plan, configuredFeatures, isUpdating, cost } = props;
   return (
     <div
       class="ManifoldSubscriptionCreate__PlanSelector__Details"
@@ -89,7 +95,7 @@ const PlanDetails: FunctionalComponent = () => {
           class="ManifoldSubscription__Button"
           type="button"
           onClick={updateSubscription}
-          disabled={isLoading}
+          disabled={isUpdating}
         >
           Update Subscription
         </button>
@@ -99,20 +105,27 @@ const PlanDetails: FunctionalComponent = () => {
 };
 
 const PlanSelector: FunctionalComponent = () => {
-  const { isLoading, plans } = store.state.edit;
+  const { isUpdating, edit } = store.state;
+  const { isLoading, plans, configuredFeatures, cost, selectedPlanId } = edit;
+  const plan = getSelectedPlan();
 
   if (isLoading) {
-    return 'Loading...';
+    return <SkeletonPlanSelector />;
   }
 
-  if (!plans) {
+  if (!plans || !plan || !configuredFeatures) {
     return null;
   }
 
   return (
     <div class="ManifoldSubscriptionCreate__PlanSelector">
-      <PlanMenu />
-      <PlanDetails />
+      <PlanMenu plans={plans} selectedPlanId={selectedPlanId} />
+      <PlanDetails
+        plan={plan}
+        configuredFeatures={configuredFeatures}
+        cost={cost}
+        isUpdating={isUpdating}
+      />
     </div>
   );
 };

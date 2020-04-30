@@ -188,7 +188,7 @@ const fromFeatureMap = (features: FeatureMap = {}) =>
   }));
 
 export const updateSubscription = async () => {
-  setState('edit.isUpdating', true);
+  setState('isUpdating', true);
   const { subscriptionId, edit } = store.state;
   const planId = getSelectedPlan()?.id || '';
   const { data } = await fetchUpdateSubscription({
@@ -209,7 +209,7 @@ export const updateSubscription = async () => {
     updateCost('view', data.plan.id, featureMap);
   }
 
-  setState('edit.isUpdating', false);
+  setState('isUpdating', false);
 };
 
 export const setConfiguredFeature = (label: string, value: unknown) => {

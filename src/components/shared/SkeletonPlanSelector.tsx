@@ -1,6 +1,6 @@
 import { h, FunctionalComponent } from '@stencil/core';
 import CostDisplay from './CostDisplay';
-import PlanCard from './PlanCard';
+import SkeletonText from './SkeletonText';
 
 const SkeletonPlanSelector: FunctionalComponent = () => (
   <div class="ManifoldSubscriptionCreate__PlanSelector">
@@ -11,7 +11,16 @@ const SkeletonPlanSelector: FunctionalComponent = () => (
         ['Third Plan', 1000],
       ].map(([displayName, cost]) => (
         <li>
-          <PlanCard isLoading plan={{ displayName: displayName as string, cost: cost as number }} />
+          <div class="ManifoldSubscriptionCreate__Card">
+            <div class="ManifoldSubscriptionCreate__PlanName">
+              <SkeletonText>{displayName}</SkeletonText>
+            </div>
+            <span class="ManifoldSubscriptionCreate__Cost">
+              <SkeletonText>
+                <CostDisplay baseCost={cost as number} />
+              </SkeletonText>
+            </span>
+          </div>
         </li>
       ))}
     </ul>
@@ -21,26 +30,27 @@ const SkeletonPlanSelector: FunctionalComponent = () => (
       itemtype="https://schema.org/IndividualProduct"
     >
       <h2 class="ManifoldSubscriptionCreate__PlanSelector__Heading" itemprop="name">
-        <span data-is-loading>Selected Plan Name</span>
+        <SkeletonText>Selected Plan Name</SkeletonText>
       </h2>
       <dl class="ManifoldSubscriptionCreate__PlanSelector__FeatureList">
         {[
           ['Feature', 'value'],
           ['Second Feature', 100],
           ['Third Feature', 'Another One'],
+          ['Fourth', 'No'],
         ].map(([name, value]) => [
           <dt class="ManifoldSubscriptionCreate__PlanSelector__FeatureName">
-            <span data-is-loading>{name}</span>
+            <SkeletonText>{name}</SkeletonText>
           </dt>,
           <dd class="ManifoldSubscriptionCreate__PlanSelector__FeatureValue">
-            <span data-is-loading>{value}</span>
+            <SkeletonText>{value}</SkeletonText>
           </dd>,
         ])}
       </dl>
       <footer class="ManifoldSubscriptionCreate__PlanSelector__Footer">
         <CostDisplay isCalculating baseCost={0} />
         <p class="ManifoldSubscriptionCreate__HelpText">
-          <span data-is-loading>Usage billed at the end of month</span>
+          <SkeletonText>Usage billed at the end of month</SkeletonText>
         </p>
       </footer>
     </div>

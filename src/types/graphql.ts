@@ -1483,13 +1483,13 @@ export type ConfiguredFeaturesFragment = (
   & { edges: Array<(
     { __typename?: 'ConfiguredFeatureEdge' }
     & { node: (
-      { __typename?: 'NumberConfiguredFeature' }
-      & Pick<NumberConfiguredFeature, 'label'>
-      & { numberValue: NumberConfiguredFeature['value'] }
-    ) | (
       { __typename?: 'StringConfiguredFeature' }
       & Pick<StringConfiguredFeature, 'label'>
       & { stringValue: StringConfiguredFeature['value'] }
+    ) | (
+      { __typename?: 'NumberConfiguredFeature' }
+      & Pick<NumberConfiguredFeature, 'label'>
+      & { numberValue: NumberConfiguredFeature['value'] }
     ) | (
       { __typename?: 'BooleanConfiguredFeature' }
       & Pick<BooleanConfiguredFeature, 'label'>
