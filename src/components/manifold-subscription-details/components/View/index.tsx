@@ -1,4 +1,5 @@
 import { h, FunctionalComponent } from '@stencil/core';
+import { SkeletonDetails } from './SkeletonDetails';
 import store, { Subscription } from '../../data/store';
 import { editSubscription } from '../../data/actions';
 import FixedFeature from '../../../shared/FixedFeature';
@@ -49,7 +50,7 @@ export const View = () => {
   const { view } = store.state;
 
   if (view.isLoading) {
-    return <div>Loading...</div>;
+    return <SkeletonDetails />;
   }
 
   if (!view.subscription) {
