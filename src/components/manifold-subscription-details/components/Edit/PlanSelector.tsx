@@ -109,7 +109,7 @@ const PlanSelector: FunctionalComponent = () => {
   const { isLoading, plans, configuredFeatures, cost, selectedPlanId } = edit;
   const plan = getSelectedPlan();
 
-  if (isLoading || !isLoading) {
+  if (isLoading) {
     return <SkeletonPlanSelector />;
   }
 
