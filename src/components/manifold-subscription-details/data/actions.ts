@@ -203,6 +203,7 @@ export const updateSubscription = async () => {
       ...data,
       configuredFeatures: featureMap,
     });
+    setState('isUpdated', true);
 
     setIsEditing(false);
     updateCost('view', data.plan.id, featureMap);
