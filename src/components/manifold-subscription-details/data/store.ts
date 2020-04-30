@@ -10,10 +10,15 @@ export interface Subscription {
   configuredFeatures: FeatureMap;
 }
 
+export interface ErrorMessage {
+  type: 'interface' | 'unknown';
+  message: string;
+}
+
 export interface Cost {
   isLoading?: boolean;
   amount?: number;
-  error?: string;
+  hasError?: boolean;
 }
 
 export interface SubscriptionDetailsStore {
@@ -24,28 +29,36 @@ export interface SubscriptionDetailsStore {
     subscriptionId?: string;
     isUpdated?: boolean;
     isUpdating?: boolean;
+    errors: ErrorMessage[];
+
     view: {
       isLoading?: boolean;
       subscription?: Subscription;
       cost: Cost;
+      errors: ErrorMessage[];
     };
+
     edit: {
       isLoading?: boolean;
       plans?: SubscriptionEditQuery['subscription']['plan']['product']['plans']['edges'];
       selectedPlanId?: string;
       configuredFeatures?: FeatureMap;
       cost: Cost;
+      errors: ErrorMessage[];
     };
   };
 }
 
 const { state } = createStore<SubscriptionDetailsStore>({
   state: {
+    errors: [],
     view: {
       cost: {},
+      errors: [],
     },
     edit: {
       cost: {},
+      errors: [],
     },
   },
 });

@@ -9,6 +9,7 @@ import { View } from './View/index';
 
 export const SubscriptionDetails = () => {
   const { isEditing } = store.state;
+
   return (
     <div class="ManifoldSubscriptionCreate__Details">
       <Header />
