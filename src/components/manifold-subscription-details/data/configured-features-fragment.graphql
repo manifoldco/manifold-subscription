@@ -1,0 +1,16 @@
+fragment configuredFeatures on ConfiguredFeatureConnection {
+  edges {
+    node {
+      label
+      ... on StringConfiguredFeature {
+        stringValue: value
+      }
+      ... on BooleanConfiguredFeature {
+        booleanValue: value
+      }
+      ... on NumberConfiguredFeature {
+        numberValue: value
+      }
+    }
+  }
+}

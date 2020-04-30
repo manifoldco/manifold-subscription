@@ -1,8 +1,13 @@
 import { Component, h, Prop, Element } from '@stencil/core';
-import { setConnection, setIsEditing, loadSubscription, setState } from './data/actions';
+import {
+  setConnection,
+  setIsEditing,
+  loadSubscription,
+  setState,
+  editSubscription,
+} from './data/actions';
 import getManifoldConnection from '../../utils/getManifoldConnection';
 import { SubscriptionDetails } from './components/SubscriptionDetails';
-import store from './data/store';
 
 @Component({
   tag: 'manifold-subscription-details',
@@ -13,15 +18,20 @@ export class ManifoldSubscriptionDetails {
   @Prop() heading?: string;
   @Prop() isEditing?: boolean = false;
 
+  // Can this be abstracted/optimized further?
   async componentWillLoad() {
     setConnection(await getManifoldConnection(this.el));
     setState('heading', this.heading);
     setState('subscriptionId', this.subscriptionId);
-    setIsEditing(this.isEditing || false);
+    if (this.isEditing) {
+      editSubscription();
+    } else {
+      setIsEditing(false);
+    }
     loadSubscription(this.subscriptionId);
   }
 
   render() {
-    return [<SubscriptionDetails />, <pre>{JSON.stringify(store.state, null, 2)}</pre>];
+    return <SubscriptionDetails />;
   }
 }

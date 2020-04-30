@@ -16,10 +16,10 @@ $newName: 'ManifoldSubscription';
 @use 'elements/boolean-input' with ($name: $name);
 @use 'elements/plan-selector' with ($name: $name);
 @use 'elements/skeleton' with ($name: $name);
+@use 'elements/header' with ($name: $newName);
 
 manifold-subscription-create,
 manifold-subscription-details,
-manifold-subscription-details-2,
 manifold-subscription-list {
   box-sizing: border-box;
 
@@ -50,14 +50,4 @@ manifold-subscription-list {
   svg {
     fill: currentColor;
   }
-}
-
-.ManifoldSubscription__Header {
-  display: grid;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  align-items: end;
-  margin-bottom: 1rem;
 }

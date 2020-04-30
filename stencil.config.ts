@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { Config } from '@stencil/core';
 import { sass } from '@stencil/sass';
 import { postcss } from '@stencil/postcss';
@@ -8,6 +9,29 @@ import { createFilter } from 'rollup-pluginutils';
 import replace from '@rollup/plugin-replace';
 
 const pkgManifest = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+function resolveGqlIncludes(code, id) {
+  // Parse @include path
+  const regex = /# *?@include *"(?<path>.*)"\n/g;
+
+  let resolvedCode = code;
+  let result;
+
+  // Loop over @include statements until there's none left
+  // eslint-disable-next-line no-cond-assign
+  while ((result = regex.exec(resolvedCode)) !== null) {
+    if (result) {
+      // Resolve absole path from the file path and @include paths
+      const dir = path.dirname(id);
+      const absPath = path.normalize(path.join(dir, result.groups.path));
+
+      // Replace the @include statement with the file contents
+      const includedFile = fs.readFileSync(absPath, 'utf8');
+      resolvedCode = resolvedCode.replace(result[0], includedFile);
+    }
+  }
+  return resolvedCode;
+}
 
 interface Options {
   include?: string;
@@ -26,8 +50,10 @@ function gql(opts: Options = {}) {
     // eslint-disable-next-line consistent-return
     transform(code, id) {
       if (filter(id)) {
+        const resolvedCode = resolveGqlIncludes(code, id);
+
         return {
-          code: `export default ${JSON.stringify(code)}`,
+          code: `export default ${JSON.stringify(resolvedCode)}`,
         };
       }
     },

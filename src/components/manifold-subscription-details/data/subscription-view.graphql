@@ -1,3 +1,6 @@
+# @include "./plan-fragment.graphql"
+# @include "./configured-features-fragment.graphql"
+
 query SubscriptionView($id: ID!) {
   subscription(id: $id) {
     id
@@ -7,80 +10,10 @@ query SubscriptionView($id: ID!) {
       message
     }
     configuredFeatures(first: 100) {
-      edges {
-        node {
-          label
-          ... on StringConfiguredFeature {
-            stringValue: value
-          }
-          ... on BooleanConfiguredFeature {
-            booleanValue: value
-          }
-          ... on NumberConfiguredFeature {
-            numberValue: value
-          }
-        }
-      }
+      ...configuredFeatures
     }
     plan {
-      id
-      label
-      displayName
-      cost
-      free
-      product {
-        id
-      }
-      fixedFeatures(first: 500) {
-        edges {
-          node {
-            displayName
-            displayValue
-            label
-          }
-        }
-      }
-      meteredFeatures(first: 500) {
-        edges {
-          node {
-            label
-            displayName
-            numericDetails {
-              unit
-              costTiers {
-                limit
-                cost
-              }
-            }
-          }
-        }
-      }
-      configurableFeatures(first: 500) {
-        edges {
-          node {
-            label
-            displayName
-            type
-            upgradable
-            downgradable
-            featureOptions {
-              displayName
-              value
-              cost
-            }
-            numericDetails {
-              increment
-              min
-              max
-              unit
-              costTiers {
-                limit
-                cost
-              }
-            }
-          }
-        }
-      }
+      ...plan
     }
   }
 }

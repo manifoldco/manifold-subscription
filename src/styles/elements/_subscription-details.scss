@@ -2,7 +2,7 @@
 $name: '' !default;
 
 .#{$name}__Details {
-  .#{$name}__Card {
+  > .#{$name}__Card {
     padding: 0;
   }
 
