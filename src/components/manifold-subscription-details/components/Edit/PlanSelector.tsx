@@ -6,6 +6,7 @@ import PlanCard from 'components/shared/PlanCard';
 import CostDisplay from 'components/shared/CostDisplay';
 import SkeletonPlanSelector from 'components/shared/SkeletonPlanSelector';
 import { FeatureMap } from 'utils/plan';
+import Message from 'components/shared/Message';
 import {
   PlanFixedFeatureEdge,
   PlanMeteredFeatureEdge,
@@ -88,6 +89,7 @@ const PlanDetails: FunctionalComponent<PlanDetailsProps> = props => {
             isCalculating={cost.isLoading}
             baseCost={cost.amount || plan.cost}
             meteredFeatures={plan.meteredFeatures.edges as PlanMeteredFeatureEdge[]}
+            hasError={!!cost.hasError}
           />
           <p class="ManifoldSubscription__HelpText">Usage billed at the end of month</p>
         </div>
@@ -114,7 +116,10 @@ const PlanSelector: FunctionalComponent = () => {
   }
 
   if (!plans || !plan || !configuredFeatures) {
-    return null;
+    return [
+      <Message type="error">Could not load plan selector.</Message>,
+      <SkeletonPlanSelector />,
+    ];
   }
 
   return (

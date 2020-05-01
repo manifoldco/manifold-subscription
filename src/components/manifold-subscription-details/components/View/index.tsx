@@ -1,4 +1,6 @@
 import { h, FunctionalComponent } from '@stencil/core';
+import Message from 'components/shared/Message';
+import { SkeletonDetails } from './SkeletonDetails';
 import store, { Subscription } from '../../data/store';
 import { editSubscription } from '../../data/actions';
 import FixedFeature from '../../../shared/FixedFeature';
@@ -49,11 +51,21 @@ export const View = () => {
   const { view } = store.state;
 
   if (view.isLoading) {
-    return <div>Loading...</div>;
+    return <SkeletonDetails />;
+  }
+
+  if (view.errors.length > 0) {
+    return [
+      ...view.errors.map(error => <Message type="error">{error.message}</Message>),
+      <SkeletonDetails />,
+    ];
   }
 
   if (!view.subscription) {
-    throw new Error('Uhoh!');
+    return [
+      <Message type="error">There was a problem loading the Component.</Message>,
+      <SkeletonDetails />,
+    ];
   }
 
   const { plan, status, configuredFeatures } = view.subscription;
@@ -71,6 +83,7 @@ export const View = () => {
             isCalculating={view.cost.isLoading}
             baseCost={view.cost.amount || plan.cost}
             meteredFeatures={plan.meteredFeatures.edges as PlanMeteredFeatureEdge[]}
+            hasError={!!view.cost.hasError}
           />
           <p class="ManifoldSubscriptionCreate__HelpText">Usage billed at the end of month</p>
         </div>

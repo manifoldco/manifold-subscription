@@ -43,14 +43,22 @@ export const loadCost = async (
   controller = new AbortController();
 
   try {
-    interface CostResponse {
+    interface CostSuccess {
       cost: number;
+      currency: 'USD';
     }
+
+    interface CostError {
+      id: string;
+      type: 'error';
+      message: string;
+    }
+
     interface CostRequest {
       features: FeatureMap;
     }
 
-    const res = await store.state.connection?.gateway.post<CostResponse, CostRequest>(
+    const res = await store.state.connection?.gateway.post<CostSuccess | CostError, CostRequest>(
       `/id/plan/${planId}/cost`,
       {
         features,
@@ -58,7 +66,14 @@ export const loadCost = async (
       { signal: controller.signal }
     );
 
-    return { amount: res?.cost };
+    const success = res as CostSuccess;
+    const error = res as CostError;
+
+    if (error?.type === 'error') {
+      throw new Error(error.message);
+    }
+
+    return { amount: success?.cost };
   } catch (error) {
     if (error.name !== 'AbortError') {
       return { error };
@@ -75,9 +90,10 @@ const updateCost = async (
 ) => {
   if (Object.keys(configuredFeatures).length > 0) {
     setState(`${context}.cost.isLoading`, true);
-    const cost = await loadCost(planId, configuredFeatures);
+    const { error, ...cost } = await loadCost(planId, configuredFeatures);
     setState(`${context}.cost`, {
       ...cost,
+      hasError: !!error,
       isLoading: false,
     });
   }
@@ -189,26 +205,35 @@ const fromFeatureMap = (features: FeatureMap = {}) =>
 
 export const updateSubscription = async () => {
   setState('isUpdating', true);
+  setState('edit.errors', []);
+
   const { subscriptionId, edit } = store.state;
+
   const planId = getSelectedPlan()?.id || '';
-  const { data } = await fetchUpdateSubscription({
-    id: subscriptionId || '',
-    planId,
-    configuredFeatures: fromFeatureMap(edit.configuredFeatures),
-  });
 
-  if (data) {
-    const featureMap = toFeatureMap(data.configuredFeatures);
-    setState('view.subscription', {
-      ...data,
-      configuredFeatures: featureMap,
+  try {
+    const { data } = await fetchUpdateSubscription({
+      id: subscriptionId || '',
+      planId,
+      configuredFeatures: fromFeatureMap(edit.configuredFeatures),
     });
-    setState('isUpdated', true);
 
-    setIsEditing(false);
-    updateCost('view', data.plan.id, featureMap);
+    if (data) {
+      const featureMap = toFeatureMap(data.configuredFeatures);
+      setState('view.subscription', {
+        ...data,
+        configuredFeatures: featureMap,
+      });
+      setState('isUpdated', true);
+
+      setIsEditing(false);
+      updateCost('view', data.plan.id, featureMap);
+    } else {
+      throw new Error('Error updating subscription.');
+    }
+  } catch (e) {
+    setState('edit.errors', [...edit.errors, { type: 'network', message: e.message }]);
   }
-
   setState('isUpdating', false);
 };
 
