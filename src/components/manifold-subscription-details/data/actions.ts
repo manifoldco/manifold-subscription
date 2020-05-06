@@ -107,19 +107,26 @@ const updateCost = async (
   }
 };
 
-// TODO separate fetch logic from state logic
-export const loadSubscription = async (subscriptionId: string) => {
-  setState('view.isLoading', true);
-  const { preview, connection } = store.state;
+const fetchSubscriptionView = async (state = store.state) => {
+  const { preview, connection, subscriptionId } = state;
 
-  let res = mockSubscriptionView as any;
-
-  if (!preview) {
-    res = await connection?.graphqlFetch<SubscriptionViewQuery>({
-      query: subscriptionQuery,
-      variables: { id: subscriptionId },
-    });
+  if (preview) {
+    return mockSubscriptionView as any;
   }
+
+  const res = await connection?.graphqlFetch<SubscriptionViewQuery>({
+    query: subscriptionQuery,
+    variables: { id: subscriptionId },
+  });
+
+  return res;
+};
+
+// TODO separate fetch logic from state logic
+export const loadSubscription = async () => {
+  setState('view.isLoading', true);
+
+  const res = await fetchSubscriptionView();
 
   if (res?.data) {
     const { subscription } = res.data;
@@ -166,17 +173,7 @@ const fetchSubscriptionEdit = async (variables: SubscriptionEditQueryVariables) 
     });
   }
 
-  if (res?.data) {
-    const { plan, configuredFeatures } = res.data.subscription;
-    return {
-      data: {
-        selectedPlanId: plan.id,
-        plans: plan.product.plans.edges,
-        configuredFeatures,
-      },
-    };
-  }
-  return { errors: res?.errors };
+  return res;
 };
 
 export const editSubscription = async () => {
@@ -186,10 +183,13 @@ export const editSubscription = async () => {
   const res = await fetchSubscriptionEdit({ subscriptionId });
 
   if (res.data) {
+    const { plan, configuredFeatures } = res.data.subscription;
+
     setState('edit', {
       ...edit,
-      ...res.data,
-      configuredFeatures: toFeatureMap(res.data.configuredFeatures),
+      selectedPlanId: plan.id,
+      plans: plan.product.plans.edges,
+      configuredFeatures: toFeatureMap(configuredFeatures),
     });
   }
 
@@ -205,7 +205,11 @@ const fetchUpdateSubscription = async (variables: SubscriptionUpdateMutationVari
 
   if (preview) {
     return {
-      data: mockSubscriptionView.data.subscription as any,
+      data: {
+        updateSubscription: {
+          data: mockSubscriptionView.data.subscription as any,
+        },
+      },
     };
   }
 
@@ -214,13 +218,7 @@ const fetchUpdateSubscription = async (variables: SubscriptionUpdateMutationVari
     variables,
   });
 
-  if (res?.data) {
-    return {
-      data: res.data.updateSubscription.data,
-    };
-  }
-
-  return { errors: res?.errors };
+  return res;
 };
 
 const fromFeatureMap = (features: FeatureMap = {}) =>
@@ -238,11 +236,13 @@ export const updateSubscription = async () => {
   const planId = getSelectedPlan()?.id || '';
 
   try {
-    const { data } = await fetchUpdateSubscription({
+    const res = await fetchUpdateSubscription({
       id: subscriptionId || '',
       planId,
       configuredFeatures: fromFeatureMap(edit.configuredFeatures),
     });
+
+    const data = res?.data?.updateSubscription?.data;
 
     if (data) {
       const featureMap = toFeatureMap(data.configuredFeatures);

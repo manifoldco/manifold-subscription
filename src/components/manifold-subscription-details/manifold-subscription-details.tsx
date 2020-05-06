@@ -33,7 +33,7 @@ export class ManifoldSubscriptionDetails {
     } else {
       setIsEditing(false);
     }
-    loadSubscription(this.subscriptionId);
+    loadSubscription();
   }
 
   render() {
