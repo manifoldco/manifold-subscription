@@ -1,0 +1,5 @@
+query SubscriptionViewPreview($planId: ID!) {
+  plan(id: $planId) {
+    ...plan
+  }
+}

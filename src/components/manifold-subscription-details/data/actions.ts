@@ -7,14 +7,61 @@ import {
   SubscriptionEditQuery,
   SubscriptionUpdateMutationVariables,
   SubscriptionUpdateMutation,
-  PlanEdge,
+  SubscriptionViewPreviewQuery,
+  Plan,
+  PlanFeatureType,
+  ConfiguredFeaturesFragment,
 } from '../../../types/graphql';
-import { toFeatureMap, FeatureMap, configurableFeatureDefaults } from '../../../utils/plan';
+import { toFeatureMap, FeatureMap } from '../../../utils/plan';
 import subscriptionQuery from './subscription-view.graphql';
+import planFragment from './plan-fragment.graphql';
+import subscriptionViewPreviewQuery from './subscription-view-preview.graphql';
 import subscriptionPlanListQuery from './subscription-edit.graphql';
 import updateSubscriptionMutation from './subscription-update.graphql';
 import mockSubscriptionView from './mock/subscription-view.json';
 import mockSubscriptionEdit from './mock/subscription-edit.json';
+
+export function configurableFeatureDefaults(plan: Plan) {
+  const defaultFeatures: ConfiguredFeaturesFragment['edges'] = [];
+
+  const configurableFeatures = plan.configurableFeatures.edges;
+
+  if (configurableFeatures) {
+    configurableFeatures.forEach(({ node: { label, numericDetails, featureOptions, type } }) => {
+      switch (type) {
+        case PlanFeatureType.Boolean: {
+          defaultFeatures.push({
+            node: {
+              label,
+              booleanValue: false,
+            },
+          });
+          break;
+        }
+        case PlanFeatureType.Number:
+          defaultFeatures.push({
+            node: {
+              label,
+              numberValue: numericDetails?.min,
+            },
+          });
+          break;
+        case PlanFeatureType.String:
+          defaultFeatures.push({
+            node: {
+              label,
+              stringValue: featureOptions?.[0].value,
+            },
+          });
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  return { edges: defaultFeatures };
+}
 
 export const setState = (
   path: string,
@@ -107,22 +154,51 @@ const updateCost = async (
   }
 };
 
+const fromFeatureMap = (features: FeatureMap = {}) =>
+  Object.entries(features).map(([label, value]) => ({
+    label,
+    value: `${value}`,
+  }));
+
 const fetchSubscriptionView = async (state = store.state) => {
-  const { preview, connection, subscriptionId } = state;
+  const { preview, connection, subscriptionId, planId = '' } = state;
 
   if (preview) {
-    return mockSubscriptionView as any;
+    const res = await connection?.graphqlFetch<SubscriptionViewPreviewQuery>({
+      query: planFragment + subscriptionViewPreviewQuery,
+      variables: { planId },
+    });
+
+    if (res?.data) {
+      return {
+        data: {
+          subscription: {
+            ...res.data,
+            status: {
+              label: 'AVAILABLE',
+              percentDone: 100,
+              message: '',
+            },
+            configuredFeatures: configurableFeatureDefaults(res.data.plan as Plan),
+          },
+        },
+      };
+    }
+
+    return { errors: res?.errors };
   }
 
-  const res = await connection?.graphqlFetch<SubscriptionViewQuery>({
+  return connection?.graphqlFetch<SubscriptionViewQuery>({
     query: subscriptionQuery,
     variables: { id: subscriptionId },
   });
-
-  return res;
 };
 
-// TODO separate fetch logic from state logic
+export const getSelectedPlan = () => {
+  const { plans, selectedPlanId } = store.state.edit;
+  return plans?.find(plan => plan.node.id === selectedPlanId)?.node;
+};
+
 export const loadSubscription = async () => {
   setState('view.isLoading', true);
 
@@ -146,7 +222,7 @@ export const loadSubscription = async () => {
 
 export const selectPlan = (planId: string) => {
   const { edit } = store.state;
-  const configuredFeatures = configurableFeatureDefaults(edit.plans as PlanEdge[], planId);
+  const configuredFeatures = toFeatureMap(configurableFeatureDefaults(getSelectedPlan() as Plan));
 
   setState('edit', {
     ...edit,
@@ -155,11 +231,6 @@ export const selectPlan = (planId: string) => {
   });
 
   updateCost('edit', planId, configuredFeatures);
-};
-
-export const getSelectedPlan = () => {
-  const { plans, selectedPlanId } = store.state.edit;
-  return plans?.find(plan => plan.node.id === selectedPlanId)?.node;
 };
 
 const fetchSubscriptionEdit = async (variables: SubscriptionEditQueryVariables) => {
@@ -221,12 +292,6 @@ const fetchUpdateSubscription = async (variables: SubscriptionUpdateMutationVari
 
   return res;
 };
-
-const fromFeatureMap = (features: FeatureMap = {}) =>
-  Object.entries(features).map(([label, value]) => ({
-    label,
-    value: `${value}`,
-  }));
 
 export const updateSubscription = async () => {
   setState('isUpdating', true);
