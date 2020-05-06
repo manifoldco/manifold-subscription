@@ -14,7 +14,7 @@ import { SubscriptionDetails } from './components/SubscriptionDetails';
 })
 export class ManifoldSubscriptionDetails {
   @Element() el: HTMLElement;
-  @Prop() subscriptionId: string;
+  @Prop() subscriptionId?: string;
   @Prop() planId?: string;
   @Prop() heading?: string;
   @Prop() isEditing?: boolean = false;

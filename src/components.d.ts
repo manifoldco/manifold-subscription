@@ -58,7 +58,7 @@ export namespace Components {
         "isEditing"?: boolean;
         "planId"?: string;
         "preview"?: boolean;
-        "subscriptionId": string;
+        "subscriptionId"?: string;
     }
     interface ManifoldSubscriptionList {
         "connection"?: Connection;
