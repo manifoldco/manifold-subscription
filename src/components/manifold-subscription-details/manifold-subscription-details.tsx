@@ -21,7 +21,9 @@ export class ManifoldSubscriptionDetails {
 
   // Can this be abstracted/optimized further?
   async componentWillLoad() {
-    setConnection(await getManifoldConnection(this.el));
+    if (!this.preview) {
+      setConnection(await getManifoldConnection(this.el));
+    }
     setState('heading', this.heading);
     setState('subscriptionId', this.subscriptionId);
     setState('preview', this.preview);
