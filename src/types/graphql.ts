@@ -1491,13 +1491,13 @@ export type ConfiguredFeaturesFragment = (
   & { edges: Array<(
     { __typename?: 'ConfiguredFeatureEdge' }
     & { node: (
-      { __typename?: 'NumberConfiguredFeature' }
-      & Pick<NumberConfiguredFeature, 'label'>
-      & { numberValue: NumberConfiguredFeature['value'] }
-    ) | (
       { __typename?: 'BooleanConfiguredFeature' }
       & Pick<BooleanConfiguredFeature, 'label'>
       & { booleanValue: BooleanConfiguredFeature['value'] }
+    ) | (
+      { __typename?: 'NumberConfiguredFeature' }
+      & Pick<NumberConfiguredFeature, 'label'>
+      & { numberValue: NumberConfiguredFeature['value'] }
     ) | (
       { __typename?: 'StringConfiguredFeature' }
       & Pick<StringConfiguredFeature, 'label'>
@@ -1557,6 +1557,32 @@ export type PlanFragment = (
           )>> }
         )> }
       ) }
+    )> }
+  )> }
+);
+
+export type SubscriptionEditPreviewQueryVariables = {
+  planId: Scalars['ID'];
+};
+
+
+export type SubscriptionEditPreviewQuery = (
+  { __typename?: 'Query' }
+  & { plan: Maybe<(
+    { __typename?: 'Plan' }
+    & Pick<Plan, 'id'>
+    & { product: Maybe<(
+      { __typename?: 'Product' }
+      & { plans: Maybe<(
+        { __typename?: 'PlanConnection' }
+        & { edges: Array<(
+          { __typename?: 'PlanEdge' }
+          & { node: (
+            { __typename?: 'Plan' }
+            & PlanFragment
+          ) }
+        )> }
+      )> }
     )> }
   )> }
 );
@@ -1621,6 +1647,19 @@ export type SubscriptionUpdateMutation = (
   ) }
 );
 
+export type SubscriptionViewPreviewQueryVariables = {
+  planId: Scalars['ID'];
+};
+
+
+export type SubscriptionViewPreviewQuery = (
+  { __typename?: 'Query' }
+  & { plan: Maybe<(
+    { __typename?: 'Plan' }
+    & PlanFragment
+  )> }
+);
+
 export type SubscriptionViewQueryVariables = {
   id: Scalars['ID'];
 };
@@ -1641,19 +1680,6 @@ export type SubscriptionViewQuery = (
       { __typename?: 'Plan' }
       & PlanFragment
     )> }
-  )> }
-);
-
-export type SubscriptionViewPreviewQueryVariables = {
-  planId: Scalars['ID'];
-};
-
-
-export type SubscriptionViewPreviewQuery = (
-  { __typename?: 'Query' }
-  & { plan: Maybe<(
-    { __typename?: 'Plan' }
-    & PlanFragment
   )> }
 );
 

@@ -3,7 +3,7 @@ import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import store, { SubscriptionDetailsStore } from './store';
 import {
   SubscriptionViewQuery,
-  SubscriptionEditQueryVariables,
+  SubscriptionEditPreviewQuery,
   SubscriptionEditQuery,
   SubscriptionUpdateMutationVariables,
   SubscriptionUpdateMutation,
@@ -13,13 +13,12 @@ import {
   ConfiguredFeaturesFragment,
 } from '../../../types/graphql';
 import { toFeatureMap, FeatureMap } from '../../../utils/plan';
-import subscriptionQuery from './subscription-view.graphql';
-import planFragment from './plan-fragment.graphql';
-import subscriptionViewPreviewQuery from './subscription-view-preview.graphql';
-import subscriptionPlanListQuery from './subscription-edit.graphql';
-import updateSubscriptionMutation from './subscription-update.graphql';
-import mockSubscriptionView from './mock/subscription-view.json';
-import mockSubscriptionEdit from './mock/subscription-edit.json';
+import subscriptionQuery from './graphql/subscription-view.graphql';
+import planFragment from './graphql/plan-fragment.graphql';
+import subscriptionViewPreviewQuery from './graphql/subscription-view-preview.graphql';
+import subscriptionEditPreviewQuery from './graphql/subscription-edit-preview.graphql';
+import subscriptionPlanListQuery from './graphql/subscription-edit.graphql';
+import updateSubscriptionMutation from './graphql/subscription-update.graphql';
 
 export function configurableFeatureDefaults(plan: Plan) {
   const defaultFeatures: ConfiguredFeaturesFragment['edges'] = [];
@@ -84,11 +83,7 @@ export const loadCost = async (
   planId: string,
   features: FeatureMap = {}
 ): Promise<{ amount?: number; error?: Error }> => {
-  const { preview, connection } = store.state;
-
-  if (preview) {
-    return {};
-  }
+  const { connection } = store.state;
 
   // If a request is in flight, cancel it
   if (controller) {
@@ -233,28 +228,52 @@ export const selectPlan = (planId: string) => {
   updateCost('edit', planId, configuredFeatures);
 };
 
-const fetchSubscriptionEdit = async (variables: SubscriptionEditQueryVariables) => {
-  const { preview, connection } = store.state;
+const fetchSubscriptionEdit = async (state = store.state) => {
+  const { preview, connection, subscriptionId, planId } = state;
 
   if (preview) {
-    return mockSubscriptionEdit as any;
+    const res = await connection?.graphqlFetch<SubscriptionEditPreviewQuery>({
+      query: planFragment + subscriptionEditPreviewQuery,
+      variables: { planId },
+    });
+
+    if (res?.data) {
+      const plan = res.data.plan.product.plans.edges[0].node;
+
+      return {
+        data: {
+          subscription: {
+            ...res.data,
+            status: {
+              label: 'AVAILABLE',
+              percentDone: 100,
+              message: '',
+            },
+            configuredFeatures: configurableFeatureDefaults(plan as Plan),
+          },
+        },
+      };
+    }
+
+    return { errors: res?.errors };
   }
 
   const res = await connection?.graphqlFetch<SubscriptionEditQuery>({
     query: subscriptionPlanListQuery,
-    variables,
+    variables: { subscriptionId },
   });
 
   return res;
 };
 
 export const editSubscription = async () => {
+  setState('isUpdated', false);
   setIsEditing(true);
   setState('edit.isLoading', true);
-  const { edit, subscriptionId = '' } = store.state;
-  const res = await fetchSubscriptionEdit({ subscriptionId });
+  const { edit } = store.state;
+  const res = await fetchSubscriptionEdit();
 
-  if (res.data) {
+  if (res?.data) {
     const { plan, configuredFeatures } = res.data.subscription;
 
     setState('edit', {
@@ -276,13 +295,32 @@ const fetchUpdateSubscription = async (variables: SubscriptionUpdateMutationVari
   const { preview, connection } = store.state;
 
   if (preview) {
-    return {
-      data: {
-        updateSubscription: {
-          data: mockSubscriptionView.data.subscription as any,
+    const res = await connection?.graphqlFetch<SubscriptionViewPreviewQuery>({
+      query: planFragment + subscriptionViewPreviewQuery,
+      variables,
+    });
+
+    if (res?.data) {
+      const plan = getSelectedPlan();
+
+      return {
+        data: {
+          updateSubscription: {
+            data: {
+              ...res.data,
+              status: {
+                label: 'AVAILABLE',
+                percentDone: 100,
+                message: '',
+              },
+              configuredFeatures: configurableFeatureDefaults(plan as Plan),
+            },
+          },
         },
-      },
-    };
+      };
+    }
+
+    return { errors: res?.errors };
   }
 
   const res = await connection?.graphqlFetch<SubscriptionUpdateMutation>({

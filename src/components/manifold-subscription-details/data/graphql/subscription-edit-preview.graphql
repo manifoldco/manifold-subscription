@@ -1,0 +1,14 @@
+query SubscriptionEditPreview($planId: ID!) {
+  plan(id: $planId) {
+    id
+    product {
+      plans(first: 25, orderBy: { field: COST, direction: ASC }) {
+        edges {
+          node {
+            ...plan
+          }
+        }
+      }
+    }
+  }
+}
