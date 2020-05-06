@@ -1,0 +1,292 @@
+{
+  "data": {
+    "subscription": {
+      "configuredFeatures": {
+        "edges": [
+          {
+            "node": {
+              "label": "multiple-choice-feature",
+              "stringValue": "insanity"
+            }
+          }
+        ]
+      },
+      "plan": {
+        "id": "2359wwete8y9ycjhyyjub1cj7gdvg",
+        "product": {
+          "plans": {
+            "edges": [
+              {
+                "node": {
+                  "id": "2359wwete8y9ycjhyyjub1cj7gdvg",
+                  "label": "plan-3",
+                  "displayName": "Autentico",
+                  "cost": 2500,
+                  "free": false,
+                  "product": {
+                    "id": "234t7f9187mh5qxn8z30nydfyzv4c"
+                  },
+                  "fixedFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "displayName": "Cheese",
+                          "displayValue": "Queso Fresco",
+                          "label": "feature-672cbdf9-d009-4d82-982e-886e4390375f"
+                        }
+                      },
+                      {
+                        "node": {
+                          "displayName": "Ground Beef",
+                          "displayValue": "true",
+                          "label": "checkbox-feature"
+                        }
+                      },
+                      {
+                        "node": {
+                          "displayName": "Guac",
+                          "displayValue": "true",
+                          "label": "feature-ad6c8f35-0f9b-408e-90ca-58a589281983"
+                        }
+                      },
+                      {
+                        "node": {
+                          "displayName": "Lettuce",
+                          "displayValue": "true",
+                          "label": "feature-57c6f8be-3ff9-4004-8348-9d275069d6b8"
+                        }
+                      }
+                    ]
+                  },
+                  "meteredFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "label": "pay-as-you-go-feature",
+                          "displayName": "Barbacoa",
+                          "numericDetails": {
+                            "unit": "ounce",
+                            "costTiers": [
+                              {
+                                "limit": 5,
+                                "cost": 1000000000
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "configurableFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "label": "multiple-choice-feature",
+                          "displayName": "Salsa",
+                          "type": "STRING",
+                          "upgradable": false,
+                          "downgradable": false,
+                          "featureOptions": [
+                            {
+                              "displayName": "Made in NYC",
+                              "value": "made-in-nyc",
+                              "cost": 0
+                            },
+                            {
+                              "displayName": "Pico de gallo",
+                              "value": "pico-de-gallo",
+                              "cost": 100
+                            },
+                            {
+                              "displayName": "Ghost",
+                              "value": "ghost",
+                              "cost": 200
+                            },
+                            {
+                              "displayName": "Insanity",
+                              "value": "insanity",
+                              "cost": 200
+                            }
+                          ],
+                          "numericDetails": null
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "node": {
+                  "id": "235enjqfbuk9gyj2qmkjfc4mbcdac",
+                  "label": "plan-1",
+                  "displayName": "Gringo",
+                  "cost": 0,
+                  "free": true,
+                  "product": {
+                    "id": "234t7f9187mh5qxn8z30nydfyzv4c"
+                  },
+                  "fixedFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "displayName": "Cheese",
+                          "displayValue": "Cheddar Jack",
+                          "label": "feature-672cbdf9-d009-4d82-982e-886e4390375f"
+                        }
+                      },
+                      {
+                        "node": {
+                          "displayName": "Ground Beef",
+                          "displayValue": "true",
+                          "label": "checkbox-feature"
+                        }
+                      },
+                      {
+                        "node": {
+                          "displayName": "Lettuce",
+                          "displayValue": "true",
+                          "label": "feature-57c6f8be-3ff9-4004-8348-9d275069d6b8"
+                        }
+                      }
+                    ]
+                  },
+                  "meteredFeatures": {
+                    "edges": []
+                  },
+                  "configurableFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "label": "multiple-choice-feature",
+                          "displayName": "Salsa",
+                          "type": "STRING",
+                          "upgradable": false,
+                          "downgradable": false,
+                          "featureOptions": [
+                            {
+                              "displayName": "Made in NYC",
+                              "value": "made-in-nyc",
+                              "cost": 0
+                            },
+                            {
+                              "displayName": "Pico de gallo",
+                              "value": "pico-de-gallo",
+                              "cost": 100
+                            },
+                            {
+                              "displayName": "Ghost",
+                              "value": "ghost",
+                              "cost": 200
+                            },
+                            {
+                              "displayName": "Insanity",
+                              "value": "insanity",
+                              "cost": 200
+                            }
+                          ],
+                          "numericDetails": null
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "node": {
+                  "id": "2351f51a7dan2z40b114nq3dnhyda",
+                  "label": "plan-2",
+                  "displayName": "Tex Mex",
+                  "cost": 1000,
+                  "free": false,
+                  "product": {
+                    "id": "234t7f9187mh5qxn8z30nydfyzv4c"
+                  },
+                  "fixedFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "displayName": "Cheese",
+                          "displayValue": "Queso Fresco",
+                          "label": "feature-672cbdf9-d009-4d82-982e-886e4390375f"
+                        }
+                      },
+                      {
+                        "node": {
+                          "displayName": "Ground Beef",
+                          "displayValue": "true",
+                          "label": "checkbox-feature"
+                        }
+                      },
+                      {
+                        "node": {
+                          "displayName": "Lettuce",
+                          "displayValue": "true",
+                          "label": "feature-57c6f8be-3ff9-4004-8348-9d275069d6b8"
+                        }
+                      }
+                    ]
+                  },
+                  "meteredFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "label": "pay-as-you-go-feature",
+                          "displayName": "Barbacoa",
+                          "numericDetails": {
+                            "unit": "ounce",
+                            "costTiers": [
+                              {
+                                "limit": 5,
+                                "cost": 1000000000
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "configurableFeatures": {
+                    "edges": [
+                      {
+                        "node": {
+                          "label": "multiple-choice-feature",
+                          "displayName": "Salsa",
+                          "type": "STRING",
+                          "upgradable": false,
+                          "downgradable": false,
+                          "featureOptions": [
+                            {
+                              "displayName": "Made in NYC",
+                              "value": "made-in-nyc",
+                              "cost": 0
+                            },
+                            {
+                              "displayName": "Pico de gallo",
+                              "value": "pico-de-gallo",
+                              "cost": 100
+                            },
+                            {
+                              "displayName": "Ghost",
+                              "value": "ghost",
+                              "cost": 200
+                            },
+                            {
+                              "displayName": "Insanity",
+                              "value": "insanity",
+                              "cost": 200
+                            }
+                          ],
+                          "numericDetails": null
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

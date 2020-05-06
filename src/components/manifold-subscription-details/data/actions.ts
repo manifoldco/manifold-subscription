@@ -13,6 +13,8 @@ import { toFeatureMap, FeatureMap, configurableFeatureDefaults } from '../../../
 import subscriptionQuery from './subscription-view.graphql';
 import subscriptionPlanListQuery from './subscription-edit.graphql';
 import updateSubscriptionMutation from './subscription-update.graphql';
+import mockSubscriptionView from './mock/subscription-view.json';
+import mockSubscriptionEdit from './mock/subscription-edit.json';
 
 export const setState = (
   path: string,
@@ -35,6 +37,12 @@ export const loadCost = async (
   planId: string,
   features: FeatureMap = {}
 ): Promise<{ amount?: number; error?: Error }> => {
+  const { preview, connection } = store.state;
+
+  if (preview) {
+    return {};
+  }
+
   // If a request is in flight, cancel it
   if (controller) {
     controller.abort();
@@ -58,7 +66,7 @@ export const loadCost = async (
       features: FeatureMap;
     }
 
-    const res = await store.state.connection?.gateway.post<CostSuccess | CostError, CostRequest>(
+    const res = await connection?.gateway.post<CostSuccess | CostError, CostRequest>(
       `/id/plan/${planId}/cost`,
       {
         features,
@@ -102,11 +110,16 @@ const updateCost = async (
 // TODO separate fetch logic from state logic
 export const loadSubscription = async (subscriptionId: string) => {
   setState('view.isLoading', true);
+  const { preview, connection } = store.state;
 
-  const res = await store.state.connection?.graphqlFetch<SubscriptionViewQuery>({
-    query: subscriptionQuery,
-    variables: { id: subscriptionId },
-  });
+  let res = mockSubscriptionView as any;
+
+  if (!preview) {
+    res = await connection?.graphqlFetch<SubscriptionViewQuery>({
+      query: subscriptionQuery,
+      variables: { id: subscriptionId },
+    });
+  }
 
   if (res?.data) {
     const { subscription } = res.data;
@@ -143,10 +156,15 @@ export const getSelectedPlan = () => {
 };
 
 const fetchSubscriptionEdit = async (variables: SubscriptionEditQueryVariables) => {
-  const res = await store.state.connection?.graphqlFetch<SubscriptionEditQuery>({
-    query: subscriptionPlanListQuery,
-    variables,
-  });
+  const { preview, connection } = store.state;
+  let res = mockSubscriptionEdit as any;
+
+  if (!preview) {
+    res = await connection?.graphqlFetch<SubscriptionEditQuery>({
+      query: subscriptionPlanListQuery,
+      variables,
+    });
+  }
 
   if (res?.data) {
     const { plan, configuredFeatures } = res.data.subscription;
@@ -183,7 +201,15 @@ export const cancelEditSubscription = () => {
 };
 
 const fetchUpdateSubscription = async (variables: SubscriptionUpdateMutationVariables) => {
-  const res = await store.state.connection?.graphqlFetch<SubscriptionUpdateMutation>({
+  const { preview, connection } = store.state;
+
+  if (preview) {
+    return {
+      data: mockSubscriptionView.data.subscription as any,
+    };
+  }
+
+  const res = await connection?.graphqlFetch<SubscriptionUpdateMutation>({
     query: updateSubscriptionMutation,
     variables,
   });

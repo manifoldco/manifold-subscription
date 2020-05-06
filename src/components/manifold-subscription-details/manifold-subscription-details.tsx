@@ -17,12 +17,15 @@ export class ManifoldSubscriptionDetails {
   @Prop() subscriptionId: string;
   @Prop() heading?: string;
   @Prop() isEditing?: boolean = false;
+  @Prop() preview?: boolean = false;
 
   // Can this be abstracted/optimized further?
   async componentWillLoad() {
     setConnection(await getManifoldConnection(this.el));
     setState('heading', this.heading);
     setState('subscriptionId', this.subscriptionId);
+    setState('preview', this.preview);
+
     if (this.isEditing) {
       editSubscription();
     } else {
