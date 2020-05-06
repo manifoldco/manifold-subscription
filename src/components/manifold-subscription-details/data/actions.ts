@@ -164,14 +164,15 @@ export const getSelectedPlan = () => {
 
 const fetchSubscriptionEdit = async (variables: SubscriptionEditQueryVariables) => {
   const { preview, connection } = store.state;
-  let res = mockSubscriptionEdit as any;
 
-  if (!preview) {
-    res = await connection?.graphqlFetch<SubscriptionEditQuery>({
-      query: subscriptionPlanListQuery,
-      variables,
-    });
+  if (preview) {
+    return mockSubscriptionEdit as any;
   }
+
+  const res = await connection?.graphqlFetch<SubscriptionEditQuery>({
+    query: subscriptionPlanListQuery,
+    variables,
+  });
 
   return res;
 };
