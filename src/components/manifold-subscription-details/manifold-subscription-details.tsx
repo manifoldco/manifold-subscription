@@ -14,26 +14,26 @@ import { SubscriptionDetails } from './components/SubscriptionDetails';
 })
 export class ManifoldSubscriptionDetails {
   @Element() el: HTMLElement;
-  @Prop() subscriptionId: string;
+  @Prop() subscriptionId?: string;
+  @Prop() planId?: string;
   @Prop() heading?: string;
   @Prop() isEditing?: boolean = false;
   @Prop() preview?: boolean = false;
 
   // Can this be abstracted/optimized further?
   async componentWillLoad() {
-    if (!this.preview) {
-      setConnection(await getManifoldConnection(this.el));
-    }
+    setConnection(await getManifoldConnection(this.el));
     setState('heading', this.heading);
     setState('subscriptionId', this.subscriptionId);
     setState('preview', this.preview);
+    setState('planId', this.planId);
 
     if (this.isEditing) {
       editSubscription();
     } else {
       setIsEditing(false);
     }
-    loadSubscription(this.subscriptionId);
+    loadSubscription();
   }
 
   render() {
