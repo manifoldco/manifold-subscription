@@ -13,10 +13,4 @@ query Plan($planId: ID!) {
       }
     }
   }
-  profile {
-    stripeSetupIntentSecret
-    stripeAccount {
-      id
-    }
-  }
 }

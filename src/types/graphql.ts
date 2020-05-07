@@ -1476,7 +1476,15 @@ export type PlanQuery = (
         ) }
       )> }
     )> }
-  )>, profile: (
+  )> }
+);
+
+export type ProfileQueryVariables = {};
+
+
+export type ProfileQuery = (
+  { __typename?: 'Query' }
+  & { profile: (
     { __typename?: 'Profile' }
     & Pick<Profile, 'stripeSetupIntentSecret'>
     & { stripeAccount: Maybe<(
@@ -1495,13 +1503,13 @@ export type ConfiguredFeaturesFragment = (
       & Pick<BooleanConfiguredFeature, 'label'>
       & { booleanValue: BooleanConfiguredFeature['value'] }
     ) | (
-      { __typename?: 'NumberConfiguredFeature' }
-      & Pick<NumberConfiguredFeature, 'label'>
-      & { numberValue: NumberConfiguredFeature['value'] }
-    ) | (
       { __typename?: 'StringConfiguredFeature' }
       & Pick<StringConfiguredFeature, 'label'>
       & { stringValue: StringConfiguredFeature['value'] }
+    ) | (
+      { __typename?: 'NumberConfiguredFeature' }
+      & Pick<NumberConfiguredFeature, 'label'>
+      & { numberValue: NumberConfiguredFeature['value'] }
     ) }
   )> }
 );
