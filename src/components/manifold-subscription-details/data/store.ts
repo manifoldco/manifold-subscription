@@ -27,6 +27,8 @@ export interface SubscriptionDetailsStore {
     isEditing?: boolean;
     heading?: string;
     subscriptionId?: string;
+    planId?: string;
+    preview?: boolean;
     isUpdated?: boolean;
     isUpdating?: boolean;
     errors: ErrorMessage[];
