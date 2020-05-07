@@ -14,6 +14,7 @@ import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import {
   PlanQuery,
   PlanQueryVariables,
+  ProfileQuery,
   PlanListQuery,
   CreateSubscriptionMutationVariables,
   CreateSubscriptionMutation,
@@ -23,6 +24,7 @@ import PlanCard from '../shared/PlanCard';
 import Message from '../shared/Message';
 import planQuery from './plan.graphql';
 import planListQuery from './plan-list.graphql';
+import profileQuery from './profile.graphql';
 import createSubscrptionMutation from './create-subscription.graphql';
 import { FeatureMap } from '../../utils/plan';
 import {
@@ -46,6 +48,7 @@ export class ManifoldSubscriptionCreate {
   cardPlaceholder?: HTMLDivElement;
   @State() card: StripeCardElement;
   @State() cardStatus: 'empty' | 'partial' | 'complete' = 'empty';
+  @State() profile: ProfileQuery['profile'];
 
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) isLoadingPlanSelector?: boolean = false;
@@ -59,6 +62,10 @@ export class ManifoldSubscriptionCreate {
   @Prop({ mutable: true }) calculatedCost?: number | null;
   @Prop({ mutable: true }) isEditing: boolean = false;
 
+  /**
+   * Puts the component in preview mode
+   */
+  @Prop() preview?: boolean;
   /**
    * Component heading text
    */
@@ -94,8 +101,11 @@ export class ManifoldSubscriptionCreate {
       componentVersion: '<@NPM_PACKAGE_VERSION@>',
       version: 0,
     });
-
     this.updatePlan(this.planId);
+  }
+
+  componentDidLoad() {
+    this.initializeStripeElements();
   }
 
   addErrors = (...errors: UIError[]) => {
@@ -106,8 +116,7 @@ export class ManifoldSubscriptionCreate {
     this.errors = filterErrors(this.errors, 'label', labels, false);
   };
 
-  @Watch('data')
-  async initializeStripeElements(data: PlanQuery) {
+  async initializeStripeElements() {
     // Only initialize once
     if (this.stripe) {
       return;
@@ -115,10 +124,50 @@ export class ManifoldSubscriptionCreate {
 
     this.removeErrors('stripe-init');
 
+    if (!this.connection) {
+      this.addErrors(interfaceError('stripe-init'));
+      throw new Error('Missing property `connection` on `manifold-subscription-create`.');
+    }
+
+    let res;
+
+    if (this.preview) {
+      res = {
+        data: {
+          profile: {
+            stripeAccount: {
+              id: '',
+            },
+          },
+        } as ProfileQuery,
+      };
+    } else {
+      res = await this.connection
+        .graphqlFetch<ProfileQuery>({
+          query: profileQuery,
+        })
+        .catch(e => {
+          this.addErrors(dataError('stripe-init', 'profile'));
+          throw new Error(e);
+        });
+    }
+
+    if (res.errors || !res.data) {
+      this.addErrors(dataError('stripe-init', 'profile'));
+      return;
+    }
+
+    this.profile = res.data.profile;
+
     // Initialize Stripe
-    this.stripe = await loadStripe(this.stripePublishableKey, {
-      stripeAccount: data.profile.stripeAccount.id,
-    });
+    this.stripe = await loadStripe(
+      this.stripePublishableKey,
+      this.preview
+        ? {}
+        : {
+            stripeAccount: res.data.profile.stripeAccount.id,
+          }
+    );
 
     if (!this.stripe) {
       this.addErrors(interfaceError('stripe-init'));
@@ -126,7 +175,7 @@ export class ManifoldSubscriptionCreate {
       throw new Error(
         'Could not load Stripe with the following credentials:' +
           `\n\tStripePublishable Key: ${this.stripePublishableKey}` +
-          `\n\tStripe Account ID: ${data.profile.stripeAccount.id}`
+          `\n\tStripe Account ID: ${res.data.profile.stripeAccount.id}`
       );
     }
 
@@ -265,6 +314,11 @@ export class ManifoldSubscriptionCreate {
 
   subscribe = async (e: UIEvent) => {
     e.preventDefault();
+
+    if (this.preview) {
+      return;
+    }
+
     await this.removeErrors('subscription', 'card');
 
     if (this.cardStatus === 'empty') {
@@ -284,7 +338,7 @@ export class ManifoldSubscriptionCreate {
 
     if (this.data && this.stripe && !this.subscribing) {
       this.subscribing = true;
-      const { stripeSetupIntentSecret } = this.data.profile;
+      const { stripeSetupIntentSecret } = this.profile;
 
       const { setupIntent, error } = await this.stripe.confirmCardSetup(stripeSetupIntentSecret, {
         payment_method: {

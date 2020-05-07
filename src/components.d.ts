@@ -45,6 +45,10 @@ export namespace Components {
          */
         "planId": string;
         "planListData"?: PlanListQuery;
+        /**
+          * Puts the component in preview mode
+         */
+        "preview"?: boolean;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
         /**
@@ -154,6 +158,10 @@ declare namespace LocalJSX {
          */
         "planId"?: string;
         "planListData"?: PlanListQuery;
+        /**
+          * Puts the component in preview mode
+         */
+        "preview"?: boolean;
         "setupIntentError"?: string;
         "setupIntentStatus"?: SetupIntent.Status;
         /**
