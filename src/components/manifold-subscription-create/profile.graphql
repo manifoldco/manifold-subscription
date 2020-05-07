@@ -1,0 +1,8 @@
+query Profile {
+  profile {
+    stripeSetupIntentSecret
+    stripeAccount {
+      id
+    }
+  }
+}
