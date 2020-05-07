@@ -101,10 +101,10 @@ export class ManifoldSubscriptionCreate {
       componentVersion: '<@NPM_PACKAGE_VERSION@>',
       version: 0,
     });
+    this.updatePlan(this.planId);
   }
 
   componentDidLoad() {
-    this.updatePlan(this.planId);
     this.initializeStripeElements();
   }
 
