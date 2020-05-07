@@ -1,9 +1,61 @@
 import { Component, Event, EventEmitter, Element, Prop, h, Watch } from '@stencil/core';
 import { Connection } from '@manifoldco/manifold-init-types/types/v0';
 import { GraphqlError } from '@manifoldco/manifold-init-types/types/v0/graphqlFetch';
-import { SubscriptionsQuery, SubscriptionsQueryVariables } from '../../types/graphql';
+import {
+  SubscriptionListQuery,
+  SubscriptionListQueryVariables,
+  SubscriptionListPreviewQueryVariables,
+  SubscriptionListPreviewQuery,
+} from '../../types/graphql';
 import ListCard from './components/ListCard';
-import query from './subscriptions.graphql';
+import fragment from './list-plan-fragment.graphql';
+import query from './subscription-list.graphql';
+import previewQuery from './subscription-list-preview.graphql';
+
+interface FetchSubscriptionList {
+  owner?: string;
+  connection: Connection;
+  preview?: boolean;
+  productId?: string;
+}
+
+const fetchSubscriptionList = async (args: FetchSubscriptionList) => {
+  const { owner, connection, preview, productId } = args;
+
+  if (preview && productId) {
+    const variables: SubscriptionListPreviewQueryVariables = { productId };
+    const res = await connection.graphqlFetch<SubscriptionListPreviewQuery>({
+      query: fragment + previewQuery,
+      variables,
+    });
+
+    if (res.data) {
+      const edges = res.data.product.plans.edges.map(({ node }) => ({
+        node: {
+          id: node.id,
+          plan: node,
+        },
+      }));
+
+      return {
+        data: {
+          subscriptions: {
+            edges,
+          },
+        } as SubscriptionListQuery,
+        errors: null,
+      };
+    }
+    return { errors: res.errors };
+  }
+
+  const variables: SubscriptionListQueryVariables = { owner };
+  const res = await connection.graphqlFetch<SubscriptionListQuery>({
+    query: fragment + query,
+    variables,
+  });
+  return res;
+};
 
 @Component({
   tag: 'manifold-subscription-list',
@@ -16,7 +68,14 @@ export class ManifoldSubscriptionList {
   @Prop({ mutable: true }) connection?: Connection;
   @Prop({ mutable: true }) loading?: boolean = false;
   @Prop({ mutable: true }) errors?: GraphqlError[];
-  @Prop({ mutable: true }) data?: SubscriptionsQuery;
+  @Prop({ mutable: true }) data?: SubscriptionListQuery;
+
+  @Prop() productId?: string;
+
+  /**
+   * Puts the component in preview mode
+   */
+  @Prop() preview?: boolean = false;
 
   /**
    * Component subscription link format
@@ -32,7 +91,7 @@ export class ManifoldSubscriptionList {
   @Prop() owner?: string;
 
   @Watch('owner') async getSubscriptions(owner?: string) {
-    if (!owner) {
+    if (!owner && !this.preview) {
       throw new Error('Missing property `owner` on `manifold-subscription-list`');
     }
 
@@ -42,10 +101,11 @@ export class ManifoldSubscriptionList {
 
     this.loading = true;
 
-    const variables: SubscriptionsQueryVariables = { owner };
-    const { data, errors } = await this.connection.graphqlFetch<SubscriptionsQuery>({
-      query,
-      variables,
+    const { data, errors } = await fetchSubscriptionList({
+      owner,
+      connection: this.connection,
+      preview: this.preview,
+      productId: this.productId,
     });
 
     if (errors) {

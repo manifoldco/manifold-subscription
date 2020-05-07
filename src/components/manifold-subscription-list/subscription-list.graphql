@@ -1,0 +1,12 @@
+query SubscriptionList($owner: ProfileIdentity!) {
+  subscriptions(first: 1000, owner: $owner) {
+    edges {
+      node {
+        id
+        plan {
+          ...listPlan
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+fragment listPlan on Plan {
+  id
+  displayName
+  cost
+  configurableFeatures(first: 1) {
+    edges {
+      node {
+        displayName
+      }
+    }
+  }
+}

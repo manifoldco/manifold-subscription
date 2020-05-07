@@ -411,6 +411,8 @@ export type Plan = Node & {
   free: Scalars['Boolean'];
   regions: Maybe<RegionConnection>;
   resizableTo: Maybe<PlanConnection>;
+  published: Maybe<Scalars['Boolean']>;
+  version: Maybe<Version>;
 };
 
 
@@ -612,9 +614,8 @@ export type Product = Node & {
   fixedFeatures: Maybe<ProductFixedFeatureConnection>;
   meteredFeatures: Maybe<ProductMeteredFeatureConnection>;
   configurableFeatures: Maybe<ProductConfigurableFeatureConnection>;
-  version: Maybe<Scalars['Int']>;
-  versionID: Maybe<Scalars['ID']>;
   published: Maybe<Scalars['Boolean']>;
+  version: Maybe<Version>;
 };
 
 
@@ -970,6 +971,7 @@ export type QueryProviderArgs = {
 
 export type QueryPlanArgs = {
   id: Scalars['ID'];
+  latest: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -1347,6 +1349,12 @@ export type ValueProp = {
   body: Scalars['String'];
 };
 
+export type Version = {
+   __typename?: 'Version';
+  label: Maybe<Scalars['Int']>;
+  id: Maybe<Scalars['ID']>;
+};
+
 export type WithUsage = {
   start: Maybe<Scalars['Time']>;
   end: Maybe<Scalars['Time']>;
@@ -1483,6 +1491,10 @@ export type ConfiguredFeaturesFragment = (
   & { edges: Array<(
     { __typename?: 'ConfiguredFeatureEdge' }
     & { node: (
+      { __typename?: 'BooleanConfiguredFeature' }
+      & Pick<BooleanConfiguredFeature, 'label'>
+      & { booleanValue: BooleanConfiguredFeature['value'] }
+    ) | (
       { __typename?: 'StringConfiguredFeature' }
       & Pick<StringConfiguredFeature, 'label'>
       & { stringValue: StringConfiguredFeature['value'] }
@@ -1490,10 +1502,6 @@ export type ConfiguredFeaturesFragment = (
       { __typename?: 'NumberConfiguredFeature' }
       & Pick<NumberConfiguredFeature, 'label'>
       & { numberValue: NumberConfiguredFeature['value'] }
-    ) | (
-      { __typename?: 'BooleanConfiguredFeature' }
-      & Pick<BooleanConfiguredFeature, 'label'>
-      & { booleanValue: BooleanConfiguredFeature['value'] }
     ) }
   )> }
 );
@@ -1636,12 +1644,49 @@ export type SubscriptionViewQuery = (
   )> }
 );
 
-export type SubscriptionsQueryVariables = {
+export type ListPlanFragment = (
+  { __typename?: 'Plan' }
+  & Pick<Plan, 'id' | 'displayName' | 'cost'>
+  & { configurableFeatures: Maybe<(
+    { __typename?: 'PlanConfigurableFeatureConnection' }
+    & { edges: Array<(
+      { __typename?: 'PlanConfigurableFeatureEdge' }
+      & { node: (
+        { __typename?: 'PlanConfigurableFeature' }
+        & Pick<PlanConfigurableFeature, 'displayName'>
+      ) }
+    )> }
+  )> }
+);
+
+export type SubscriptionListPreviewQueryVariables = {
+  productId: Scalars['ID'];
+};
+
+
+export type SubscriptionListPreviewQuery = (
+  { __typename?: 'Query' }
+  & { product: Maybe<(
+    { __typename?: 'Product' }
+    & { plans: Maybe<(
+      { __typename?: 'PlanConnection' }
+      & { edges: Array<(
+        { __typename?: 'PlanEdge' }
+        & { node: (
+          { __typename?: 'Plan' }
+          & ListPlanFragment
+        ) }
+      )> }
+    )> }
+  )> }
+);
+
+export type SubscriptionListQueryVariables = {
   owner: Scalars['ProfileIdentity'];
 };
 
 
-export type SubscriptionsQuery = (
+export type SubscriptionListQuery = (
   { __typename?: 'Query' }
   & { subscriptions: Maybe<(
     { __typename?: 'SubscriptionAgreementConnection' }
@@ -1652,17 +1697,7 @@ export type SubscriptionsQuery = (
         & Pick<SubscriptionAgreement, 'id'>
         & { plan: Maybe<(
           { __typename?: 'Plan' }
-          & Pick<Plan, 'displayName' | 'cost'>
-          & { configurableFeatures: Maybe<(
-            { __typename?: 'PlanConfigurableFeatureConnection' }
-            & { edges: Array<(
-              { __typename?: 'PlanConfigurableFeatureEdge' }
-              & { node: (
-                { __typename?: 'PlanConfigurableFeature' }
-                & Pick<PlanConfigurableFeature, 'displayName'>
-              ) }
-            )> }
-          )> }
+          & ListPlanFragment
         )> }
       )> }
     )> }
