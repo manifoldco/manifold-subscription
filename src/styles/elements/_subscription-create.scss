@@ -64,6 +64,10 @@ $name: '' !default;
   background-color: mercury.$color-white;
   border: 1px solid mercury.$color-grayLight;
   border-radius: 0.2em;
+
+  [data-is-loading] {
+    line-height: 0.75;
+  }
 }
 
 .StripeElement--focus {
