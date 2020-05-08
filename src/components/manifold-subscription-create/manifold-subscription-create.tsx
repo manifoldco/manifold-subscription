@@ -101,11 +101,21 @@ export class ManifoldSubscriptionCreate {
       componentVersion: '<@NPM_PACKAGE_VERSION@>',
       version: 0,
     });
-    this.updatePlan(this.planId);
   }
 
   componentDidLoad() {
-    this.initializeStripeElements();
+    this.update(this.planId);
+  }
+
+  @Watch('planId')
+  update(value?: string) {
+    if (this.preview && !value) {
+      this.loading = true;
+    } else {
+      this.updatePlan(this.planId);
+      this.initializeStripeElements();
+      this.fetchCustomCost(this.configuredFeatures);
+    }
   }
 
   addErrors = (...errors: UIError[]) => {
@@ -116,6 +126,7 @@ export class ManifoldSubscriptionCreate {
     this.errors = filterErrors(this.errors, 'label', labels, false);
   };
 
+  @Watch('stripePublishableKey')
   async initializeStripeElements() {
     // Only initialize once
     if (this.stripe) {
@@ -184,7 +195,6 @@ export class ManifoldSubscriptionCreate {
     this.card = elements.create('card');
     if (this.card && this.cardPlaceholder) {
       this.card.mount(this.cardPlaceholder);
-      this.cardPlaceholder.removeAttribute('data-is-loading');
 
       this.card.on('change', e => {
         if (e.empty) {
@@ -207,7 +217,7 @@ export class ManifoldSubscriptionCreate {
     }
   }
 
-  @Watch('planId') async updatePlan(planId?: string) {
+  async updatePlan(planId?: string) {
     this.removeErrors('plan-query');
 
     if (!planId) {
@@ -264,6 +274,9 @@ export class ManifoldSubscriptionCreate {
 
   @Watch('configuredFeatures')
   async fetchCustomCost(configuredFeatures: FeatureMap) {
+    if (!this.planId && this.preview) {
+      return undefined;
+    }
     this.removeErrors('cost');
 
     // if not configurable, return plan cost
@@ -275,6 +288,11 @@ export class ManifoldSubscriptionCreate {
     if (!this.connection) {
       this.addErrors(dataError('cost', 'cost of selected plan'));
       throw new Error('Missing property `connection` on `manifold-subscription-create`.');
+    }
+
+    if (!this.planId) {
+      this.addErrors(dataError('cost', 'cost of selected plan'));
+      throw new Error('Missing property `planId` on `manifold-subscription-create`.');
     }
 
     // Hide display while calculating
@@ -489,21 +507,22 @@ export class ManifoldSubscriptionCreate {
                 class="ManifoldSubscriptionCreate__ModifyPlanButton"
                 onClick={this.toggleIsEditing}
               >
-                Change Plan
+                <span data-is-loading={this.loading}>Change Plan</span>
               </button>
             </PlanCard>
           )}
 
           <div class="ManifoldSubscription__Field ManifoldSubscription__Field--Card">
-            <label class="ManifoldSubscription__Field__Label">Credit Card</label>
+            <label class="ManifoldSubscription__Field__Label">
+              <span data-is-loading={this.loading}>Credit Card</span>
+            </label>
             <div
               class="StripeElement"
               ref={el => {
                 this.cardPlaceholder = el;
               }}
-              data-is-loading
             >
-              Credit Card Field
+              <div data-is-loading>Credit Card Field</div>
             </div>
             {validationErrors.map(error => (
               <p class="ManifoldSubscription__Field__InlineError">{error.message}</p>
@@ -514,11 +533,14 @@ export class ManifoldSubscriptionCreate {
             type="submit"
             data-kind="primary"
             disabled={
+              this.loading ||
               this.subscribing ||
               filterErrors(this.errors, 'type', ['data', 'interface']).length > 0
             }
           >
-            {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
+            <span data-is-loading={this.loading}>
+              {this.subscribing ? 'Subscribing...' : 'Subscribe with Card'}
+            </span>
           </button>
           {subscriptionErrors.length > 0 && (
             <div class="ManifoldSubscriptionCreate__MessageContainer">
@@ -528,7 +550,9 @@ export class ManifoldSubscriptionCreate {
             </div>
           )}
           <p class="ManifoldSubscription__HelpText" data-centered>
-            We charge for plan cost + usage at end of month
+            <span data-is-loading={this.loading}>
+              We charge for plan cost + usage at end of month.
+            </span>
           </p>
         </form>
       </div>
