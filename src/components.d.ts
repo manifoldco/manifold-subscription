@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { UIError, } from "./utils/error";
-import { PlanListQuery, PlanQuery, SubscriptionsQuery, } from "./types/graphql";
+import { PlanListQuery, PlanQuery, SubscriptionListQuery, } from "./types/graphql";
 import { SetupIntent, } from "@stripe/stripe-js";
 import { FeatureMap, } from "./utils/plan";
 import { Connection, } from "@manifoldco/manifold-init-types/types/v0";
@@ -66,7 +66,7 @@ export namespace Components {
     }
     interface ManifoldSubscriptionList {
         "connection"?: Connection;
-        "data"?: SubscriptionsQuery;
+        "data"?: SubscriptionListQuery;
         "errors"?: GraphqlError[];
         /**
           * Component heading text
@@ -77,6 +77,11 @@ export namespace Components {
           * Owner for subscriptions
          */
         "owner"?: string;
+        /**
+          * Puts the component in preview mode
+         */
+        "preview"?: boolean;
+        "productId"?: string;
         /**
           * Component subscription link format
          */
@@ -174,7 +179,7 @@ declare namespace LocalJSX {
     }
     interface ManifoldSubscriptionList {
         "connection"?: Connection;
-        "data"?: SubscriptionsQuery;
+        "data"?: SubscriptionListQuery;
         "errors"?: GraphqlError[];
         /**
           * Component heading text
@@ -186,6 +191,11 @@ declare namespace LocalJSX {
           * Owner for subscriptions
          */
         "owner"?: string;
+        /**
+          * Puts the component in preview mode
+         */
+        "preview"?: boolean;
+        "productId"?: string;
         /**
           * Component subscription link format
          */

@@ -1,0 +1,11 @@
+query SubscriptionListPreview($productId: ID!) {
+  product(id: $productId) {
+    plans(first: 3) {
+      edges {
+        node {
+          ...listPlan
+        }
+      }
+    }
+  }
+}
