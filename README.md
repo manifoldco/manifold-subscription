@@ -91,7 +91,7 @@ import '@manifoldco/manifold-subscription/dist/manifold-subscription/manifold-su
 This libary is built using [Stencil][stencil]. For more information about integrating with your
 site, please refer to the latest [framework docs][stencil-framework].
 
-## `manifold-subscription-create`
+## `<manifold-subscription-create>`
 
 ### Options
 
@@ -141,6 +141,14 @@ A subscription creation has been initialized.
 | Detail | Type     | Description       |
 | :----- | :------- | :---------------- |
 | `id`   | `string` | A subscription ID |
+
+## `<manifold-subscription-details>`
+
+TBD
+
+## `<manifold-subscription-list>`
+
+TBD
 
 <!-- Add docs for new components here -->
 
