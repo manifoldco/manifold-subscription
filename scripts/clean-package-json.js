@@ -1,3 +1,7 @@
+/**
+ * Strip out package.json scripts because those can get weird on remote installs
+ */
+
 const fs = require('fs');
 const path = require('path');
 

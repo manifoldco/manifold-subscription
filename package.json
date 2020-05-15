@@ -1,6 +1,6 @@
 {
   "name": "@manifoldco/manifold-subscription",
-  "version": "0.0.8",
+  "version": "0.0.16",
   "private": false,
   "description": "Manifold Subscription Web Components",
   "main": "dist/index.js",
@@ -17,19 +17,20 @@
   ],
   "scripts": {
     "build": "stencil build",
-    "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "changelog:format": "changelog",
+    "changelog:release": "node scripts/update-changelog",
+    "clean-package-json": "node scripts/clean-package-json",
     "generate": "stencil generate",
     "generate:gql": "graphql-codegen --config codegen.yml",
     "happo": "npm run build && happo run",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.scss'",
     "lint:js": "eslint --ext .js,.ts,.tsx src",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
     "typecheck": "npm run generate:gql && tsc --noEmit",
-    "version-from-git": "node scripts/version-from-git",
-    "clean-package-json": "node scripts/clean-package-json",
-    "prebuild": "npm run version-from-git"
+    "version": "node scripts/bump-version"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.1",
@@ -62,6 +63,7 @@
     "happo.io": "^5.1.5",
     "jest": "24.9.0",
     "jest-cli": "24.9.0",
+    "keep-a-changelog": "^0.10.1",
     "lodash": "^4.17.15",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.19.1",
