@@ -1,0 +1,27 @@
+<script>
+  // ⚠️ these run for every story
+
+  // https://github.com/storybookjs/storybook/issues/6113
+  document.addEventListener(
+    'DOMContentLoaded',
+    () => {
+      // run the following scripts on page change / update:
+      runOnPageChange();
+
+      // Storybook setup
+      const callback = function(mutationsList) {
+        for (let i = 0, len = mutationsList.length; i < len; i++) {
+          if (mutationsList[i].type == 'childList') {
+            runOnPageChange();
+            break;
+          }
+        }
+      };
+
+      const observer = new MutationObserver(callback);
+      const config = { childList: true, subtree: false };
+      observer.observe(document.getElementById('root'), config);
+    },
+    false
+  );
+</script>
