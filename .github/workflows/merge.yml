@@ -8,18 +8,10 @@ on:
 jobs:
   vrt:
     env:
-      CURRENT_SHA: ${{ github.sha }}
-      PREVIOUS_SHA: ${{ github.event.before }}
-      CHANGE_URL: ${{ github.event.compare }}
-      HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
-      HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
+      PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-        with:
-          node-version: '13.x'
       - run: npm install
-      - run: npm run build
-      - run: npm run generate:gql
-      - run: node_modules/.bin/happo-ci
+      - run: npm run vrt
