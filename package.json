@@ -61,7 +61,7 @@
     "happo-plugin-typescript": "^1.0.0",
     "happo.io": "^5.1.5",
     "jest": "24.9.0",
-    "jest-cli": "24.9.0",
+    "jest-cli": "26.0.1",
     "lodash": "^4.17.15",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.19.1",
