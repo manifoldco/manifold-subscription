@@ -62,7 +62,7 @@
     "@storybook/addon-knobs": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/html": "^5.3.18",
-    "@types/jest": "24.0.20",
+    "@types/jest": "26.0.7",
     "@types/lodash": "^4.14.150",
     "@types/puppeteer": "1.19.0",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
